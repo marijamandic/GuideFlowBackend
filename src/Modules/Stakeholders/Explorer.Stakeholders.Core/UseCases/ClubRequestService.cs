@@ -18,22 +18,22 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
         }
 
-        public Result<ClubRequestDto> AcceptMembershipRequest(int requestId)
+        public Result<ClubRequestDto> AcceptMembershipRequest(long requestId)
         {
             throw new NotImplementedException();
         }
 
-        public Result<ClubRequestDto> CancelMembershipRequest(int requestId)
+        public Result<ClubRequestDto> CancelMembershipRequest(long requestId)
         {
             throw new NotImplementedException();
         }
 
-        public Result<ClubRequestDto> DeclineMembershipRequest(int requestId)
+        public Result<ClubRequestDto> DeclineMembershipRequest(long requestId)
         {
             throw new NotImplementedException();
         }
 
-        public Result<ClubRequestDto> GetRequestStatus(int requestId)
+        public Result<ClubRequestDto> GetRequestStatus(long requestId)
         {
             throw new NotImplementedException();
         }

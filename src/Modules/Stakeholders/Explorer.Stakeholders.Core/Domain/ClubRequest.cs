@@ -15,11 +15,11 @@ public enum ClubRequestStatus
 public class ClubRequest : Entity
 {
 
-    public int TouristId { get; private set; }
-    public int ClubId { get; private set; }
+    public long TouristId { get; private set; }
+    public long ClubId { get; private set; }
     public ClubRequestStatus Status { get; private set; }
 
-    public ClubRequest(int touristId, int clubId)
+    public ClubRequest(long touristId, long clubId)
 	{
 
         TouristId = touristId;

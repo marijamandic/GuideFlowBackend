@@ -6,9 +6,9 @@ namespace Explorer.Stakeholders.API.Public;
 public interface IClubRequestService
 {
     Result<ClubRequestDto> SubmitMembershipRequest(ClubRequestDto requestDto);
-    Result<ClubRequestDto> AcceptMembershipRequest(int requestId);
-    Result<ClubRequestDto> DeclineMembershipRequest(int requestId);
-    Result<ClubRequestDto> CancelMembershipRequest(int requestId);
-    Result<ClubRequestDto> GetRequestStatus(int requestId);
+    Result<ClubRequestDto> AcceptMembershipRequest(long requestId);
+    Result<ClubRequestDto> DeclineMembershipRequest(long requestId);
+    Result<ClubRequestDto> CancelMembershipRequest(long requestId);
+    Result<ClubRequestDto> GetRequestStatus(long requestId);
 
 }

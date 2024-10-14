@@ -11,7 +11,7 @@ public enum ClubRequestStatus
 
 public class ClubRequestDto
 {
-    public int TouristId { get; set; }
-    public int ClubId { get; set; }
+    public long TouristId { get; set; }
+    public long ClubId { get; set; }
     public ClubRequestStatus Status { get; set; }
 }
