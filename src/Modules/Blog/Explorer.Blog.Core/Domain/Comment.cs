@@ -15,7 +15,7 @@ namespace Explorer.Blog.Core.Domain
         public long PostId { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public string Content { get; private set; }
-        public DateTime? LastModified { get; private set; }
+        public DateTime LastModified { get; private set; }
 
         public Comment(long userId, long postId, DateTime createdAt, string content,DateTime lastModified)
         {
