@@ -1,14 +1,16 @@
 ﻿using Explorer.Stakeholders.Core.Domain;
 using Microsoft.EntityFrameworkCore;
-
 namespace Explorer.Stakeholders.Infrastructure.Database;
 
 public class StakeholdersContext : DbContext
 {
+
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
 
-    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
+    public DbSet<AppRating> Ratings { get; set; }
+
+    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

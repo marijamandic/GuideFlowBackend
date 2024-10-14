@@ -14,7 +14,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public long RatingId { get; init; }
         public long UserId { get; init; }
 
-        public int Rating {  get; init; } // 1 d0 5
+        public int RatingValue {  get; init; } // 1 d0 5
         public string Comment {  get; init; }
         public DateTime RatingTime { get; init; }
 
@@ -22,7 +22,15 @@ namespace Explorer.Stakeholders.Core.Domain
         {
             RatingId = ratingId;
             UserId = userId;
-            Rating = rating;
+            RatingValue = rating;
+            Comment = comment;
+            RatingTime = ratingTime;
+            Validate();
+        }
+        public AppRating(long userId, int rating, string comment, DateTime ratingTime)
+        {
+            UserId = userId;
+            RatingValue = rating;
             Comment = comment;
             RatingTime = ratingTime;
             Validate();
@@ -32,7 +40,7 @@ namespace Explorer.Stakeholders.Core.Domain
         {
             if (RatingId == 0) throw new ArgumentException("Invalid RatingId");
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
-            if (Rating < 1 || Rating > 5) throw new ArgumentException("Rating must be between 1 and 5");
+            if (RatingValue < 1 || RatingValue > 5) throw new ArgumentException("Rating Value must be between 1 and 5");
             if (string.IsNullOrWhiteSpace(Comment)) throw new ArgumentException("Invalid Comment");
 
             if (RatingTime == default(DateTime)) throw new ArgumentException("Invalid RatingTime");
