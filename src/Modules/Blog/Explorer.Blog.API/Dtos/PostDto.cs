@@ -6,7 +6,7 @@
         public string Title { get; set; }
         public int UserId { get; set; }
         public string Description { get; set; }
-        public DateTime PublisDate { get; set; }
+        public DateTime PublishDate { get; set; }
         public string ImageUrl { get; set; }
         public Status Status { get; set; }     
     }

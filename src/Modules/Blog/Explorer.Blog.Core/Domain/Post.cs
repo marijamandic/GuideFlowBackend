@@ -19,6 +19,8 @@ namespace Explorer.Blog.Core.Domain
         public string ImageUrl { get; private set; }
         public Status Status { get; private set; }
 
+        public Post() { }
+
         public Post(string title , long userId , string description , DateTime publishDate , string imageUrl , Status status) { 
             Title = title;
             UserId = userId;
@@ -32,8 +34,7 @@ namespace Explorer.Blog.Core.Domain
         private void Validate() {
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
             if (string.IsNullOrWhiteSpace(Title)) throw new ArgumentException("Invalid Title");
-            if (string.IsNullOrEmpty(Status.ToString())) throw new ArgumentException("Invalid Status");
-            if (PublishDate == DateTime.MinValue && PublishDate < DateTime.Now) throw new ArgumentException("Invalid PublishDate");
+            if (PublishDate == DateTime.MinValue) throw new ArgumentException("Invalid PublishDate");
         }
 
     }
