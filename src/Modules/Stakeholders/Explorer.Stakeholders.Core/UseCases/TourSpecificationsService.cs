@@ -3,6 +3,8 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using System.Collections.Generic;
+using FluentResults;
+
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
@@ -18,7 +20,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         // Kreiramo novu turu
-        public TourSpecificationDto CreateTourSpecifications(TourSpecificationDto tourSpecificationDto)
+        public Result<TourSpecificationDto> CreateTourSpecifications(TourSpecificationDto tourSpecificationDto)
         {
             var existingTourSpec = _tourSpecifications
                 .FirstOrDefault(t => t.UserId == tourSpecificationDto.UserId);
@@ -35,13 +37,13 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
         // Vraća sve ture
-        public IEnumerable<TourSpecificationDto> GetAllTourSpecifications()
+        public Result<IEnumerable<TourSpecificationDto>> GetAllTourSpecifications()
         {
             return _tourSpecifications;
         }
 
         // Ažuriramo postojeću turu
-        public void UpdateTourSpecifications(TourSpecificationDto tourSpecificationDto)
+        public Result UpdateTourSpecifications (TourSpecificationDto tourSpecificationDto)
         {
             var existingTourSpec = _tourSpecifications
                 .FirstOrDefault(t => t.UserId == tourSpecificationDto.UserId);
@@ -51,30 +53,35 @@ namespace Explorer.Stakeholders.Core.UseCases
                 existingTourSpec.TourDifficulty = tourSpecificationDto.TourDifficulty;
                 existingTourSpec.TransportRatings = tourSpecificationDto.TransportRatings;
                 existingTourSpec.Tags = tourSpecificationDto.Tags;
+                return Result.Ok(); // Vraća uspešan rezultat
+
             }
             else
             {
-                throw new ArgumentException("Specifikacija ture nije pronađena.");
+                return Result.Fail("Specifikacija ture nije pronađena.");
+
             }
         }
 
         // Brišemo turu po ID-u
-        public void DeleteTourSpecifications(long userId)
+        public Result DeleteTourSpecifications(long userId)
         {
             var tourSpec = _tourSpecifications.FirstOrDefault(t => t.UserId == userId);
 
             if (tourSpec != null)
             {
                 _tourSpecifications.Remove(tourSpec);
+                return Result.Ok(); // Vraća uspešan rezultat
             }
             else
             {
-                throw new ArgumentException("Specifikacija ture nije pronađena.");
+                return Result.Fail("Specifikacija ture nije pronađena.");
+
             }
         }
 
         // Vraćamo turu prema UserId
-        public TourSpecificationDto GetTourSpecificationsByUserId(long userId)
+        public Result<TourSpecificationDto> GetTourSpecificationsByUserId(long userId)
         {
             var tourSpec = _tourSpecifications.FirstOrDefault(t => t.UserId == userId);
 
