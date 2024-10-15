@@ -1,25 +1,25 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Explorer.BuildingBlocks.Core.Domain;
 
-namespace Explorer.Stakeholders.Core.Domain
+
+namespace Explorer.Tours.Core.Domain
 {
-    public enum TransportationMode { WALK, BIKE, CAR, BOAT}
+    public enum TransportationMode { WALK, BIKE, CAR, BOAT }
     public class TourSpecifications : Entity
     {
         public long UserId { get; set; }
-        public int TourDifficulty {  get; set; }
-        //public Dictionary<TransportationMode, int> TransportRatings { get; set; }
+        public int TourDifficulty { get; set; }
         public int WalkRating { get; set; }
         public int BikeRating { get; set; }
         public int CarRating { get; set; }
         public int BoatRating { get; set; }
         public List<string> Tags { get; set; }
 
-        public TourSpecifications(long userId, int tourDifficulty, int walkRating, int bikeRating, int carRating, int boatRating , List<string> tags)
+        public TourSpecifications(long userId, int tourDifficulty, int walkRating, int bikeRating, int carRating, int boatRating, List<string> tags)
         {
             UserId = userId;
             TourDifficulty = tourDifficulty;
@@ -49,4 +49,5 @@ namespace Explorer.Stakeholders.Core.Domain
             }
         }
     }
+
 }

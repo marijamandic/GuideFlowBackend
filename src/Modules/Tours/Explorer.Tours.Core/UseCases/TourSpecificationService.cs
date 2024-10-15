@@ -1,25 +1,22 @@
 ﻿using AutoMapper;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public;
+using Explorer.Tours.Core.Domain;
 using System.Collections.Generic;
 using FluentResults;
+using Explorer.BuildingBlocks.Core.UseCases;
 
-
-namespace Explorer.Stakeholders.Core.UseCases
+namespace Explorer.Tours.Core.UseCases
 {
-    public class TourSpecificationService : ITourSpecificationService
+    public class TourSpecificationService : CrudService<TourSpecificationDto, TourSpecifications>, ITourSpecificationService
     {
-        // Simuliramo bazu podataka sa listom
         private readonly List<TourSpecificationDto> _tourSpecifications;
 
-        public TourSpecificationService()
+        public TourSpecificationService(ICrudRepository<TourSpecifications> crudRepository, IMapper mapper) : base(crudRepository, mapper)
         {
-            // Inicijalna lista
             _tourSpecifications = new List<TourSpecificationDto>();
         }
 
-        // Kreiramo novu turu
         public Result<TourSpecificationDto> CreateTourSpecifications(TourSpecificationDto tourSpecificationDto)
         {
             var existingTourSpec = _tourSpecifications
@@ -30,20 +27,17 @@ namespace Explorer.Stakeholders.Core.UseCases
                 throw new ArgumentException("Specifikacija ture za ovog korisnika već postoji.");
             }
 
-            // Dodajemo novu specifikaciju ture u listu
             _tourSpecifications.Add(tourSpecificationDto);
 
             return tourSpecificationDto;
         }
 
-        // Vraća sve ture
         public Result<IEnumerable<TourSpecificationDto>> GetAllTourSpecifications()
         {
             return _tourSpecifications;
         }
 
-        // Ažuriramo postojeću turu
-        public Result UpdateTourSpecifications (TourSpecificationDto tourSpecificationDto)
+        public Result UpdateTourSpecifications(TourSpecificationDto tourSpecificationDto)
         {
             var existingTourSpec = _tourSpecifications
                 .FirstOrDefault(t => t.UserId == tourSpecificationDto.UserId);
@@ -51,9 +45,8 @@ namespace Explorer.Stakeholders.Core.UseCases
             if (existingTourSpec != null)
             {
                 existingTourSpec.TourDifficulty = tourSpecificationDto.TourDifficulty;
-                existingTourSpec.TransportRatings = tourSpecificationDto.TransportRatings;
                 existingTourSpec.Tags = tourSpecificationDto.Tags;
-                return Result.Ok(); // Vraća uspešan rezultat
+                return Result.Ok();
 
             }
             else
@@ -63,7 +56,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
-        // Brišemo turu po ID-u
         public Result DeleteTourSpecifications(long userId)
         {
             var tourSpec = _tourSpecifications.FirstOrDefault(t => t.UserId == userId);
@@ -71,7 +63,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             if (tourSpec != null)
             {
                 _tourSpecifications.Remove(tourSpec);
-                return Result.Ok(); // Vraća uspešan rezultat
+                return Result.Ok();
             }
             else
             {
@@ -80,7 +72,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
-        // Vraćamo turu prema UserId
         public Result<TourSpecificationDto> GetTourSpecificationsByUserId(long userId)
         {
             var tourSpec = _tourSpecifications.FirstOrDefault(t => t.UserId == userId);

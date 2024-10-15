@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.Core.Domain;
 
-namespace Explorer.Stakeholders.Core.Mappers
+namespace Explorer.Tours.Core.Mappers
 {
     public class TourSpecificationsProfile : Profile
     {
