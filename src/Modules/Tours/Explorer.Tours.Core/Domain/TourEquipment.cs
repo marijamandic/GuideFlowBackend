@@ -13,10 +13,10 @@ namespace Explorer.Tours.Core.Domain
         public int EquipmentId { get; init; }
         public int Quantity { get; init; }
 
-        public TourEquipment( int tourId, int eqId)
+        public TourEquipment( int tourId, int equipmentId)
         {
             TourId = tourId;
-            EquipmentId = eqId;
+            EquipmentId = equipmentId;
             Quantity = 0;
         }
     }
