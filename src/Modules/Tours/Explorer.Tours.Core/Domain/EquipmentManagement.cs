@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain
 {
-    public enum Status { Added, Removed}
+    public enum Status { Added = 0, Removed = 1}
     public class EquipmentManagement : Entity
     {
         public int TouristId { get; private set; }
