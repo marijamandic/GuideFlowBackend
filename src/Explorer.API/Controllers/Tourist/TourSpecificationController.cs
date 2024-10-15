@@ -33,7 +33,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<TourSpecificationDto> Update(int id, [FromBody] TourSpecificationDto tour)
+        public ActionResult<TourSpecificationDto> Update(long id, [FromBody] TourSpecificationDto tour)
         {
             if (id != tour.UserId)
             {

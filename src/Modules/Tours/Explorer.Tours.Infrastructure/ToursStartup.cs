@@ -35,6 +35,7 @@ public static class ToursStartup
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourSpecifications>), typeof(CrudDatabaseRepository<TourSpecifications, ToursContext>));
 
         services.AddScoped<ITourSpecificationRepository, TourSpecificationRepository>();
 
