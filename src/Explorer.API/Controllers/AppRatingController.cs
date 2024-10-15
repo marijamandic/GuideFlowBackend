@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers
 {
-    [Authorize(Policy = "touristPolicy")]
+    //[Authorize(Policy = "touristPolicy")]
     [Microsoft.AspNetCore.Mvc.Route("api/tourist/AppRating")] // Koristite potpuni naziv
     public class AppRatingController : BaseApiController
     {

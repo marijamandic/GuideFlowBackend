@@ -15,6 +15,11 @@ namespace Explorer.Stakeholders.Core.UseCases
     //Sta znaci naslediti CRUD ili BASE Service??
     public class RatingAppService : CrudService<RatingAppDto, AppRating>, IRatingAppService
     {
-        public RatingAppService(ICrudRepository<AppRating> repository, IMapper mapper) : base(repository, mapper) { }
+        public RatingAppService(ICrudRepository<AppRating> repository, IMapper mapper) : base(repository, mapper) 
+        {
+            
+        }
+
+        
     }
 }

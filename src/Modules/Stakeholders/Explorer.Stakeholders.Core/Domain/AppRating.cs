@@ -18,19 +18,19 @@ namespace Explorer.Stakeholders.Core.Domain
         public string Comment {  get; init; }
         public DateTime RatingTime { get; init; }
 
-        public AppRating(long ratingId, long userId, int rating, string comment, DateTime ratingTime)
+        public AppRating(long ratingId, long userId, int RatingValue, string comment, DateTime ratingTime)
         {
             RatingId = ratingId;
             UserId = userId;
-            RatingValue = rating;
+            this.RatingValue = RatingValue;
             Comment = comment;
             RatingTime = ratingTime;
             Validate();
         }
-        public AppRating(long userId, int rating, string comment, DateTime ratingTime)
+        public AppRating(long userId, int RatingValue, string comment, DateTime ratingTime)
         {
             UserId = userId;
-            RatingValue = rating;
+            this.RatingValue = RatingValue;
             Comment = comment;
             RatingTime = ratingTime;
             Validate();
