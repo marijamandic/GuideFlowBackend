@@ -1,4 +1,5 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,8 @@ namespace Explorer.Tours.API.Public.Administration
 {
     public interface IClubService
     {
+        Result<PagedResult<ClubDto>> GetPaged(int page, int pageSize);
+        Result<ClubDto> Get(int id);
         Result<ClubDto> Create(ClubDto club);
         Result<ClubDto> Update(ClubDto club);
         Result Delete(int id);

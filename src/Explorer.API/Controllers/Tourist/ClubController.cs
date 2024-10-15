@@ -1,5 +1,7 @@
-﻿using Explorer.Tours.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,12 @@ namespace Explorer.API.Controllers.Tourist
         public ClubController(IClubService clubService)
         {
             _clubService = clubService;
+        }
+        [HttpGet]
+        public ActionResult<PagedResult<ClubDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _clubService.GetPaged(page, pageSize);
+            return CreateResponse(result);
         }
         [HttpPost]
         public ActionResult<ClubDto> Create([FromBody] ClubDto clubDto)
