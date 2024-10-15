@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
         [HttpGet]
         public ActionResult<PagedResult<ProblemDto>> GetAll()
         {
-            var result = _problemService.GetAll();
+            var result = _problemService.GetPaged(0, 0);
             return CreateResponse(result);
         }
     }

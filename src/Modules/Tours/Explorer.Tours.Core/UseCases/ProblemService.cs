@@ -15,9 +15,4 @@ namespace Explorer.Tours.Core.UseCases;
 public class ProblemService : CrudService<ProblemDto, Problem>, IProblemService
 {
     public ProblemService(ICrudRepository<Problem> repository, IMapper mapper) : base(repository, mapper) { }
-
-    public Result<PagedResult<ProblemDto>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
 }
