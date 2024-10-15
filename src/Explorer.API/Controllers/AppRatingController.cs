@@ -20,7 +20,15 @@ namespace Explorer.API.Controllers
         public ActionResult<RatingAppDto> NewAppRating([FromBody] RatingAppDto ratingAppDto)
         {
             var result = _ratingAppService.Create(ratingAppDto);
-            return CreateResponse(result);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result.Value); 
         }
+
+
     }
 }
