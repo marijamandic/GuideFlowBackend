@@ -11,6 +11,6 @@ namespace Explorer.Tours.API.Public;
 
 public interface IProblemService
 {
-    Result<ProblemDto> Create(ProblemDto dto);
+    Result<ProblemDto> Create(ProblemDto problem);
     Result<PagedResult<ProblemDto>> GetAll();
 }
