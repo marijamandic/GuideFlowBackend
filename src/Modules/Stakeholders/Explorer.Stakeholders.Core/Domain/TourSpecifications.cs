@@ -12,20 +12,26 @@ namespace Explorer.Stakeholders.Core.Domain
     {
         public long UserId { get; set; }
         public int TourDifficulty {  get; set; }
-        public Dictionary<TransportationMode, int> TransportRatings { get; set; }
+        //public Dictionary<TransportationMode, int> TransportRatings { get; set; }
+        public int WalkRating { get; set; }
+        public int BikeRating { get; set; }
+        public int CarRating { get; set; }
+        public int BoatRating { get; set; }
         public List<string> Tags { get; set; }
 
-        public TourSpecifications(long userId, int tourDifficulty, Dictionary<TransportationMode, int> transportRatings, List<string> tags)
+        public TourSpecifications(long userId, int tourDifficulty, int walkRating, int bikeRating, int carRating, int boatRating , List<string> tags)
         {
             UserId = userId;
             TourDifficulty = tourDifficulty;
-            TransportRatings = transportRatings;
+            WalkRating = walkRating;
+            CarRating = carRating;
+            BikeRating = bikeRating;
+            BoatRating = boatRating;
             Tags = tags;
         }
 
         public TourSpecifications()
         {
-            TransportRatings = new Dictionary<TransportationMode, int>();
             Tags = new List<string>();
         }
 
@@ -33,10 +39,10 @@ namespace Explorer.Stakeholders.Core.Domain
         {
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
             if (TourDifficulty < 1 || TourDifficulty > 5) throw new ArgumentException("Tour Difficulty must be in range of 1 to 5");
-            foreach(var rating in TransportRatings.Values)
-            {
-                if (rating < 0 || rating > 3) throw new ArgumentException("Transport rating must be in range of 1 to 3");
-            }
+            if (WalkRating < 0 || WalkRating > 3) throw new ArgumentException("Transport rating must be in range of 1 to 3");
+            if (CarRating < 0 || CarRating > 3) throw new ArgumentException("Transport rating must be in range of 1 to 3");
+            if (BikeRating < 0 || BikeRating > 3) throw new ArgumentException("Transport rating must be in range of 1 to 3");
+            if (BoatRating < 0 || BoatRating > 3) throw new ArgumentException("Transport rating must be in range of 1 to 3");
             foreach (var tag in Tags)
             {
                 if (string.IsNullOrWhiteSpace(tag)) throw new ArgumentException("Tags must not be null");
