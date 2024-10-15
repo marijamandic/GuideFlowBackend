@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -14,33 +15,65 @@ namespace Explorer.Stakeholders.Core.UseCases
 {
     public class ClubInvitationService : BaseService<ClubInvitationDto, ClubInvitation>, IClubInvitationService
     {
-        public ClubInvitationService(IMapper mapper) : base(mapper)
-        {
+        private readonly IClubInvitationRepository _clubInvitationRepository;
 
+        public ClubInvitationService(IMapper mapper, IClubInvitationRepository clubInvitationRepository)
+            : base(mapper)
+        {
+            _clubInvitationRepository = clubInvitationRepository;
         }
+
         public Result<ClubInvitationDto> AcceptInvitation(long invitationId)
         {
-            throw new NotImplementedException();
+            var clubInvitation = _clubInvitationRepository.GetById(invitationId);
+            if (clubInvitation == null)
+            {
+                return Result.Fail<ClubInvitationDto>("Invitation not found.");
+            }
+            clubInvitation.AcceptInvitation();
+            _clubInvitationRepository.Update(clubInvitation);
+            return Result.Ok(MapToDto(clubInvitation));
         }
 
         public Result<ClubInvitationDto> CancelInvitation(long invitationId)
         {
-            throw new NotImplementedException();
+            var clubInvitation = _clubInvitationRepository.GetById(invitationId);
+            if (clubInvitation == null)
+            {
+                return Result.Fail<ClubInvitationDto>("Invitation not found.");
+            }
+            clubInvitation.CancelInvitation();
+            _clubInvitationRepository.Update(clubInvitation);
+            return Result.Ok(MapToDto(clubInvitation));
         }
 
         public Result<ClubInvitationDto> DeclineInvitation(long invitationId)
         {
-            throw new NotImplementedException();
+            var clubInvitation = _clubInvitationRepository.GetById(invitationId);
+            if (clubInvitation == null)
+            {
+                return Result.Fail<ClubInvitationDto>("Invitation not found.");
+            }
+            clubInvitation.DeclineInvitation();
+            _clubInvitationRepository.Update(clubInvitation);
+            return Result.Ok(MapToDto(clubInvitation));
         }
 
         public Result<ClubInvitationDto> GetInvitationStatus(long invitationId)
         {
-            throw new NotImplementedException();
+            var clubInvitation = _clubInvitationRepository.GetById(invitationId);
+            if (clubInvitation == null)
+            {
+                return Result.Fail<ClubInvitationDto>("Invitation not found.");
+            }
+            return Result.Ok(MapToDto(clubInvitation));
         }
 
         public Result<ClubInvitationDto> SubmitInvitation(ClubInvitationDto invitationDto)
         {
-            throw new NotImplementedException();
+            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristID, ClubInvitationStatus.PENDING);
+            var createdInvitation = _clubInvitationRepository.Create(clubInvitation);
+            return Result.Ok(MapToDto(createdInvitation));
         }
     }
 }

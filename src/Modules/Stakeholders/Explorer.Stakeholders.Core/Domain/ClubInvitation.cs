@@ -38,6 +38,27 @@ namespace Explorer.Stakeholders.Core.Domain
             Status = status;
         }
 
+        public void AcceptInvitation()
+        {
+            if (Status != ClubInvitationStatus.PENDING)
+                throw new InvalidOperationException("Only pending invitations can be accepted.");
+            Status = ClubInvitationStatus.ACCEPTED;
+        }
+
+        public void DeclineInvitation()
+        {
+            if (Status != ClubInvitationStatus.PENDING)
+                throw new InvalidOperationException("Only pending invitations can be declined.");
+            Status = ClubInvitationStatus.DECLINED;
+        }
+
+        public void CancelInvitation()
+        {
+            if (Status != ClubInvitationStatus.PENDING)
+                throw new InvalidOperationException("Only pending invitations can be cancelled.");
+            Status = ClubInvitationStatus.CANCELLED;
+        }
+
         public void ChangeStatus(ClubInvitationStatus newStatus)
         {
             Status = newStatus;
