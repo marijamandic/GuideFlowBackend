@@ -12,5 +12,6 @@ namespace Explorer.Tours.API.Public.Administration
     public interface ICheckpointService
     {
         Result<CheckpointDto> Create(CheckpointDto checkpoint);
+
     }
 }
