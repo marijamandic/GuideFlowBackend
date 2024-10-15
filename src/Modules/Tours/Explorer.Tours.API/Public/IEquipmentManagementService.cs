@@ -11,9 +11,10 @@ namespace Explorer.Tours.API.Public
 {
     public interface IEquipmentManagementService
     {
+        public List<EquipmentManagementDto> GetEquipmentList();
         List<EquipmentManagementDto> GetEquipmentListForTourist(int touristId);
-        void AddEquipment(EquipmentManagementDto equipment);
-        void RemoveEquipment(EquipmentManagementDto equipment);
+        EquipmentManagementDto AddEquipment(EquipmentManagementDto equipment);
+        EquipmentManagementDto RemoveEquipment(EquipmentManagementDto equipment);
 
 
     }
