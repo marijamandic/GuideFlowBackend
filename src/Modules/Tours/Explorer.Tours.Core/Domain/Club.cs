@@ -9,15 +9,15 @@ namespace Explorer.Tours.Core.Domain
 {
     public class Club : Entity
     {
-        public long ClubId { get; init; }
+        //public long ClubId { get; init; }
         public long OwnerId { get; init; }
         public string Name { get; init; }
         public string Description { get; init; }
         public string ImageUrl { get; init; }
 
-        public Club(long clubId,long ownerId,string name,string description,string imageUrl)
+        public Club(long ownerId,string name,string description,string imageUrl)
         {
-            ClubId = clubId;
+            //ClubId = clubId;
             OwnerId = ownerId;
             Name = name;
             Description = description;
