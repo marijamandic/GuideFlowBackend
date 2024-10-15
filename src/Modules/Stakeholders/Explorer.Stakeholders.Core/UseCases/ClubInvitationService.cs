@@ -71,7 +71,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<ClubInvitationDto> SubmitInvitation(ClubInvitationDto invitationDto)
         {
-            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristID, ClubInvitationStatus.PENDING);
+            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristID, Domain.ClubInvitationStatus.PENDING);    // jer imam enum u dto-u
             var createdInvitation = _clubInvitationRepository.Create(clubInvitation);
             return Result.Ok(MapToDto(createdInvitation));
         }
