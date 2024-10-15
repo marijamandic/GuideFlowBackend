@@ -29,10 +29,10 @@ namespace Explorer.Blog.Core.Domain
 
         private void Validate()
         {
-            if (UserId <= 0) throw new ArgumentException("Invalid UserId");
-            if (PostId <= 0) throw new ArgumentException("Invalid PostId");
+            if (UserId == 0) throw new ArgumentException("Invalid UserId");
+            if (PostId == 0) throw new ArgumentException("Invalid PostId");
             if (string.IsNullOrWhiteSpace(Content)) throw new ArgumentException("Content cannot be empty");
-            if (CreatedAt > DateTime.Now) throw new ArgumentException("CreatedAt cannot be in the future");
+            if (CreatedAt >= DateTime.UtcNow) throw new ArgumentException("CreatedAt cannot be in the future");
             if (LastModified < CreatedAt) throw new ArgumentException("LastModified cannot be before CreatedAt");
         }
     }
