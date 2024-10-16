@@ -29,7 +29,16 @@ namespace Explorer.API.Controllers.Author.Management
             [HttpPost]
             public ActionResult<TourEquipmentDto> Create([FromBody] TourEquipmentDto tourEquipment)
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
                 var result = _tourEquipmentService.Create(tourEquipment);
+                if (result == null)
+                {
+                    return NotFound(); // Ili neka druga odgovarajuća greška
+                }
                 return CreateResponse(result);
             }
 
