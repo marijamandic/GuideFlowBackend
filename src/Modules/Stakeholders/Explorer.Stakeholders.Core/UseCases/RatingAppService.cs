@@ -19,7 +19,9 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             
         }
-
-        
+        public Result<PagedResult<RatingAppDto>> GetPaged(int page, int pageSize)
+        {
+            return base.GetPaged(page, pageSize); 
+        }
     }
 }

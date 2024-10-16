@@ -19,6 +19,7 @@ namespace Explorer.API.Controllers
         [HttpPost("rating")]
         public ActionResult<RatingAppDto> NewAppRating([FromBody] RatingAppDto ratingAppDto)
         {
+            //ratingAppDto = (DateTime)ratingAppDto.RatingTime;
             var result = _ratingAppService.Create(ratingAppDto);
 
             if (result.IsFailed)
@@ -29,6 +30,17 @@ namespace Explorer.API.Controllers
             return Ok(result.Value); 
         }
 
+        [HttpGet("all")]
+        public ActionResult<IEnumerable<RatingAppDto>> GetAllRatings([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _ratingAppService.GetPaged(page, pageSize);
 
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok(result.Value);
+        }
     }
 }
