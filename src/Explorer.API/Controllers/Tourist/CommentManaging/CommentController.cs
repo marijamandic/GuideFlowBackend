@@ -4,10 +4,10 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers.Tourist.Managing
+namespace Explorer.API.Controllers.Tourist.CommentManaging
 {
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/managing/comment")]
+    [Route("api/commentmanaging/comment")]
     public class CommentController : BaseApiController
     {
         ICommentService commentService;
@@ -18,7 +18,7 @@ namespace Explorer.API.Controllers.Tourist.Managing
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<CommentDto>> GetAll(int page, int pageSize)
+        public ActionResult<PagedResult<CommentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = commentService.GetPaged(page, pageSize);
             return CreateResponse(result);

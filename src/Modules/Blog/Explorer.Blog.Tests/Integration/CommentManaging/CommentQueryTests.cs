@@ -1,5 +1,5 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist.Managing;
+using Explorer.API.Controllers.Tourist.CommentManaging;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
