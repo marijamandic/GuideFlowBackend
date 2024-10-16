@@ -11,8 +11,8 @@ namespace Explorer.Tours.API.Dtos
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Level { get; set; }
-        public List<string> Tags { get; set; }
+        public int Level { get; set; }
+        public List<int> Taggs { get; set; }
         public string Status { get; set; }
         public decimal Price { get; set; }
     }

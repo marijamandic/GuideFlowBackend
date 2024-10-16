@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Author.Tour
 {
-    [Authorize(Policy = "authorPolicy")]
+    //[Authorize(Policy = "authorPolicy")]
     [Route("api/author/tours")]
-    public class ToursController : BaseApiController
+    public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
 
-        public ToursController(ITourService tourService)
+        public TourController(ITourService tourService)
         {
             _tourService = tourService;
         }
