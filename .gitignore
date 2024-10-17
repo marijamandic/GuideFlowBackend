@@ -551,3 +551,4 @@ $RECYCLE.BIN/
 src/**/Migrations/*
 
 /src/BuildingBlocks/Explorer.BuildingBlocks.Infrastructure/Database/DbConnectionStringBuilder.cs
+/src/BuildingBlocks/Explorer.BuildingBlocks.Tests/BaseTestFactory.cs

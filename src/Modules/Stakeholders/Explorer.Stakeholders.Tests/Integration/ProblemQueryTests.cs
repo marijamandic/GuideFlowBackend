@@ -1,17 +1,15 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
 
-namespace Explorer.Tours.Tests.Integration.Administration;
-
-[Collection("Sequential")]
-public class ProblemQueryTests : BaseToursIntegrationTest
+namespace Explorer.Stakeholders.Tests.Integration;
+public class ProblemQueryTests : BaseStakeholdersIntegrationTest
 {
-    public ProblemQueryTests(ToursTestFactory factory) : base(factory) { }
+    public ProblemQueryTests(StakeholdersTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Retreives_all()

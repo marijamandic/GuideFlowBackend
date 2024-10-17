@@ -1,23 +1,15 @@
 ﻿using Explorer.API.Controllers.Tourist;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
-using Explorer.Tours.Infrastructure.Database;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Explorer.Tours.Tests.Integration.Administration;
-
-[Collection("Sequential")]
-public class ProblemCommandTests : BaseToursIntegrationTest
+namespace Explorer.Stakeholders.Tests.Integration;
+public class ProblemCommandTests : BaseStakeholdersIntegrationTest
 {
-    public ProblemCommandTests(ToursTestFactory factory) : base(factory) { }
+    public ProblemCommandTests(StakeholdersTestFactory factory) : base(factory) { }
 
     [Fact]
     public void Creates()
@@ -25,13 +17,13 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var newEntity = new ProblemDto
         {
             UserId = 1,
             TourId = 2,
-            Category = "testkat",
-            Priority = "testprior",
+            Category = ProblemCategory.Accommodation,
+            Priority = ProblemPriority.High,
             Description = "Description",
             ReportedAt = DateOnly.FromDateTime(DateTime.Today)
         };
@@ -45,7 +37,7 @@ public class ProblemCommandTests : BaseToursIntegrationTest
         result.Category.ShouldBe(newEntity.Category);
 
         // Assert - db
-        var storedEntity = dbContext.Problem.FirstOrDefault(p => p.Category == result.Category);
+        var storedEntity = dbContext.Problem.FirstOrDefault(p => p.Description == result.Description);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }
