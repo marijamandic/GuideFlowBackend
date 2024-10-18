@@ -46,6 +46,10 @@ namespace Explorer.Tours.Core.UseCases
             {
                 existingTourSpec.TourDifficulty = tourSpecificationDto.TourDifficulty;
                 existingTourSpec.Tags = tourSpecificationDto.Tags;
+                existingTourSpec.BikeRating = tourSpecificationDto.BikeRating;
+                existingTourSpec.BoatRating = tourSpecificationDto.BoatRating;
+                existingTourSpec.CarRating = tourSpecificationDto.CarRating;
+                existingTourSpec.WalkRating = tourSpecificationDto.WalkRating;
                 return Result.Ok();
 
             }

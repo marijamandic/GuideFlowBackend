@@ -37,7 +37,7 @@ namespace Explorer.API.Controllers.Tourist
         {
             if (id != tour.UserId)
             {
-                return BadRequest("ID u putanju ne odgovara ID-u ture.");
+                return BadRequest("ID u putanji ne odgovara ID-u korisnika.");
             }
 
             var result = _tourSpecificationService.UpdateTourSpecifications(tour);
