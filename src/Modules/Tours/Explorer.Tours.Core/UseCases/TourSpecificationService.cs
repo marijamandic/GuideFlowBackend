@@ -5,16 +5,21 @@ using Explorer.Tours.Core.Domain;
 using System.Collections.Generic;
 using FluentResults;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 
 namespace Explorer.Tours.Core.UseCases
 {
     public class TourSpecificationService : CrudService<TourSpecificationDto, TourSpecifications>, ITourSpecificationService
     {
+        private readonly ITourSpecificationRepository _tourSpecificationRepository;
         private readonly List<TourSpecificationDto> _tourSpecifications;
-
-        public TourSpecificationService(ICrudRepository<TourSpecifications> crudRepository, IMapper mapper) : base(crudRepository, mapper)
+        private readonly ICrudRepository<TourSpecifications> _crudRepository;
+        private readonly IMapper _mapper;
+        public TourSpecificationService(ICrudRepository<TourSpecifications> crudRepository, IMapper mapper, ITourSpecificationRepository tourSpecificationRepository) : base(crudRepository, mapper)
         {
-            _tourSpecifications = new List<TourSpecificationDto>();
+            _crudRepository = crudRepository;
+            _mapper = mapper;
+            _tourSpecificationRepository = tourSpecificationRepository;
         }
 
         public Result<TourSpecificationDto> CreateTourSpecifications(TourSpecificationDto tourSpecificationDto)
@@ -76,17 +81,24 @@ namespace Explorer.Tours.Core.UseCases
             }
         }
 
+        public IEnumerable<TourSpecificationDto> GetAllTourSpecifications_()
+        {
+            var tourSpecs = _tourSpecificationRepository.GetAll();
+            var tourSpecificationDtos = tourSpecs.Select(t => _mapper.Map<TourSpecificationDto>(t));
+            return tourSpecificationDtos;
+        }
         public Result<TourSpecificationDto> GetTourSpecificationsByUserId(long userId)
         {
-            var tourSpec = _tourSpecifications.FirstOrDefault(t => t.UserId == userId);
+            var lista = GetAllTourSpecifications_();
+            var tourSpec = lista.FirstOrDefault(t => t.UserId == userId);
 
             if (tourSpec != null)
             {
-                return tourSpec;
+                return Result.Ok(tourSpec);
             }
             else
             {
-                throw new ArgumentException("Specifikacija ture nije pronađena za zadatog korisnika.");
+                return Result.Fail("Specifikacija ture nije pronađena za zadatog korisnika.");
             }
         }
     }

@@ -50,5 +50,21 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tourSpecificationService.DeleteTourSpecifications(id);
             return CreateResponse(result);
         }
+
+
+        [HttpGet("{userId:long}")]
+        public ActionResult<TourSpecificationDto> GetByUserId(long userId)
+        {
+            var result = _tourSpecificationService.GetTourSpecificationsByUserId(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return NotFound(result.Errors);
+        }
+
+
+
     }
 }

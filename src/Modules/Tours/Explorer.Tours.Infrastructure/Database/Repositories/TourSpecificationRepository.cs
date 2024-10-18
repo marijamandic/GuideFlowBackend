@@ -31,6 +31,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public IEnumerable<TourSpecifications> GetAll()
         {
             return _context.TourSpecifications.ToList();
+            //return _context.Set<TourSpecifications>().ToList();
         }
 
         public TourSpecifications Create(TourSpecifications tourSpecification)
