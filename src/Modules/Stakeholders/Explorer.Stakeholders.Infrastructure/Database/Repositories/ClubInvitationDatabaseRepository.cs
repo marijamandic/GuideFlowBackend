@@ -19,7 +19,9 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public ClubInvitation GetById(long id)
         {
-            return _dbContext.ClubInvitations.FirstOrDefault(ci => ci.Id == id);
+            var clubInvitation = _dbContext.ClubInvitations.FirstOrDefault(ci => ci.Id == id);
+            if (clubInvitation == null) throw new KeyNotFoundException($"Invitation with ID {id} not found.");
+            return clubInvitation;
         }
 
         public List<ClubInvitation> GetByStatus(ClubInvitationStatus status)
@@ -50,6 +52,11 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
                 _dbContext.ClubInvitations.Remove(clubInvitation);
                 _dbContext.SaveChanges();
             }
+        }
+
+        public List<ClubInvitation> GetAll()
+        {
+            return _dbContext.ClubInvitations.ToList(); 
         }
     }
 }

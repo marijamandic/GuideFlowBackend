@@ -15,5 +15,8 @@ namespace Explorer.Stakeholders.API.Public
         Result<ClubInvitationDto> DeclineInvitation(long invitationId);
         Result<ClubInvitationDto> CancelInvitation(long invitationId);
         Result<ClubInvitationDto> GetInvitationStatus(long invitationId);
+        Result<List<ClubInvitationDto>> GetAll();
+        Result<ClubInvitationDto> UpdateInvitation(int invitationId, ClubInvitationDto invitationDto);
     }
+
 }

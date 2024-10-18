@@ -2,6 +2,7 @@
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -11,9 +12,17 @@ namespace Explorer.API.Controllers.Tourist
     {
         private readonly IClubInvitationService _clubInvitationService;
 
+
         public ClubInvitationController(IClubInvitationService clubInvitationService)
         {
             _clubInvitationService = clubInvitationService;
+        }
+
+        [HttpGet("all")]
+        public ActionResult<IEnumerable<ClubInvitationDto>> GetAll()
+        {
+            var result = _clubInvitationService.GetAll();
+            return CreateResponse(result);
         }
 
         [HttpGet("{invitationId:int}")]
@@ -40,9 +49,33 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPut("{invitationId:int}/decline")]
         public ActionResult<ClubInvitationDto> Decline(int invitationId)
         {
+            System.Diagnostics.Debug.WriteLine($"In the controller!");
+
             var result = _clubInvitationService.DeclineInvitation(invitationId);
+
+            if (result.IsFailed)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error: {string.Join(", ", result.Errors.Select(e => e.Message))}");
+                return BadRequest(result.Errors);
+            }
+
             return CreateResponse(result);
         }
+
+        [HttpPut("{invitationId:int}/update")]
+        public ActionResult<ClubInvitationDto> UpdateInvitation(int invitationId, [FromBody] ClubInvitationDto invitationDto)
+        {
+            Debug.WriteLine($"Received PUT request for invitationId: {invitationId}");
+            var result = _clubInvitationService.UpdateInvitation(invitationId, invitationDto);
+
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return CreateResponse(result);
+        }
+
 
         [HttpDelete("{invitationId:int}")]
         public ActionResult Cancel(int invitationId)

@@ -12,6 +12,7 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
         List<ClubInvitation> GetByStatus(ClubInvitationStatus status);  
         ClubInvitation Create(ClubInvitation clubInvitation);  
         void Update(ClubInvitation clubInvitation);  
-        void Delete(long id); 
+        void Delete(long id);
+        List<ClubInvitation> GetAll();
     }
 }

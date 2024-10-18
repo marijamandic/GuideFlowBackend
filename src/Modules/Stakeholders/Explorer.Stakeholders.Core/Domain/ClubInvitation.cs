@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,9 +18,16 @@ namespace Explorer.Stakeholders.Core.Domain
 
     public class ClubInvitation : Entity
     {
+        [Column("ClubId")]
         public long ClubId { get; private set; }
+
+        [Column("TouristID")] 
         public long TouristID { get; private set; }
+
+        [Column("Status")]
         public ClubInvitationStatus Status { get; private set; }
+
+        protected ClubInvitation() { }
 
         public ClubInvitation(long clubId, long touristID, ClubInvitationStatus status)
         {
@@ -62,6 +70,13 @@ namespace Explorer.Stakeholders.Core.Domain
         public void ChangeStatus(ClubInvitationStatus newStatus)
         {
             Status = newStatus;
+        }
+
+        public void UpdateDetails(long clubId, long touristId, ClubInvitationStatus status)
+        {
+            this.ClubId = clubId;
+            this.TouristID = touristId;
+            this.Status = status;
         }
     }
 }
