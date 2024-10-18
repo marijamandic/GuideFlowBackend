@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "tourist_Policy")]
+    //[Authorize(Policy = "tourist_Policy")]
     [Route("api/tourist/tourspecifications")]
     public class TourSpecificationController : BaseApiController
     {
@@ -19,9 +19,9 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<TourSpecificationDto>> GetAll()
+        public ActionResult<PagedResult<TourSpecificationDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _tourSpecificationService.GetAllTourSpecifications();
+            var result = _tourSpecificationService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
 
