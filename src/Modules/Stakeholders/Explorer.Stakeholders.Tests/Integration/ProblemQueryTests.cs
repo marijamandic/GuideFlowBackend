@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
+using Explorer.API.Controllers.Tourist;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
@@ -16,7 +17,7 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
-        var controller = CreateController(scope);
+        var controller = CreateAdminController(scope);
 
         // Act
         var result = ((ObjectResult)controller.GetAll().Result)?.Value as PagedResult<ProblemDto>;
@@ -27,9 +28,36 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
         result.TotalCount.ShouldBe(3);
     }
 
-    private static ProblemController CreateController(IServiceScope scope)
+    [Fact]
+    public void Retreives_constants()
     {
-        return new ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateTouristController(scope);
+
+        // Act
+        var result = ((ObjectResult)controller.GetConstants().Result)?.Value as ProblemConstantsDto;
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.Categories.ShouldBeOfType<List<string>>();
+        result.Priorities.ShouldBeOfType<List<string>>();
+        result.Categories.Count.ShouldBe(5);
+        result.Priorities.Count.ShouldBe(3);
+
+    }
+
+    private static Explorer.API.Controllers.Administrator.Administration.ProblemController CreateAdminController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Administrator.Administration.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+
+    private static Explorer.API.Controllers.Tourist.ProblemController CreateTouristController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Tourist.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };

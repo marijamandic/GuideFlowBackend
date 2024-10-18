@@ -3,9 +3,37 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases;
-public class ProblemService : CrudService<ProblemDto, Problem>, IProblemService
+public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
 {
-    public ProblemService(ICrudRepository<Problem> repository, IMapper mapper) : base(repository, mapper) { }
+    private readonly IProblemRepository _problemRepository;
+
+    public ProblemService(IProblemRepository problemRepository, IMapper mapper) : base(mapper)
+    {
+        _problemRepository = problemRepository;
+    }
+
+    public Result<ProblemDto> Create(ProblemDto problem)
+    {
+        var result = _problemRepository.Create(MapToDomain(problem));
+        return MapToDto(result);
+    }
+
+    public Result<ProblemConstantsDto> GetConstants()
+    {
+        return new ProblemConstantsDto
+        {
+            Categories = Enum.GetNames(typeof(API.Dtos.ProblemCategory)).ToList(),
+            Priorities = Enum.GetNames(typeof(API.Dtos.ProblemPriority)).ToList()
+        };
+    }
+
+    public Result<PagedResult<ProblemDto>> GetPaged(int page, int pageSize)
+    {
+        var result = _problemRepository.GetPaged(page, pageSize);
+        return MapToDto(result);
+    }
 }
