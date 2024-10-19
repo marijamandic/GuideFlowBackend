@@ -12,7 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.Tests.Integration.Administration
+namespace Explorer.Stakeholders.Tests.Integration.Administration
 {
     /*[Collection("Sequential")]
     public class ClubTest : BaseToursIntegrationTest
