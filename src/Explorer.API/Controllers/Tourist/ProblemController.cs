@@ -23,12 +23,5 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.Create(problem);
             return CreateResponse(result);
         }
-
-        [HttpGet]
-        public ActionResult<ProblemConstantsDto> GetConstants()
-        {
-            var result = _problemService.GetConstants();
-            return CreateResponse(result);
-        }
     }
 }

@@ -12,5 +12,4 @@ public interface IProblemService
 {
     Result<PagedResult<ProblemDto>> GetPaged(int page, int pageSize);
     Result<ProblemDto> Create(ProblemDto problem);
-    Result<ProblemConstantsDto> GetConstants();
 }

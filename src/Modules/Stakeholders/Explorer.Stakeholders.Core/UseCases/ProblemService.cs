@@ -22,15 +22,6 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
         return MapToDto(result);
     }
 
-    public Result<ProblemConstantsDto> GetConstants()
-    {
-        return new ProblemConstantsDto
-        {
-            Categories = Enum.GetNames(typeof(API.Dtos.ProblemCategory)).ToList(),
-            Priorities = Enum.GetNames(typeof(API.Dtos.ProblemPriority)).ToList()
-        };
-    }
-
     public Result<PagedResult<ProblemDto>> GetPaged(int page, int pageSize)
     {
         var result = _problemRepository.GetPaged(page, pageSize);
