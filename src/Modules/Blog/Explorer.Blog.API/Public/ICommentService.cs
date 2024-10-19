@@ -11,8 +11,7 @@ namespace Explorer.Blog.API.Public
 {
     public interface ICommentService
     {
-        //public Result<List<CommentDto>> GetAllByPost(int id); mozda
-        Result<PagedResult<CommentDto>> GetPaged(int page, int pageSize);//iz ovoga svakako mogu dobiti sve komentare ako stavim page=0,pageSize=0
+        Result<PagedResult<CommentDto>> GetAllForPost(int id,int page,int pageSize);
         Result<CommentDto> Create(CommentDto comment);
         Result<CommentDto> Update(CommentDto comment);
         Result Delete(int id);

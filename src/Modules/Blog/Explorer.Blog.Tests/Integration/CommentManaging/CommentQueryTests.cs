@@ -29,12 +29,12 @@ namespace Explorer.Blog.Tests.Integration.CommentManaging
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as PagedResult<CommentDto>;
+            var result = ((ObjectResult)controller.GetAllForPost(-1,0, 0).Result)?.Value as PagedResult<CommentDto>;
 
             // Assert
             result.ShouldNotBeNull();
-            result.Results.Count.ShouldBe(3);
-            result.TotalCount.ShouldBe(3);
+            result.Results.Count.ShouldBe(1);
+            result.TotalCount.ShouldBe(1);
         }
 
         private static CommentController CreateController(IServiceScope scope)

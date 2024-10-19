@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.CommentManaging
 {
-    [Authorize(Policy = "touristPolicy")]
+    //[Authorize(Policy = "touristPolicy")]
     [Route("api/commentmanaging/comment")]
     public class CommentController : BaseApiController
     {
@@ -18,9 +18,9 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<CommentDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<PagedResult<CommentDto>> GetAllForPost([FromQuery]int id,[FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = commentService.GetPaged(page, pageSize);
+            var result = commentService.GetAllForPost(id,page, pageSize);
             return CreateResponse(result);
         }
 
