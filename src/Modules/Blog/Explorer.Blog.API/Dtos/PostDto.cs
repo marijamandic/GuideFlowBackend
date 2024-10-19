@@ -7,7 +7,8 @@
         public int UserId { get; set; }
         public string Description { get; set; }
         public DateTime PublishDate { get; set; }
-        public string ImageUrl { get; set; }
+        public string? ImageUrl { get; set; }
+        public string? ImageBase64 { get; set; }
         public Status Status { get; set; }     
     }
     public enum Status

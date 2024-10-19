@@ -4,6 +4,7 @@ using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.Blog.Infrastructure.Database;
 using Explorer.Tours.API.Public.Administration;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -49,7 +50,7 @@ namespace Explorer.Blog.Tests.Integration.BlogManagement
 
         private static PostController CreateController(IServiceScope scope)
         {
-            return new PostController(scope.ServiceProvider.GetRequiredService<IPostService>())
+            return new PostController(scope.ServiceProvider.GetRequiredService<IPostService>(),scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>())
             {
                 ControllerContext = BuildContext("-1")
             };
