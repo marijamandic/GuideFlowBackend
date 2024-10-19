@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IO;
 namespace Explorer.API.Controllers.Author.BlogManagement
 {
-    //[Authorize(Policy = "authorPolicy")]
+    [Authorize(Policy = "authorPolicy")]
     [Route("api/blogManagement/post")]
     public class PostController : BaseApiController
     {
