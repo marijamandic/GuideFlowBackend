@@ -10,6 +10,7 @@ namespace Explorer.Tours.API.Dtos
 
     public class TourSpecificationDto
     {
+        public int Id { get; set; }
         public long UserId { get; set; }
         public int TourDifficulty { get; set; }
         public int WalkRating { get; set; }

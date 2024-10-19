@@ -22,9 +22,17 @@ namespace Explorer.Tours.Core.UseCases
             _tourSpecificationRepository = tourSpecificationRepository;
         }
 
+        public IEnumerable<TourSpecificationDto> GetAllTourSpecifications_()
+        {
+            var tourSpecs = _tourSpecificationRepository.GetAll();
+            var tourSpecificationDtos = tourSpecs.Select(t => _mapper.Map<TourSpecificationDto>(t));
+            return tourSpecificationDtos;
+        }
+
         public Result<TourSpecificationDto> CreateTourSpecifications(TourSpecificationDto tourSpecificationDto)
         {
-            var existingTourSpec = _tourSpecifications
+            var allSpec = GetAllTourSpecifications_();
+            var existingTourSpec = allSpec
                 .FirstOrDefault(t => t.UserId == tourSpecificationDto.UserId);
 
             if (existingTourSpec != null)
@@ -32,7 +40,7 @@ namespace Explorer.Tours.Core.UseCases
                 throw new ArgumentException("Specifikacija ture za ovog korisnika već postoji.");
             }
 
-            _tourSpecifications.Add(tourSpecificationDto);
+            allSpec.ToList().Add(tourSpecificationDto);
 
             return tourSpecificationDto;
         }
@@ -44,7 +52,8 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result UpdateTourSpecifications(TourSpecificationDto tourSpecificationDto)
         {
-            var existingTourSpec = _tourSpecifications
+            var allSpec = GetAllTourSpecifications_();
+            var existingTourSpec = allSpec
                 .FirstOrDefault(t => t.UserId == tourSpecificationDto.UserId);
 
             if (existingTourSpec != null)
@@ -67,7 +76,8 @@ namespace Explorer.Tours.Core.UseCases
 
         public Result DeleteTourSpecifications(long userId)
         {
-            var tourSpec = _tourSpecifications.FirstOrDefault(t => t.UserId == userId);
+            var allSpec = GetAllTourSpecifications_();
+            var tourSpec = allSpec.FirstOrDefault(t => t.UserId == userId);
 
             if (tourSpec != null)
             {
@@ -81,16 +91,11 @@ namespace Explorer.Tours.Core.UseCases
             }
         }
 
-        public IEnumerable<TourSpecificationDto> GetAllTourSpecifications_()
-        {
-            var tourSpecs = _tourSpecificationRepository.GetAll();
-            var tourSpecificationDtos = tourSpecs.Select(t => _mapper.Map<TourSpecificationDto>(t));
-            return tourSpecificationDtos;
-        }
+        
         public Result<TourSpecificationDto> GetTourSpecificationsByUserId(long userId)
         {
-            var lista = GetAllTourSpecifications_();
-            var tourSpec = lista.FirstOrDefault(t => t.UserId == userId);
+            var allSpec = GetAllTourSpecifications_();
+            var tourSpec = allSpec.FirstOrDefault(t => t.UserId == userId);
 
             if (tourSpec != null)
             {

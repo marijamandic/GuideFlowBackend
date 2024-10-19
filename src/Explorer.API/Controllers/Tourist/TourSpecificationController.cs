@@ -28,26 +28,21 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPost]
         public ActionResult<TourSpecificationDto> Create([FromBody] TourSpecificationDto tour)
         {
-            var result = _tourSpecificationService.CreateTourSpecifications(tour);
+            var result = _tourSpecificationService.Create(tour);
             return CreateResponse(result);
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<TourSpecificationDto> Update(long id, [FromBody] TourSpecificationDto tour)
+        public ActionResult<EquipmentDto> Update([FromBody] TourSpecificationDto tour)
         {
-            if (id != tour.UserId)
-            {
-                return BadRequest("ID u putanji ne odgovara ID-u korisnika.");
-            }
-
-            var result = _tourSpecificationService.UpdateTourSpecifications(tour);
+            var result = _tourSpecificationService.Update(tour);
             return CreateResponse(result);
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var result = _tourSpecificationService.DeleteTourSpecifications(id);
+            var result = _tourSpecificationService.Delete(id);
             return CreateResponse(result);
         }
 
