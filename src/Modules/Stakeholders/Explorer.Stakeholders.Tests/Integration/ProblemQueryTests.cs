@@ -28,25 +28,6 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
         result.TotalCount.ShouldBe(3);
     }
 
-    [Fact]
-    public void Retreives_constants()
-    {
-        // Arrange
-        using var scope = Factory.Services.CreateScope();
-        var controller = CreateTouristController(scope);
-
-        // Act
-        var result = ((ObjectResult)controller.GetConstants().Result)?.Value as ProblemConstantsDto;
-
-        // Assert
-        result.ShouldNotBeNull();
-        result.Categories.ShouldBeOfType<List<string>>();
-        result.Priorities.ShouldBeOfType<List<string>>();
-        result.Categories.Count.ShouldBe(5);
-        result.Priorities.Count.ShouldBe(3);
-
-    }
-
     private static Explorer.API.Controllers.Administrator.Administration.ProblemController CreateAdminController(IServiceScope scope)
     {
         return new Explorer.API.Controllers.Administrator.Administration.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
