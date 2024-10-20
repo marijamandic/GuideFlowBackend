@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.CommentManaging
 {
-    //[Authorize(Policy = "touristPolicy")]
+    [Authorize(Policy = "touristPolicy")]
     [Route("api/commentmanaging/comment")]
     public class CommentController : BaseApiController
     {
