@@ -1,12 +1,12 @@
-﻿using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Stakeholders.Core.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Explorer.Stakeholders.Core.Domain.Club;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club;
 
-namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
+namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
 {
     public class ClubInvitationDatabaseRepository : IClubInvitationRepository
     {
@@ -56,7 +56,7 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public List<ClubInvitation> GetAll()
         {
-            return _dbContext.ClubInvitations.ToList(); 
+            return _dbContext.ClubInvitations.ToList();
         }
     }
 }

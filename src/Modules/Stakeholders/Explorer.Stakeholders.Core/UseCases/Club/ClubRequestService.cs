@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Dtos.Club;
+using Explorer.Stakeholders.API.Public.Club;
+using Explorer.Stakeholders.Core.Domain.Club;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -11,15 +11,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Core.UseCases
+namespace Explorer.Stakeholders.Core.UseCases.Club
 {
     public class ClubRequestService : BaseService<ClubRequestDto, ClubRequest>, IClubRequestService
     {
         private readonly IClubRequestRepository _clubRequestRepository;
-        public ClubRequestService(IMapper mapper, IClubRequestRepository clubRequestRepository) : base(mapper)
+        private readonly IClubMemberService _clubMemberService;
+
+        public ClubRequestService(IMapper mapper, IClubRequestRepository clubRequestRepository, IClubMemberService clubMemberService) : base(mapper)
         {
             _clubRequestRepository = clubRequestRepository;
-
+            _clubMemberService = clubMemberService;
         }
 
         public Result<ClubRequestDto> AcceptMembershipRequest(long requestId)
@@ -30,12 +32,13 @@ namespace Explorer.Stakeholders.Core.UseCases
                 return Result.Fail<ClubRequestDto>("Request not found.");
             }
 
-            //prihvatanje zahteva
             clubRequest.AcceptRequest();
             _clubRequestRepository.Update(clubRequest);
+            _clubMemberService.AddMember(clubRequest.ClubId, clubRequest.TouristId);
 
             return Result.Ok(MapToDto(clubRequest));
         }
+
 
         public Result<ClubRequestDto> CancelMembershipRequest(long requestId)
         {

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Dtos.Club;
+using Explorer.Stakeholders.API.Public.Club;
+using Explorer.Stakeholders.Core.Domain.Club;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -11,16 +11,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Core.UseCases
+namespace Explorer.Stakeholders.Core.UseCases.Club
 {
     public class ClubInvitationService : BaseService<ClubInvitationDto, ClubInvitation>, IClubInvitationService
     {
         private readonly IClubInvitationRepository _clubInvitationRepository;
+        private readonly IClubMemberService _clubMemberService;
 
-        public ClubInvitationService(IMapper mapper, IClubInvitationRepository clubInvitationRepository)
-            : base(mapper)
+
+        public ClubInvitationService(IMapper mapper, IClubInvitationRepository clubInvitationRepository, IClubMemberService clubMemberService) : base(mapper)
         {
             _clubInvitationRepository = clubInvitationRepository;
+            _clubMemberService = clubMemberService;
         }
 
         public Result<ClubInvitationDto> AcceptInvitation(long invitationId)
@@ -30,10 +32,15 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 return Result.Fail<ClubInvitationDto>("Invitation not found.");
             }
+
             clubInvitation.AcceptInvitation();
             _clubInvitationRepository.Update(clubInvitation);
+
+            _clubMemberService.AddMember(clubInvitation.ClubId, clubInvitation.TouristID);
+
             return Result.Ok(MapToDto(clubInvitation));
         }
+
 
         public Result<ClubInvitationDto> CancelInvitation(long invitationId)
         {
@@ -70,14 +77,14 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
-        private Explorer.Stakeholders.Core.Domain.ClubInvitationStatus MapStatus(Explorer.Stakeholders.API.Dtos.ClubInvitationStatus dtoStatus)
+        private Domain.Club.ClubInvitationStatus MapStatus(API.Dtos.Club.ClubInvitationStatus dtoStatus)
         {
             return dtoStatus switch
             {
-                Explorer.Stakeholders.API.Dtos.ClubInvitationStatus.PENDING => Explorer.Stakeholders.Core.Domain.ClubInvitationStatus.PENDING,
-                Explorer.Stakeholders.API.Dtos.ClubInvitationStatus.ACCEPTED => Explorer.Stakeholders.Core.Domain.ClubInvitationStatus.ACCEPTED,
-                Explorer.Stakeholders.API.Dtos.ClubInvitationStatus.DECLINED => Explorer.Stakeholders.Core.Domain.ClubInvitationStatus.DECLINED,
-                Explorer.Stakeholders.API.Dtos.ClubInvitationStatus.CANCELLED => Explorer.Stakeholders.Core.Domain.ClubInvitationStatus.CANCELLED,
+                API.Dtos.Club.ClubInvitationStatus.PENDING => Domain.Club.ClubInvitationStatus.PENDING,
+                API.Dtos.Club.ClubInvitationStatus.ACCEPTED => Domain.Club.ClubInvitationStatus.ACCEPTED,
+                API.Dtos.Club.ClubInvitationStatus.DECLINED => Domain.Club.ClubInvitationStatus.DECLINED,
+                API.Dtos.Club.ClubInvitationStatus.CANCELLED => Domain.Club.ClubInvitationStatus.CANCELLED,
                 _ => throw new ArgumentOutOfRangeException(nameof(dtoStatus), $"Unsupported status value: {dtoStatus}")
             };
         }
@@ -108,7 +115,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<ClubInvitationDto> SubmitInvitation(ClubInvitationDto invitationDto)
         {
-            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristId, Domain.ClubInvitationStatus.PENDING);    // jer imam enum u dto-u
+            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristId, Domain.Club.ClubInvitationStatus.PENDING);    // jer imam enum u dto-u
             var createdInvitation = _clubInvitationRepository.Create(clubInvitation);
             return Result.Ok(MapToDto(createdInvitation));
         }
