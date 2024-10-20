@@ -12,6 +12,7 @@ namespace Explorer.API.Controllers.Author.BlogManagement
     {
         private readonly IPostService _postService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+
         public PostController(IPostService postService , IWebHostEnvironment webHostEnvironment) {
             _postService = postService;
             _webHostEnvironment = webHostEnvironment;
@@ -20,6 +21,12 @@ namespace Explorer.API.Controllers.Author.BlogManagement
         [HttpGet]
         public ActionResult<PagedResult<PostDto>> GetAll([FromQuery]int page, [FromQuery]int pageSize) {
             var result = _postService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }        
+        
+        [HttpGet("{id:int}")]
+        public ActionResult<PagedResult<PostDto>> Get(int id) {
+            var result = _postService.Get(id);
             return CreateResponse(result);
         }
 
@@ -40,7 +47,6 @@ namespace Explorer.API.Controllers.Author.BlogManagement
                 System.IO.File.WriteAllBytes(filePath, imageData);
                 post.ImageUrl = $"images/blogs/{fileName}";
             }
-
 
             var result = _postService.Create(post);
             return CreateResponse(result);
