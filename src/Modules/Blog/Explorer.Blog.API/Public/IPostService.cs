@@ -13,5 +13,6 @@ namespace Explorer.Blog.API.Public
     {
         Result<PostDto> Create(PostDto post);
         Result<PagedResult<PostDto>> GetPaged(int page, int pageSize);
+        Result<PostDto> Get(int id);
     }
 }
