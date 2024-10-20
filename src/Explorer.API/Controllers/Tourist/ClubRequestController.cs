@@ -16,8 +16,8 @@ namespace Explorer.API.Controllers.Tourist
             _clubRequestService = clubRequestService;
         }
 
-        [HttpGet("{requestId:int}")]
-        public ActionResult<ClubRequestDto> GetRequest(int requestId)
+        [HttpGet("{requestId:long}")]
+        public ActionResult<ClubRequestDto> GetRequest(long requestId)
         {
             var result = _clubRequestService.GetRequestStatus(requestId);
             return CreateResponse(result);
@@ -30,22 +30,22 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpPut("{requestId:int}/accept")]
-        public ActionResult<ClubRequestDto> Accept(int requestId)
+        [HttpPut("{requestId:long}/accept")]
+        public ActionResult<ClubRequestDto> Accept(long requestId)
         {
             var result = _clubRequestService.AcceptMembershipRequest(requestId);
             return CreateResponse(result);
         }
 
-        [HttpPut("{requestId:int}/decline")]
-        public ActionResult<ClubRequestDto> Decline(int requestId)
+        [HttpPut("{requestId:long}/decline")]
+        public ActionResult<ClubRequestDto> Decline(long requestId)
         {
             var result = _clubRequestService.DeclineMembershipRequest(requestId);
             return CreateResponse(result);
         }
 
-        [HttpDelete("{requestId:int}")]
-        public ActionResult Cancel(int requestId)
+        [HttpDelete("{requestId:long}")]
+        public ActionResult Cancel(long requestId)
         {
             var result = _clubRequestService.CancelMembershipRequest(requestId);
             return CreateResponse(result);

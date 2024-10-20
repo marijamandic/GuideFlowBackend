@@ -16,9 +16,16 @@ public class StakeholdersContext : DbContext
     {
         modelBuilder.HasDefaultSchema("stakeholders");
 
+        modelBuilder.Entity<ClubRequest>()
+       .Property(e => e.Status)
+       .HasConversion(
+           v => v.ToString(),  
+           v => Enum.Parse<ClubRequestStatus>(v)
+       );
+
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
 
-
+        
         ConfigureStakeholder(modelBuilder);
         
 
