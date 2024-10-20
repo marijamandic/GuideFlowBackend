@@ -5,21 +5,33 @@ namespace Explorer.Stakeholders.Infrastructure.Database;
 
 public class StakeholdersContext : DbContext
 {
+
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
     public DbSet<Club> Clubs { get; set; }
     public DbSet<ClubInvitation> ClubInvitations { get; set; }
 
+    public DbSet<ClubRequest> ClubRequests { get; set; }
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("stakeholders");
 
+        modelBuilder.Entity<ClubRequest>()
+       .Property(e => e.Status)
+       .HasConversion(
+           v => v.ToString(),  
+           v => Enum.Parse<ClubRequestStatus>(v)
+       );
+
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
 
+        
         ConfigureStakeholder(modelBuilder);
         ConfigureClubInvitation(modelBuilder);
+        
+
     }
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
@@ -48,4 +60,5 @@ public class StakeholdersContext : DbContext
             .Property(ci => ci.ClubId)
             .IsRequired();
     }
+    
 }
