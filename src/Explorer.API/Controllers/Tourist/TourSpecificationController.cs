@@ -4,10 +4,11 @@ using Explorer.Tours.API.Public;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.Design;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    //[Authorize(Policy = "tourist_Policy")]
+    [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/tourspecifications")]
     public class TourSpecificationController : BaseApiController
     {
@@ -33,7 +34,7 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<EquipmentDto> Update([FromBody] TourSpecificationDto tour)
+        public ActionResult<TourSpecificationDto> Update([FromBody] TourSpecificationDto tour)
         {
             var result = _tourSpecificationService.Update(tour);
             return CreateResponse(result);
@@ -59,7 +60,12 @@ namespace Explorer.API.Controllers.Tourist
             return NotFound(result.Errors);
         }
 
-
+        [HttpGet("{userId}/hasPreference")]
+        public async Task<IActionResult> CheckUserPreference(int userId)
+        {
+            var hasPreference = await _tourSpecificationService.HasPreferenceAsync(userId);
+            return Ok(hasPreference);
+        }
 
     }
 }

@@ -16,5 +16,7 @@ namespace Explorer.Tours.API.Public
         Result<TourSpecificationDto> Update(TourSpecificationDto tourSpecificationDto);
         Result Delete(int id);
         Result<TourSpecificationDto> GetTourSpecificationsByUserId(long userId);
+        Task<bool> HasPreferenceAsync(int userId);
+
     }
 }

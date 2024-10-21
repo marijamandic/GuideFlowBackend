@@ -106,5 +106,11 @@ namespace Explorer.Tours.Core.UseCases
                 return Result.Fail("Specifikacija ture nije pronađena za zadatog korisnika.");
             }
         }
+
+        public async Task<bool> HasPreferenceAsync(int userId)
+        {
+            var result = GetTourSpecificationsByUserId(userId);
+            return result.IsSuccess;
+        }
     }
 }
