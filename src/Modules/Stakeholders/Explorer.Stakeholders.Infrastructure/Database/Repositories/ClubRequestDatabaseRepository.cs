@@ -15,6 +15,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             _dbContext = dbContext;
         }
 
+        public List<ClubRequest> GetAll()
+        {
+            return _dbContext.ClubRequests.ToList();
+        }
         public ClubRequest GetById(long id)
         {
             return _dbContext.ClubRequests.FirstOrDefault(cr => cr.Id == id);
@@ -48,6 +52,13 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
                 _dbContext.ClubRequests.Remove(clubRequest);
                 _dbContext.SaveChanges();
             }
+        }
+
+        public List<ClubRequest> GetByTouristId(long touristId)
+        {
+            return _dbContext.ClubRequests
+                .Where(cr => cr.TouristId == touristId)
+                .ToList();
         }
     }
 }

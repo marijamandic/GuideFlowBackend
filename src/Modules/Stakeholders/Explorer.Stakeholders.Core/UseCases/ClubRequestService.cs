@@ -22,6 +22,20 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         }
 
+        public Result<List<ClubRequestDto>> GetAll()
+        {
+            var clubRequests = _clubRequestRepository.GetAll();
+            if (clubRequests == null || !clubRequests.Any())
+            {
+                return Result.Fail<List<ClubRequestDto>>("No requests found.");
+            }
+
+            var clubRequestsDtos = clubRequests
+                .Select(cr => MapToDto(cr))
+                .ToList();
+
+            return Result.Ok(clubRequestsDtos);
+        }
         public Result<ClubRequestDto> AcceptMembershipRequest(long requestId)
         {
             var clubRequest = _clubRequestRepository.GetById(requestId);
@@ -84,6 +98,26 @@ namespace Explorer.Stakeholders.Core.UseCases
             var createdRequest = _clubRequestRepository.Create(clubRequest);
 
             return Result.Ok(MapToDto(createdRequest));
+        }
+
+        public Result<List<ClubRequestDto>> GetRequestByTouristId(long touristId)
+        {
+            var clubRequests = _clubRequestRepository.GetByTouristId(touristId);
+            if (clubRequests == null)
+            {
+                return Result.Fail<List<ClubRequestDto>>("Request not found.");
+            }
+            List<ClubRequestDto> dtos = new();
+            foreach(var club in clubRequests)
+            {
+                ClubRequestDto dto = new();
+                dto.ClubId = club.ClubId;
+                dto.TouristId = club.TouristId;
+                dto.Id = club.Id;
+                dto.Status = (API.Dtos.ClubRequestStatus)(API.Dtos.ClubInvitationStatus)Enum.Parse(typeof(API.Dtos.ClubInvitationStatus), club.Status.ToString());
+                dtos.Add(dto);
+            }
+            return Result.Ok(dtos);
         }
     }
 }
