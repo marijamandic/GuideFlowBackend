@@ -1,5 +1,7 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +16,13 @@ namespace Explorer.API.Controllers.Tourist
         public ClubRequestController(IClubRequestService clubRequestService)
         {
             _clubRequestService = clubRequestService;
+        }
+
+        [HttpGet("getAllRequests")]
+        public ActionResult<IEnumerable<ClubInvitationDto>> GetAll()
+        {
+            var result = _clubRequestService.GetAll();
+            return CreateResponse(result);
         }
 
         [HttpGet("{requestId:long}")]
@@ -44,12 +53,20 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpDelete("{requestId:long}")]
+        [HttpPut("{requestId:long}/cancel")]
+        public ActionResult<ClubRequestDto> Cancel(long requestId)
+        {
+            var result = _clubRequestService.CancelMembershipRequest(requestId);
+            return CreateResponse(result);
+        }
+
+        /*[HttpDelete("{requestId:long}")]
         public ActionResult Cancel(long requestId)
         {
             var result = _clubRequestService.CancelMembershipRequest(requestId);
             return CreateResponse(result);
         }
+        */
 
         [HttpGet("for-tourist/{touristId:long}")]
         public ActionResult GetRequestByTouristId(long touristId)

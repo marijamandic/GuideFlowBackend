@@ -12,4 +12,7 @@ public interface IClubRequestService
     Result<ClubRequestDto> GetRequestStatus(long requestId);
     Result<List<ClubRequestDto>> GetRequestByTouristId(long touristId);
 
+    Result<List<ClubRequestDto>> GetAll();
+    
+
 }

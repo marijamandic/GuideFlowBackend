@@ -22,6 +22,20 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         }
 
+        public Result<List<ClubRequestDto>> GetAll()
+        {
+            var clubRequests = _clubRequestRepository.GetAll();
+            if (clubRequests == null || !clubRequests.Any())
+            {
+                return Result.Fail<List<ClubRequestDto>>("No requests found.");
+            }
+
+            var clubRequestsDtos = clubRequests
+                .Select(cr => MapToDto(cr))
+                .ToList();
+
+            return Result.Ok(clubRequestsDtos);
+        }
         public Result<ClubRequestDto> AcceptMembershipRequest(long requestId)
         {
             var clubRequest = _clubRequestRepository.GetById(requestId);
