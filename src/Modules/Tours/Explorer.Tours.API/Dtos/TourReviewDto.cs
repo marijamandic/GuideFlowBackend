@@ -8,7 +8,7 @@ namespace Explorer.Tours.API.Dtos;
 
 public class TourReviewDto
 {
-    public int id { get; set; }
+    public int Id { get; set; }
     public int Rating { get; set; }
     public string? Comment { get; set; }
     public DateTime TourDate { get; set; }

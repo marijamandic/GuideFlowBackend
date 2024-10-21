@@ -19,6 +19,13 @@ namespace Explorer.API.Controllers.Tourist
             _tourReviewService = tourReviewService;
         }
 
+        [HttpGet]
+        public ActionResult<PagedResult<TourReviewDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourReviewService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<TourReviewDto> Create([FromBody] TourReviewDto tourReview)
         {
