@@ -16,5 +16,9 @@ namespace Explorer.Tours.API.Public.Administration
         Result<TourEquipmentDto> Update(TourEquipmentDto tourEquipment);
         Result Delete(int id);
         Result<TourEquipmentDto> Get(int id);
+
+        List<TourEquipmentDto> GetByTour(int tourId);
+        List<EquipmentDto> GetEquipmentByTour(int tourId);
+
     }
 }

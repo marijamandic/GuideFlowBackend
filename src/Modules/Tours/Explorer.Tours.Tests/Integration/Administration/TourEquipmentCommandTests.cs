@@ -1,4 +1,4 @@
-﻿using Explorer.API.Controllers.Author.Management;
+﻿using Explorer.API.Controllers.Author.Administration;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
@@ -55,7 +55,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
             var controller = CreateController(scope);
             var newEntity = new TourEquipmentDto
             {
-                Quantity = 0 // Invalid quantity
+                Quantity = -1 // Invalid quantity
             };
 
             // Act

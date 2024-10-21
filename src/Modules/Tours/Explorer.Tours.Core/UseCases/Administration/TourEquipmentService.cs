@@ -14,8 +14,29 @@ namespace Explorer.Tours.Core.UseCases.Administration
 {
     public class TourEquipmentService : CrudService<TourEquipmentDto, TourEquipment>, ITourEquipmentService
     {
-        public TourEquipmentService(ICrudRepository<TourEquipment> repository, IMapper mapper) : base(repository, mapper) { }
-        //public TourEquipmentService(ITourEquipmentRepository repository, IMapper mapper) : base(repository, mapper) { }
+
+        private readonly ITourEquipmentRepository _tourEquipmentRepository;
+        private readonly IMapper _mapper; // Injektovanje mappera
+
+        public TourEquipmentService(ICrudRepository<TourEquipment> repository, IMapper mapper, ITourEquipmentRepository tourEquipmentRepository) : base(repository, mapper)
+        {
+            _tourEquipmentRepository = tourEquipmentRepository;
+            _mapper = mapper;
+        }
+        public List<TourEquipmentDto> GetByTour(int tourId)
+        {
+            var tourEquipments = _tourEquipmentRepository.GetByTour(tourId);
+            return _mapper.Map<List<TourEquipmentDto>>(tourEquipments); // Mapiranje
+        }
+
+        public List<EquipmentDto> GetEquipmentByTour(int tourId)
+        {
+            var equipments = _tourEquipmentRepository.GetEquipmentByTour(tourId);
+             return _mapper.Map<List<EquipmentDto>>(equipments); // Mapiranje
+        
+        }
+
+
 
     }
 }
