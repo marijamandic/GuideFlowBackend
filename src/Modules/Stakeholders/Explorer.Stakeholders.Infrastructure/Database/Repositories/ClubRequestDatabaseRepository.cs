@@ -49,5 +49,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
                 _dbContext.SaveChanges();
             }
         }
+
+        public List<ClubRequest> GetByTouristId(long touristId)
+        {
+            return _dbContext.ClubRequests
+                .Where(cr => cr.TouristId == touristId)
+                .ToList();
+        }
     }
 }

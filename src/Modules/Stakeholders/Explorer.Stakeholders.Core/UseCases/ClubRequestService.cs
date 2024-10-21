@@ -85,5 +85,25 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return Result.Ok(MapToDto(createdRequest));
         }
+
+        public Result<List<ClubRequestDto>> GetRequestByTouristId(long touristId)
+        {
+            var clubRequests = _clubRequestRepository.GetByTouristId(touristId);
+            if (clubRequests == null)
+            {
+                return Result.Fail<List<ClubRequestDto>>("Request not found.");
+            }
+            List<ClubRequestDto> dtos = new();
+            foreach(var club in clubRequests)
+            {
+                ClubRequestDto dto = new();
+                dto.ClubId = club.ClubId;
+                dto.TouristId = club.TouristId;
+                dto.Id = club.Id;
+                dto.Status = (API.Dtos.ClubRequestStatus)(API.Dtos.ClubInvitationStatus)Enum.Parse(typeof(API.Dtos.ClubInvitationStatus), club.Status.ToString());
+                dtos.Add(dto);
+            }
+            return Result.Ok(dtos);
+        }
     }
 }

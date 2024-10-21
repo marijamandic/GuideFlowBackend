@@ -10,5 +10,6 @@ public interface IClubRequestService
     Result<ClubRequestDto> DeclineMembershipRequest(long requestId);
     Result<ClubRequestDto> CancelMembershipRequest(long requestId);
     Result<ClubRequestDto> GetRequestStatus(long requestId);
+    Result<List<ClubRequestDto>> GetRequestByTouristId(long touristId);
 
 }

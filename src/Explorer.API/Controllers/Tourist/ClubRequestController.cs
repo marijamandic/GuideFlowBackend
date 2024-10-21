@@ -51,6 +51,13 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("for-tourist/{touristId:long}")]
+        public ActionResult GetRequestByTouristId(long touristId)
+        {
+            var result = _clubRequestService.GetRequestByTouristId(touristId);
+            return CreateResponse(result);
+        }
+
 
     }
 }
