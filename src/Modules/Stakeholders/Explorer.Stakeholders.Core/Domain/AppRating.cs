@@ -11,16 +11,13 @@ namespace Explorer.Stakeholders.Core.Domain
 {
     public class AppRating : Entity
     {
-        public long RatingId { get; init; }
         public long UserId { get; init; }
-
         public int RatingValue {  get; init; } // 1 d0 5
         public string Comment {  get; init; }
         public DateTime RatingTime { get; init; }
 
         public AppRating(long ratingId, long userId, int RatingValue, string comment, DateTime ratingTime)
         {
-            RatingId = ratingId;
             UserId = userId;
             this.RatingValue = RatingValue;
             Comment = comment;

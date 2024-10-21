@@ -25,7 +25,7 @@ public static class StakeholdersStartup
     
     private static void SetupCore(IServiceCollection services)
     {
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>(); //Ova linija kaze kada god ti treba IAuthenticationService, koristi konkretnu implementaciju AuthenticationService
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<IRatingAppService, RatingAppService>();
     }
@@ -36,7 +36,7 @@ public static class StakeholdersStartup
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
 
         services.AddScoped(typeof(ICrudRepository<AppRating>), typeof(CrudDatabaseRepository<AppRating, StakeholdersContext>));
-        services.AddScoped<IAppRatingRepository, AppRatingDatabaseRepository>();
+        //services.AddScoped<IAppRatingRepository, AppRatingDatabaseRepository>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),

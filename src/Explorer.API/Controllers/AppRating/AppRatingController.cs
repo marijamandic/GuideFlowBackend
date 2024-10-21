@@ -3,10 +3,10 @@ using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers
+namespace Explorer.API.Controllers.AppRating
 {
-    //[Authorize(Policy = "touristPolicy")]
-    [Microsoft.AspNetCore.Mvc.Route("api/tourist/AppRating")] // Koristite potpuni naziv
+    [Authorize(Policy = "touristPolicy")]
+    [Route("api/tourist/AppRating")] 
     public class AppRatingController : BaseApiController
     {
         private readonly IRatingAppService _ratingAppService;
@@ -27,7 +27,7 @@ namespace Explorer.API.Controllers
                 return BadRequest(result.Errors);
             }
 
-            return Ok(result.Value); 
+            return Ok(result.Value);
         }
 
         [HttpGet("all")]
