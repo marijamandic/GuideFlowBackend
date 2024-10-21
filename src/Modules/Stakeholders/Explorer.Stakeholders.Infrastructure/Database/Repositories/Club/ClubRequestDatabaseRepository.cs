@@ -1,10 +1,10 @@
-﻿using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.Stakeholders.Core.Domain.Club;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
+namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
 {
     public class ClubRequestDatabaseRepository : IClubRequestRepository
     {

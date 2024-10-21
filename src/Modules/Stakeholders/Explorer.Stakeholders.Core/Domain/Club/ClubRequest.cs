@@ -2,7 +2,7 @@
 using System;
 
 
-namespace Explorer.Stakeholders.Core.Domain;
+namespace Explorer.Stakeholders.Core.Domain.Club;
 
 public enum ClubRequestStatus
 {
@@ -20,12 +20,12 @@ public class ClubRequest : Entity
     public ClubRequestStatus Status { get; private set; }
 
     public ClubRequest(long touristId, long clubId)
-	{
+    {
 
         TouristId = touristId;
         ClubId = clubId;
         Status = ClubRequestStatus.PENDING;
-	}
+    }
 
     public void AcceptRequest()
     {

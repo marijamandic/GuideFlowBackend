@@ -1,4 +1,4 @@
-﻿namespace Explorer.Stakeholders.API.Dtos;
+﻿namespace Explorer.Stakeholders.API.Dtos.Club;
 
 public enum ClubRequestStatus
 {

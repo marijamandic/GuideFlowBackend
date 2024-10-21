@@ -1,7 +1,7 @@
-﻿using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.Stakeholders.API.Dtos.Club;
 using FluentResults;
 
-namespace Explorer.Stakeholders.API.Public;
+namespace Explorer.Stakeholders.API.Public.Club;
 
 public interface IClubRequestService
 {

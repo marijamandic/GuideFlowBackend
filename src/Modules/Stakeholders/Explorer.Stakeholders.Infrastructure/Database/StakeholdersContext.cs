@@ -1,4 +1,5 @@
 ﻿using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Club;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database;
@@ -10,6 +11,7 @@ public class StakeholdersContext : DbContext
     public DbSet<Person> People { get; set; }
     public DbSet<Club> Clubs { get; set; }
     public DbSet<ClubInvitation> ClubInvitations { get; set; }
+    public DbSet<ClubMember> ClubMembers { get; set; }
 
     public DbSet<ClubRequest> ClubRequests { get; set; }
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}

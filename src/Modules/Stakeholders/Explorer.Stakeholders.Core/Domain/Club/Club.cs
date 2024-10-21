@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Core.Domain
+namespace Explorer.Stakeholders.Core.Domain.Club
 {
     public class Club : Entity
     {
@@ -15,7 +15,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public string Description { get; init; }
         public string ImageUrl { get; init; }
 
-        public Club(long ownerId,string name,string description,string imageUrl)
+        public Club(long ownerId, string name, string description, string imageUrl)
         {
             //ClubId = clubId;
             OwnerId = ownerId;
@@ -24,6 +24,6 @@ namespace Explorer.Stakeholders.Core.Domain
             ImageUrl = imageUrl;
         }
     }
-    
+
 
 }

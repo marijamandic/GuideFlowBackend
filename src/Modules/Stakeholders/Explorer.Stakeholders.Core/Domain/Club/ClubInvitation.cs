@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Stakeholders.Core.Domain
+namespace Explorer.Stakeholders.Core.Domain.Club
 {
     public enum ClubInvitationStatus
     {
@@ -21,7 +21,7 @@ namespace Explorer.Stakeholders.Core.Domain
         [Column("ClubId")]
         public long ClubId { get; private set; }
 
-        [Column("TouristID")] 
+        [Column("TouristID")]
         public long TouristID { get; private set; }
 
         [Column("Status")]
@@ -74,9 +74,9 @@ namespace Explorer.Stakeholders.Core.Domain
 
         public void UpdateDetails(long clubId, long touristId, ClubInvitationStatus status)
         {
-            this.ClubId = clubId;
-            this.TouristID = touristId;
-            this.Status = status;
+            ClubId = clubId;
+            TouristID = touristId;
+            Status = status;
         }
     }
 }

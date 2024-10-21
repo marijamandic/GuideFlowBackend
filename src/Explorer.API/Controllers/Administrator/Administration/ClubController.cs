@@ -1,6 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public.Administration;
+using Explorer.Stakeholders.API.Dtos.Club;
+using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

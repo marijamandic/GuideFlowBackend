@@ -1,7 +1,7 @@
 ﻿using Explorer.API.Controllers;
 using Explorer.API.Controllers.Tourist;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.API.Dtos.Club;
+using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;

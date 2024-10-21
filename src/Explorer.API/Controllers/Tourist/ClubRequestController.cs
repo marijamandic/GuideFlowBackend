@@ -2,6 +2,8 @@
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.UseCases;
+﻿using Explorer.Stakeholders.API.Dtos.Club;
+using Explorer.Stakeholders.API.Public.Club;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
