@@ -32,7 +32,7 @@ namespace Explorer.API.Controllers.Tourist
             if (!string.IsNullOrEmpty(clubDto.ImageBase64))
             {
                 var imageData = Convert.FromBase64String(clubDto.ImageBase64.Split(',')[1]);
-                var fileName = Guid.NewGuid() + ".jpg";
+                var fileName = Guid.NewGuid() + ".png";
                 var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "clubs");
                 if (!Directory.Exists(folderPath))
                 {
@@ -48,6 +48,19 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPut("{id:int}")]
         public ActionResult<ClubDto> Update([FromBody] ClubDto clubDto)
         {
+            if (!string.IsNullOrEmpty(clubDto.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(clubDto.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "clubs");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                clubDto.ImageUrl = $"images/clubs/{fileName}";
+            }
             var result = _clubService.Update(clubDto);
             return CreateResponse(result);
         }
