@@ -13,9 +13,6 @@ namespace Explorer.Stakeholders.API.Dtos.Club
         public long UserId { get; set; }
         public DateTime JoinedDate { get; set; }
 
-        // Optional: Additional fields for better display
-        public string ClubName { get; set; }   // mozda
-        public string Username { get; set; }   // mozda
     }
 
 }

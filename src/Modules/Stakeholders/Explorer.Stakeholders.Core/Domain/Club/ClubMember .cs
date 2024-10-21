@@ -13,10 +13,6 @@ namespace Explorer.Stakeholders.Core.Domain.Club
         public long UserId { get; private set; }
         public DateTime JoinedDate { get; private set; }
 
-        // Navigation properties 
-        public Club Club { get; private set; }
-        public User User { get; private set; }
-
         protected ClubMember() { }
 
         public ClubMember(long clubId, long userId)
