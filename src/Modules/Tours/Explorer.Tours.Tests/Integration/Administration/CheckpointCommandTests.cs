@@ -24,8 +24,8 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         {
             Name = "Starting Point",
             Description = "Starting checkpoint for the tour.",
-            Latitude = "45.2671",
-            Longitude = "19.8335",
+            Latitude = 45.2671,
+            Longitude = 19.8335,
             ImageUrl = "/images/start-point.jpg"
         };
 
@@ -73,11 +73,11 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
         var updatedEntity = new CheckpointDto
         {
-            Id = -1,
+            Id = 8,
             Name = "Updated Checkpoint",
             Description = "Updated description.",
-            Latitude = "45.2700",
-            Longitude = "19.8400",
+            Latitude = 5.2700,
+            Longitude = 19.8400,
             ImageUrl = "/images/updated-checkpoint.jpg"
         };
 
@@ -86,11 +86,11 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
 
         // Assert - Response
         result.ShouldNotBeNull();
-        result.Id.ShouldBe(-1);
+        result.Id.ShouldBe(8);
         result.Name.ShouldBe(updatedEntity.Name);
 
         // Assert - Database
-        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == -1);
+        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == 8);
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
     }
@@ -104,7 +104,11 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         var invalidEntity = new CheckpointDto
         {
             Id = -1000, // Invalid Id
-            Name = "Invalid Checkpoint"
+            Name = "Updated Checkpoint",
+            Description = "Updated description.",
+            Latitude = 5.2700,
+            Longitude = 19.8400,
+            ImageUrl = "/images/updated-checkpoint.jpg"
         };
 
         // Act
@@ -124,7 +128,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
         // Act
-        var result = (OkResult)controller.Delete(2);
+        var result = (OkResult)controller.Delete(3);
 
         // Assert - Response
         result.ShouldNotBeNull();
