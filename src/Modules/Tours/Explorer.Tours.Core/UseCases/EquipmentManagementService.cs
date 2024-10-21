@@ -4,58 +4,90 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases
 {
     public class EquipmentManagementService : CrudService<EquipmentManagementDto, EquipmentManagement>, IEquipmentManagementService
     {
-        // Simuliramo skladište opreme
-        private readonly List<EquipmentManagementDto> equipmentStorage = new List<EquipmentManagementDto>();
 
-        public EquipmentManagementService(ICrudRepository<EquipmentManagement> repository, IMapper mapper) : base(repository, mapper) { }
+        private readonly List<EquipmentManagementDto> equipmentStorage;
+        private readonly IEquipmentManagementRepository _equipmentManagementRepository;
+        private readonly ICrudRepository<EquipmentManagement> _crudRepository;
+        private readonly IMapper _mapper;
+
+
+        public EquipmentManagementService(ICrudRepository<EquipmentManagement> crudRepository, IMapper mapper, IEquipmentManagementRepository equipmentManagementRepository) : base(crudRepository, mapper)
+        {
+            _crudRepository = crudRepository;
+            _mapper = mapper;
+            _equipmentManagementRepository = equipmentManagementRepository;
+        }
+
 
         public List<EquipmentManagementDto> GetEquipmentList()
         {
-            // Vrati listu opreme 
+
+            var equipment = _equipmentManagementRepository.GetAll();
+            var equipmentManagementDtos = equipment.Select(e => _mapper.Map<EquipmentManagementDto>(e)).ToList();
+            return equipmentManagementDtos;
+
+        }
+
+        public Result<List<EquipmentManagementDto>> GetAllEquipment()
+        {
             return equipmentStorage;
         }
         public List<EquipmentManagementDto> GetEquipmentListForTourist(int touristId)
         {
-            // Vrati listu opreme za određenog turistu
+
             return equipmentStorage.FindAll(e => e.TouristId == touristId);
         }
 
-        public EquipmentManagementDto AddEquipment(EquipmentManagementDto equipmentDto)
+        //public Result AddEquipment(EquipmentManagementDto equipmentDto)
+        //{
+
+        //    if (!equipmentStorage.Exists(e => e.TouristId == equipmentDto.TouristId && e.EquipmentId == equipmentDto.EquipmentId))
+        //    {
+        //        equipmentDto.Status = Explorer.Tours.API.Dtos.Status.Added;
+        //        equipmentStorage.Add(equipmentDto);
+        //        return 
+        //    }
+        //    else
+        //        return null;
+        //}
+
+        //public EquipmentManagementDto RemoveEquipment(EquipmentManagementDto equipmentDto)
+        //{
+
+        //    var equipmentToRemove = equipmentStorage.Find(e => e.TouristId == equipmentDto.TouristId && e.EquipmentId == equipmentDto.EquipmentId);
+        //    if (equipmentToRemove != null)
+        //    {
+        //        equipmentToRemove.Status = Explorer.Tours.API.Dtos.Status.Removed;
+        //        equipmentStorage.Remove(equipmentToRemove);
+        //        return equipmentToRemove;
+        //    }
+        //    else
+        //        return null;
+        //}
+
+        public Result<EquipmentManagementDto> GetEquipmentByUser(int id)
         {
-            // Dodaj opremu u skladište
-            if (!equipmentStorage.Exists(e => e.TouristId == equipmentDto.TouristId && e.EquipmentId == equipmentDto.EquipmentId))
+            var equipment = GetEquipmentList();
+            var eq = equipment.FirstOrDefault(e => e.TouristId.Equals(id));
+
+            if (eq != null)
             {
-                equipmentDto.Status = Explorer.Tours.API.Dtos.Status.Added;
-                equipmentStorage.Add(equipmentDto);
-                return equipmentDto;
+                return Result.Ok(eq);
             }
             else
-                return null;
+                return Result.Fail("Equipment for user not found");
         }
-
-        public EquipmentManagementDto RemoveEquipment(EquipmentManagementDto equipmentDto)
-        {
-            // Ukloni opremu iz skladišta
-            var equipmentToRemove = equipmentStorage.Find(e => e.TouristId == equipmentDto.TouristId && e.EquipmentId == equipmentDto.EquipmentId);
-            if (equipmentToRemove != null)
-            {
-                equipmentToRemove.Status = Explorer.Tours.API.Dtos.Status.Removed;
-                equipmentStorage.Remove(equipmentToRemove);
-                return equipmentToRemove;
-            }
-            else
-                return null;
-        }
-
     }
 }

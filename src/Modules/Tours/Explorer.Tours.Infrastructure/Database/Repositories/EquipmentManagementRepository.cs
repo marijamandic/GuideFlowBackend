@@ -14,9 +14,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         private readonly ToursContext _context;
         public EquipmentManagementRepository() { }
 
-        public EquipmentManagement GetById(int id) 
+        public EquipmentManagementRepository(ToursContext context)
         {
-            return _context.EquipmentManagements.Find(id);
+            _context = context;
+        }
+
+        public EquipmentManagement? GetEquipmentById(int id) 
+        {
+            return _context.EquipmentManagements.FirstOrDefault(e => e.Id == id);
         }
 
         public List<EquipmentManagement> GetByTouristId(int touristId) {
@@ -29,13 +34,30 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
                    .Where(e => e.Status == status)
                    .ToList();
         }
-        public void Add(EquipmentManagement equipmentManagement) {
+        public EquipmentManagement Add(EquipmentManagement equipmentManagement) {
             _context.EquipmentManagements.Add(equipmentManagement);
             _context.SaveChanges();
+            return equipmentManagement;
         }
         public void Remove(EquipmentManagement equipmentManagement) {
-            _context.EquipmentManagements.Remove(equipmentManagement);
-            _context.SaveChanges();
+            //_context.EquipmentManagements.Remove(equipmentManagement);
+            //_context.SaveChanges();
+
+            var equipment = _context.EquipmentManagements.Find(equipmentManagement.Id);
+            if (equipment != null)
+            {
+                _context.EquipmentManagements.Remove(equipment);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new ArgumentException("Equipment not found");
+            }
+        }
+
+        public IEnumerable<EquipmentManagement> GetAll() 
+        {  
+            return _context.EquipmentManagements.ToList();
         }
     }
 }

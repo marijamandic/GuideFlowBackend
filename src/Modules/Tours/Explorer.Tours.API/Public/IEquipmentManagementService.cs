@@ -11,11 +11,10 @@ namespace Explorer.Tours.API.Public
 {
     public interface IEquipmentManagementService
     {
-        public List<EquipmentManagementDto> GetEquipmentList();
-        List<EquipmentManagementDto> GetEquipmentListForTourist(int touristId);
-        EquipmentManagementDto AddEquipment(EquipmentManagementDto equipment);
-        EquipmentManagementDto RemoveEquipment(EquipmentManagementDto equipment);
-
-
+        Result<PagedResult<EquipmentManagementDto>> GetPaged(int page, int pageSize);
+        Result<EquipmentManagementDto> Create(EquipmentManagementDto tourEquipment);
+        Result<EquipmentManagementDto> Update(EquipmentManagementDto tourEquipment);
+        Result Delete(int id);
+        Result<EquipmentManagementDto> GetEquipmentByUser(int id);
     }
 }

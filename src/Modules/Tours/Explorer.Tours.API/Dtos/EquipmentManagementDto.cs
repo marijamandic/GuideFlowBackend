@@ -13,20 +13,20 @@ namespace Explorer.Tours.API.Dtos
         public int TouristId { get; set; }
         public int EquipmentId { get; set; }
         public Status Status { get; set; }
-        public List<EquipmentManagementDto> EquipmentList { get; set; }
+        //public List<EquipmentManagementDto> EquipmentList { get; set; }
 
 
 
-        public EquipmentManagementDto()
-        {
-            EquipmentList = new List<EquipmentManagementDto>();
-        }
-        public EquipmentManagementDto(int touristId, List<EquipmentManagementDto> equipmentList)
-        {
-            TouristId = touristId;
-            EquipmentList = equipmentList ?? new List<EquipmentManagementDto>();
-        }
-        public EquipmentManagementDto(int touristId, int equipmentId, Status status)
+        //public EquipmentManagementDto()
+        //{
+        //    //EquipmentList = new List<EquipmentManagementDto>();
+        //}
+        //public EquipmentManagementDto(int touristId, List<EquipmentManagementDto> equipmentList)
+        //{
+        //    TouristId = touristId;
+        //    EquipmentList = equipmentList ?? new List<EquipmentManagementDto>();
+        //}
+        public EquipmentManagementDto(int equipmentId, int touristId,  Status status)
         {
             TouristId = touristId;
             EquipmentId = equipmentId;

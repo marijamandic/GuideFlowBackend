@@ -8,10 +8,13 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface IEquipmentManagementRepository
     {
-        EquipmentManagement GetById(int id);
+        EquipmentManagement? GetEquipmentById(int id);
         List<EquipmentManagement> GetByTouristId(int touristId);
         List<EquipmentManagement> GetByStatus(Status status);
-        void Add(EquipmentManagement equipmentManagement);
+        EquipmentManagement Add(EquipmentManagement equipmentManagement);
         void Remove(EquipmentManagement equipmentManagement);
+
+        IEnumerable<EquipmentManagement> GetAll();
+
     }
 }
