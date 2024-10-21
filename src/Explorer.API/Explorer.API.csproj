@@ -27,6 +27,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Tourist\" />
+	<Folder Include="wwwroot\" />
+	<Folder Include="wwwroot\images\tourObjects\" />
   </ItemGroup>
 
 </Project>

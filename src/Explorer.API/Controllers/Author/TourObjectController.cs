@@ -4,6 +4,8 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace Explorer.API.Controllers.Author
 {
@@ -12,10 +14,12 @@ namespace Explorer.API.Controllers.Author
     public class TourObjectController : BaseApiController
     {
         private readonly ITourObjectService _tourObjectService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public TourObjectController(ITourObjectService tourObjectService)
+        public TourObjectController(ITourObjectService tourObjectService, IWebHostEnvironment webHostEnvironment)
         {
             _tourObjectService = tourObjectService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -28,6 +32,19 @@ namespace Explorer.API.Controllers.Author
         [HttpPost]
         public ActionResult<TourObjectDto> Create([FromBody] TourObjectDto tourObject)
         {
+            if (!string.IsNullOrEmpty(tourObject.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(tourObject.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "blogs");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                tourObject.ImageUrl = $"images/blogs/{fileName}";
+            }
             var result = _tourObjectService.Create(tourObject);
             return CreateResponse(result);
         }
