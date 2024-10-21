@@ -23,7 +23,7 @@ else
     app.UseExceptionHandler("/error");
     app.UseHsts();
 }
-
+app.UseStaticFiles();
 app.UseRouting();
 app.UseCors(corsPolicy);
 app.UseHttpsRedirection();
