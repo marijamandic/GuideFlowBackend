@@ -21,7 +21,7 @@ public class CheckpointQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetAll(0, 0).Result)?.Value as IEnumerable<CheckpointDto>;
+        var result = ((ObjectResult)controller.GetAll(0, 10).Result)?.Value as IEnumerable<CheckpointDto>;
 
         // Assert
         result.ShouldNotBeNull();
