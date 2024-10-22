@@ -43,13 +43,6 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         }
 
-        public List<TourEquipmentDto> GetAll()
-        {
-            var result = _tourEquipmentRepository.GetAll();
-            return _mapper.Map<List<TourEquipmentDto>>(result); // Mapiranje
-
-        }
-
 
 
     }
