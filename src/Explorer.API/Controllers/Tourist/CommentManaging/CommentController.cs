@@ -1,6 +1,8 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,17 +12,26 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
     [Route("api/commentmanaging/comment")]
     public class CommentController : BaseApiController
     {
-        ICommentService commentService;
+        private readonly ICommentService commentService;
+        private readonly IUserService userService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(ICommentService commentService,IUserService userService)
         {
             this.commentService = commentService;
+            this.userService = userService;
         }
 
         [HttpGet]
         public ActionResult<PagedResult<CommentDto>> GetAllForPost([FromQuery]int id,[FromQuery] int page, [FromQuery] int pageSize)
         {
             var result = commentService.GetAllForPost(id,page, pageSize);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("user/{id:int}")]
+        public ActionResult<UserDto> GetCommentCreator(int id) 
+        { 
+            var result=userService.GetById(id);
             return CreateResponse(result);
         }
 

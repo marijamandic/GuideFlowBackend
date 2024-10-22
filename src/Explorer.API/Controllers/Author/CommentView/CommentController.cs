@@ -10,7 +10,7 @@ namespace Explorer.API.Controllers.Author.CommentView
     [Route("api/commentview/comment")]
     public class CommentController : BaseApiController
     {
-        ICommentService commentService;
+        private readonly ICommentService commentService;
 
         public CommentController(ICommentService commentService)
         {
