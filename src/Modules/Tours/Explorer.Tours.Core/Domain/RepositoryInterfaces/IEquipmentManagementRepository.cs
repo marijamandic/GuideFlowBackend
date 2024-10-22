@@ -10,11 +10,13 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     {
         EquipmentManagement? GetEquipmentById(int id);
         List<EquipmentManagement> GetByTouristId(int touristId);
-        List<EquipmentManagement> GetByStatus(Status status);
+        //List<EquipmentManagement> GetByStatus(Status status);
         EquipmentManagement Add(EquipmentManagement equipmentManagement);
         void Remove(EquipmentManagement equipmentManagement);
 
-        IEnumerable<EquipmentManagement> GetAll();
+        List<EquipmentManagement> GetAll();
+
+
 
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/equipmentManagement/equipmentManagement")]
+    [Route("api/tourist/equipmentManagement")]
     public class EquipmentManagementController : BaseApiController
     {
         private readonly IEquipmentManagementService _equipmentService;
@@ -49,17 +49,19 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+
+        [HttpDelete("{equipmentId:int}")]
+        public ActionResult DeleteEquipment(int equipmentId)
         {
-            var result = _equipmentService.Delete(id);
+            var result = _equipmentService.DeleteEquipmentById(equipmentId);
             return CreateResponse(result);
         }
 
         [HttpGet("{userId:long}")]
-        public ActionResult<EquipmentManagementDto> GetByTourist(int id)
+        public ActionResult<PagedResult<EquipmentManagementDto>> GetByTourist(int id)
         {
             var result = _equipmentService.GetEquipmentByUser(id);
+
             if (result.IsSuccess)
             {
                 return Ok(result.Value);

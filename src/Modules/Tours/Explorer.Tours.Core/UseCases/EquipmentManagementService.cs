@@ -50,37 +50,23 @@ namespace Explorer.Tours.Core.UseCases
             return equipmentStorage.FindAll(e => e.TouristId == touristId);
         }
 
-        //public Result AddEquipment(EquipmentManagementDto equipmentDto)
-        //{
-
-        //    if (!equipmentStorage.Exists(e => e.TouristId == equipmentDto.TouristId && e.EquipmentId == equipmentDto.EquipmentId))
-        //    {
-        //        equipmentDto.Status = Explorer.Tours.API.Dtos.Status.Added;
-        //        equipmentStorage.Add(equipmentDto);
-        //        return 
-        //    }
-        //    else
-        //        return null;
-        //}
-
-        //public EquipmentManagementDto RemoveEquipment(EquipmentManagementDto equipmentDto)
-        //{
-
-        //    var equipmentToRemove = equipmentStorage.Find(e => e.TouristId == equipmentDto.TouristId && e.EquipmentId == equipmentDto.EquipmentId);
-        //    if (equipmentToRemove != null)
-        //    {
-        //        equipmentToRemove.Status = Explorer.Tours.API.Dtos.Status.Removed;
-        //        equipmentStorage.Remove(equipmentToRemove);
-        //        return equipmentToRemove;
-        //    }
-        //    else
-        //        return null;
-        //}
+        
+        public IEnumerable<EquipmentManagementDto> GetAllEquipment_()
+        {
+            var eqMan = _equipmentManagementRepository.GetAll();
+            var eqManDtos = eqMan.Select(e => _mapper.Map<EquipmentManagementDto>(e));
+            return eqManDtos;
+        }
 
         public Result<EquipmentManagementDto> GetEquipmentByUser(int id)
         {
-            var equipment = GetEquipmentList();
-            var eq = equipment.FirstOrDefault(e => e.TouristId.Equals(id));
+            var equipment = GetAllEquipment_();
+            //foreach(EquipmentManagementDto equ in equipment)
+            //{
+            //    if(equ.TouristId == id)
+            //        return Result.Ok(equ);
+            //}
+            var eq = equipment.FirstOrDefault(e => e.TouristId == id);
 
             if (eq != null)
             {
@@ -89,5 +75,19 @@ namespace Explorer.Tours.Core.UseCases
             else
                 return Result.Fail("Equipment for user not found");
         }
+
+
+        public Result<EquipmentManagementDto> DeleteEquipmentById(int equipmentId)
+        {
+            var equipment = _equipmentManagementRepository.GetEquipmentById(equipmentId);
+            if (equipment == null)
+            {
+                return Result.Fail("Equipment not found"); 
+            }
+
+            _equipmentManagementRepository.Remove(equipment);
+            return Result.Ok();
+        }
+
     }
 }

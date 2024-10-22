@@ -51,7 +51,7 @@ namespace Explorer.Tours.Tests.Integration
             var controller = CreateController(scope);
 
             // Act
-            var result = (ObjectResult)controller.Delete(-1000);
+            var result = (ObjectResult)controller.DeleteEquipment(-1000);
 
             // Assert
             result.ShouldNotBeNull();
