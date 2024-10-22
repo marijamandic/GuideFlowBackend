@@ -51,5 +51,12 @@ namespace Explorer.API.Controllers.Author.BlogManagement
             var result = _postService.Create(post);
             return CreateResponse(result);
         }
+
+        [HttpPut("{id}")]
+        public ActionResult<PostDto> Update([FromBody] PostDto post , int id) { 
+            post.Id = id;
+            var result = _postService.Update(post);
+            return CreateResponse(result);
+        }
     }
 }
