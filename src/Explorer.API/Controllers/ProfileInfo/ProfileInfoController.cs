@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.ProfileInfo
 {
-    [Authorize(Policy = "administratorPolicy")]
+    //[Authorize(Policy = "administratorPolicy")]
     [Route("api/administration/profileInfo")]
     public class ProfileInfoController : BaseApiController
     {
@@ -33,13 +33,14 @@ namespace Explorer.API.Controllers.ProfileInfo
             return CreateResponse(result);
         }
 
-        // PUT: api/administration/profileInfo/{id}
-        [HttpPut("{id:long}")]
-        public ActionResult<ProfileInfoDto> Update(long id, [FromBody] ProfileInfoDto profileInfo)
+        // PUT: api/administration/profileInfo/{id}/{userId}
+        [HttpPut("{id:long}/{userId:long}")]
+        public ActionResult<ProfileInfoDto> Update(long id, long userId, [FromBody] ProfileInfoDto profileInfo)
         {
-            if (id != profileInfo.Id)
+            // Provera da li se id i userId podudaraju sa onima u DTO
+            if (id != profileInfo.Id || userId != profileInfo.UserId)
             {
-                return BadRequest("ID mismatch");
+                return BadRequest("ID ili UserId se ne podudaraju.");
             }
 
             var result = _profileInfoService.Update(profileInfo);
@@ -53,6 +54,19 @@ namespace Explorer.API.Controllers.ProfileInfo
             var result = _profileInfoService.Delete(id);
             return CreateResponse(result);
         }
+
+        [HttpGet("{userId:long}")]
+        public ActionResult<ProfileInfoDto> GetByUserId(int userId)
+        {
+            var result = _profileInfoService.GetByUserId(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value); // Ako je uspešno, vraćamo profil
+            }
+
+            return NotFound(result.Errors); // Ako nije, vraćamo grešku
+        }
+
     }
 }
 

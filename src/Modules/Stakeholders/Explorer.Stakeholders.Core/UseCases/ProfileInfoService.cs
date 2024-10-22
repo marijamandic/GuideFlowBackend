@@ -34,7 +34,25 @@ namespace Explorer.Stakeholders.Core.UseCases
             return base.GetPaged(pageIndex, pageSize);
         }
 
+        public Result<ProfileInfoDto> GetByUserId(int userId)
+        {
+            var allProfiles = GetAll(); // Prvo preuzimamo sve profile
+            if (allProfiles.IsFailed)
+            {
+                return Result.Fail("Greška prilikom preuzimanja svih profila.");
+            }
 
+            var profile = allProfiles.Value.FirstOrDefault(p => p.UserId == userId); // Tražimo profil sa zadatim ID-om
+
+            if (profile != null)
+            {
+                return Result.Ok(profile); // Ako je profil pronađen, vraćamo ga
+            }
+            else
+            {
+                return Result.Fail($"Profil sa UserID-om {userId} nije pronađen."); // Ako nije, vraćamo grešku
+            }
+        }
 
 
         /* public ProfileInfoService(ICrudRepository<ProfileInfo> crudRepository, IMapper mapper) : base(crudRepository, mapper)

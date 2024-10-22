@@ -16,5 +16,6 @@ namespace Explorer.Stakeholders.API.Public
         Result Delete(int id);
         Result<List<ProfileInfoDto>> GetAll();
         Result<PagedResult<ProfileInfoDto>> GetPaged(int pageIndex, int pageSize);
+        Result<ProfileInfoDto> GetByUserId(int userId);
     }
 }
