@@ -12,5 +12,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 
         List<TourEquipment> GetByTour(int tourId);
         List<Equipment> GetEquipmentByTour(int tourId);
+
+        List<TourEquipment> GetAll();
     }
 }

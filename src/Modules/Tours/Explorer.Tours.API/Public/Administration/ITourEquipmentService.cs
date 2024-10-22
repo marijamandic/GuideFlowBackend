@@ -20,5 +20,6 @@ namespace Explorer.Tours.API.Public.Administration
         List<TourEquipmentDto> GetByTour(int tourId);
         List<EquipmentDto> GetEquipmentByTour(int tourId);
 
+        List<TourEquipmentDto> GetAll();
     }
 }

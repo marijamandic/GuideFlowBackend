@@ -25,6 +25,12 @@ namespace Explorer.API.Controllers.Author.Administration
             var result = _tourEquipmentService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
+        [HttpGet("tour/{id:int}")]
+        public List<TourEquipmentDto> GetAllByTour([FromRoute] int id)
+        {
+            var result = _tourEquipmentService.GetByTour(id);
+            return result;
+        }
 
 
         [HttpPost]
