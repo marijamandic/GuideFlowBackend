@@ -22,8 +22,8 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
         var newEntity = new EquipmentDto
         {
-            Name = "Obuća za grub teren",
-            Description = "Patike sa tvrdim đonom i kramponima koje daju stabilnost na neravnom i rastresitom terenu."
+            Name = "Obuca za grub teren",
+            Description = "Patike sa tvrdim djonom i kramponima koje daju stabilnost na neravnom i rastresitom terenu."
         };
 
         // Act
@@ -69,8 +69,8 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         var updatedEntity = new EquipmentDto
         {
             Id = -1,
-            Name = "Tečnost",
-            Description = "Voda ili druga tečnost koja hidrira. Preporuka je pola litre tečnosti na sat vremena umerene aktivnosti po umerenoj temperaturi."
+            Name = "Tecnost",
+            Description = "Voda ili druga tecnost koja hidrira. Preporuka je pola litre tecnosti na sat vremena umerene aktivnosti po umerenoj temperaturi."
         };
 
         // Act
@@ -83,7 +83,7 @@ public class EquipmentCommandTests : BaseToursIntegrationTest
         result.Description.ShouldBe(updatedEntity.Description);
 
         // Assert - Database
-        var storedEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == "Tečnost");
+        var storedEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == "Tecnost");
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
         var oldEntity = dbContext.Equipment.FirstOrDefault(i => i.Name == "Voda");

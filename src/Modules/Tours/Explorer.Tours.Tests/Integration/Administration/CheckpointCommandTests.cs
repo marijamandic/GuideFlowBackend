@@ -73,7 +73,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
         var updatedEntity = new CheckpointDto
         {
-            Id = 8,
+            Id = -2,
             Name = "Updated Checkpoint",
             Description = "Updated description.",
             Latitude = 5.2700,
@@ -86,11 +86,11 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
 
         // Assert - Response
         result.ShouldNotBeNull();
-        result.Id.ShouldBe(8);
+        result.Id.ShouldBe(-2);
         result.Name.ShouldBe(updatedEntity.Name);
 
         // Assert - Database
-        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == 8);
+        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == -2);
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
     }
@@ -128,14 +128,14 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
         // Act
-        var result = (OkResult)controller.Delete(3);
+        var result = (OkResult)controller.Delete(-1);
 
         // Assert - Response
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(200);
 
         // Assert - Database
-        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == -3);
+        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == -1);
         storedEntity.ShouldBeNull();
     }
 
