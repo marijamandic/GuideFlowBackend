@@ -24,11 +24,11 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         var controller = CreateController(scope);
         var account = new AccountRegistrationDto
         {
-            Username = "turista1@gmail.com",
-            Email = "turista1@gmail.com",
-            Password = "turista1",
-            Name = "Zika",
-            Surname = "Zikic"
+            Username = "turistaA@gmail.com",
+            Email = "turistaA@gmail.com",
+            Password = "turistaA",
+            Name = "Žika",
+            Surname = "Žikić"
         };
 
         // Act
