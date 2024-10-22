@@ -61,7 +61,6 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
                 OwnerId = 10,
                 Description = "nema",
                 ImageUrl = "string",
-                ImageBase64 = "string"
             };
             var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ClubDto;
 
