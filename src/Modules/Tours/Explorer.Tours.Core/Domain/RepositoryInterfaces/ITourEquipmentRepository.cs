@@ -8,7 +8,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface ITourEquipmentRepository
     {
-        
+
 
         List<TourEquipment> GetByTour(int tourId);
         List<Equipment> GetEquipmentByTour(int tourId);

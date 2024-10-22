@@ -32,6 +32,13 @@ namespace Explorer.API.Controllers.Author.Administration
             return result;
         }
 
+        [HttpGet("tour/{id:int}")]
+        public List<TourEquipmentDto> GetAllByTour([FromRoute] int id)
+        {
+            var result = _tourEquipmentService.GetByTour(id);
+            return result;
+        }
+
 
         [HttpPost]
         public ActionResult<TourEquipmentDto> Create([FromBody] TourEquipmentDto tourEquipment)

@@ -23,11 +23,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public List<TourEquipment> GetByTour(int tourId)
         {
-             return _context.TourEquipment
-                 .Where(te => te.TourId == tourId)
-                 .ToList(); // No need to include related entities since there's no navigation property
-            
-            
+            return _context.TourEquipment
+                .Where(te => te.TourId == tourId)
+                .ToList(); // No need to include related entities since there's no navigation property
+
+
 
         }
 
