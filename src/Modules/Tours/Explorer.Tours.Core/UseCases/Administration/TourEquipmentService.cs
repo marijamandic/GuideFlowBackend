@@ -32,8 +32,15 @@ namespace Explorer.Tours.Core.UseCases.Administration
         public List<EquipmentDto> GetEquipmentByTour(int tourId)
         {
             var equipments = _tourEquipmentRepository.GetEquipmentByTour(tourId);
-             return _mapper.Map<List<EquipmentDto>>(equipments); // Mapiranje
-        
+            return _mapper.Map<List<EquipmentDto>>(equipments); // Mapiranje
+
+        }
+
+        public List<TourEquipmentDto> GetAll()
+        {
+            var result = _tourEquipmentRepository.GetAll();
+            return _mapper.Map<List<TourEquipmentDto>>(result); // Mapiranje
+
         }
 
 
