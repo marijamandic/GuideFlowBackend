@@ -2,8 +2,10 @@
 using Explorer.Blog.Infrastructure.Database;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.Club;
 using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.API.Public.Administration;
+//using Explorer.Stakeholders.API.Public.Administration;
+using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Hosting;
