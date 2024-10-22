@@ -9,6 +9,7 @@ namespace Explorer.Stakeholders.API.Dtos
     public class ProfileInfoDto
     {
         public long Id { get; set; }
+        public long UserId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string ProfilePicture { get; set; }

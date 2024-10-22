@@ -11,10 +11,10 @@ namespace Explorer.Stakeholders.API.Public
 {
     public interface IProfileInfoService
     {
-        Result<ProfileInfoDto> CreateProfileInfo(ProfileInfoDto profileInfoDto);
-        Result UpdateProfileInfo(ProfileInfoDto profileInfoDto);
-        Result DeleteProfileInfo(long id);
-        Result<ProfileInfoDto> GetProfileInfoById(long profileId);
-        Result<PagedResult<ProfileInfoDto>> GetPaged(int page, int pageSize);
+        Result<ProfileInfoDto> Create(ProfileInfoDto profileInfoDto);
+        Result<ProfileInfoDto> Update(ProfileInfoDto profileInfoDto);
+        Result Delete(int id);
+        Result<List<ProfileInfoDto>> GetAll();
+        Result<PagedResult<ProfileInfoDto>> GetPaged(int pageIndex, int pageSize);
     }
 }

@@ -25,19 +25,11 @@ namespace Explorer.API.Controllers.ProfileInfo
             return CreateResponse(result);
         }
 
-        // GET: api/administration/profileInfo/{id}
-        [HttpGet("{id:long}")]
-        public ActionResult<ProfileInfoDto> GetById(long id)
-        {
-            var result = _profileInfoService.GetProfileInfoById(id);
-            return CreateResponse(result);
-        }
-
         // POST: api/administration/profileInfo
         [HttpPost]
         public ActionResult<ProfileInfoDto> Create([FromBody] ProfileInfoDto profileInfo)
         {
-            var result = _profileInfoService.CreateProfileInfo(profileInfo);
+            var result = _profileInfoService.Create(profileInfo);
             return CreateResponse(result);
         }
 
@@ -50,15 +42,15 @@ namespace Explorer.API.Controllers.ProfileInfo
                 return BadRequest("ID mismatch");
             }
 
-            var result = _profileInfoService.UpdateProfileInfo(profileInfo);
+            var result = _profileInfoService.Update(profileInfo);
             return CreateResponse(result);
         }
 
         // DELETE: api/administration/profileInfo/{id}
         [HttpDelete("{id:long}")]
-        public ActionResult Delete(long id)
+        public ActionResult Delete(int id)
         {
-            var result = _profileInfoService.DeleteProfileInfo(id);
+            var result = _profileInfoService.Delete(id);
             return CreateResponse(result);
         }
     }

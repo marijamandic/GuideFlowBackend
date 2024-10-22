@@ -9,17 +9,18 @@ namespace Explorer.Stakeholders.Core.Domain
 {
     public class ProfileInfo : Entity
     {
+        public long UserId { get; private set; }
         public string FirstName { get; private set; }
         public string LastName { get; private set; }
         public string ProfilePicture { get; private set; }
         public string Biography { get; private set; }
         public string Moto { get; private set; }
 
-        public ProfileInfo(long id, string firstName, string lastName, string profilePicture, string biography, string moto)
+        public ProfileInfo(long userId, string firstName, string lastName, string profilePicture, string biography, string moto)
         {
-            Validate(id, firstName, lastName, profilePicture, biography, moto);
+            Validate(firstName, lastName, profilePicture, biography, moto);
 
-            Id = id;
+            UserId = userId;
             FirstName = firstName;
             LastName = lastName;
             ProfilePicture = profilePicture;
@@ -27,9 +28,8 @@ namespace Explorer.Stakeholders.Core.Domain
             Moto = moto;
         }
 
-        private void Validate(long id, string firstName, string lastName, string profilePicture, string biography, string moto)
+        private void Validate(string firstName, string lastName, string profilePicture, string biography, string moto)
         {
-            if (id <= 0) throw new ArgumentException("Id must be a positive number", nameof(id));
             if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("First name cannot be empty.", nameof(firstName));
             if (string.IsNullOrWhiteSpace(lastName)) throw new ArgumentException("Last name cannot be empty.", nameof(lastName));
             if (string.IsNullOrWhiteSpace(profilePicture)) throw new ArgumentException("Profile picture cannot be empty.", nameof(profilePicture));
