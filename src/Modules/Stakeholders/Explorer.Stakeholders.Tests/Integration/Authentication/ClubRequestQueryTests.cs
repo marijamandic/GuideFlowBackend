@@ -39,7 +39,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            long requestId = 1;
+            long requestId = -1;
 
             // Act
             var result = ((ObjectResult)controller.GetRequest(requestId).Result)?.Value as ClubRequestDto;
@@ -55,7 +55,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            long requestId = 5;
+            long requestId = -5;
 
             // Act
             var result = ((ObjectResult)controller.Accept(requestId).Result)?.Value as ClubRequestDto;
@@ -71,7 +71,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            long requestId = 3;
+            long requestId = -3;
 
             // Act
             var result = ((ObjectResult)controller.Decline(requestId).Result)?.Value as ClubRequestDto;
@@ -87,7 +87,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             // Arrange
             using var scope = Factory.Services.CreateScope();
             var controller = CreateController(scope);
-            long requestId = 4;
+            long requestId = -4;
 
             // Act
             var result = ((ObjectResult)controller.Cancel(requestId).Result)?.Value as ClubRequestDto;
@@ -97,7 +97,21 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             result.Status.ShouldBe(ClubRequestStatus.CANCELLED);
         }
 
-  
+        [Fact]
+        public void GetRequestByTouristId_ReturnsRequestsForTourist()
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            long touristId = 1;
+
+            // Act
+            var result = ((ObjectResult)controller.GetRequestByTouristId(touristId).Result)?.Value as IEnumerable<ClubRequestDto>;
+
+            // Assert
+            result.ShouldNotBeNull();
+            result.Count().ShouldBe(3);
+        }
 
         private static ClubRequestController CreateController(IServiceScope scope)
         {
