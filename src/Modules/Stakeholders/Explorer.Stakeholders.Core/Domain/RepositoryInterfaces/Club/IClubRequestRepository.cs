@@ -9,13 +9,12 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club
 {
     public interface IClubRequestRepository
     {
+        List<ClubRequest> GetAll();
         ClubRequest GetById(long id);
         List<ClubRequest> GetByStatus(ClubRequestStatus status); 
         ClubRequest Create(ClubRequest clubRequest); 
         void Update(ClubRequest clubRequest); 
         void Delete(long id);
         List<ClubRequest> GetByTouristId(long touristId);
-
-        List<ClubRequest> GetAll();
     }
 }

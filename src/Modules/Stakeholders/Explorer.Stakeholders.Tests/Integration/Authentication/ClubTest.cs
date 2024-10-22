@@ -4,7 +4,6 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.Club;
 using Explorer.Stakeholders.API.Public;
-//using Explorer.Stakeholders.API.Public.Administration;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database;
@@ -62,6 +61,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
                 OwnerId = 10,
                 Description = "nema",
                 ImageUrl = "string",
+                ImageBase64 = "string"
             };
             var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ClubDto;
 
