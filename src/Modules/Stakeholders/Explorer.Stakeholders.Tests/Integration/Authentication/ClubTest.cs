@@ -60,8 +60,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
                 Name = "drugi club",
                 OwnerId = 10,
                 Description = "nema",
-                ImageUrl = "string",
-                ImageBase64 = "string"
+                ImageUrl = "string"
             };
             var result = ((ObjectResult)controller.Create(updatedEntity).Result)?.Value as ClubDto;
 
