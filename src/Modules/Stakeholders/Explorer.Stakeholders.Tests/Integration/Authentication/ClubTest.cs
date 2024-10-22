@@ -56,16 +56,16 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
 
             var updatedEntity = new ClubDto
             {
-                Id = -2,
+                Id = -10,
                 Name = "drugi club",
                 OwnerId = 10,
                 Description = "nema",
                 ImageUrl = "string"
             };
-            var result = ((ObjectResult)controller.Create(updatedEntity).Result)?.Value as ClubDto;
+            var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as ClubDto;
 
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(-1);
+            result.Id.ShouldBe(updatedEntity.Id);
             result.Name.ShouldBe(updatedEntity.Name);
             result.Description.ShouldBe(updatedEntity.Description);
 
@@ -82,12 +82,12 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             var controller = CreateController(scope);
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
 
-            var result = (OkResult)controller.Delete(-3);
+            var result = (OkResult)controller.Delete(-20);
 
             result.ShouldNotBeNull();
             result.StatusCode.ShouldBe(200);
 
-            var storedCourse = dbContext.Clubs.FirstOrDefault(i => i.Id == -55);
+            var storedCourse = dbContext.Clubs.FirstOrDefault(i => i.Id == -20);
             storedCourse.ShouldBeNull();
         }
 

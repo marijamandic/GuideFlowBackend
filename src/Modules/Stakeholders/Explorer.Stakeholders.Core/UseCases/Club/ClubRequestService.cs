@@ -117,7 +117,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
                 dto.ClubId = club.ClubId;
                 dto.TouristId = club.TouristId;
                 dto.Id = club.Id;
-                dto.Status = (API.Dtos.Club.ClubRequestStatus)(API.Dtos.Club.ClubInvitationStatus)Enum.Parse(typeof(API.Dtos.Club.ClubInvitationStatus), club.Status.ToString());
+                dto.Status = (API.Dtos.Club.ClubRequestStatus)Enum.Parse(typeof(API.Dtos.Club.ClubRequestStatus), club.Status.ToString());
                 dtos.Add(dto);
             }
             return Result.Ok(dtos);

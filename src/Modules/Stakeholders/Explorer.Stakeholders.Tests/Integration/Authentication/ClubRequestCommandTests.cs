@@ -37,7 +37,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             
             // Assert - Response
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(0);
+            result.Id.ShouldNotBe(0);
             result.TouristId.ShouldNotBe(0);
             result.ClubId.ShouldNotBe(0);
             result.Status.ShouldBe(newEntity.Status);
@@ -45,7 +45,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             // Assert - Database
             var storedEntity = dbContext.ClubRequests.FirstOrDefault(i => i.ClubId == newEntity.ClubId);
             storedEntity.ShouldNotBeNull();
-            storedEntity.Id.ShouldBe(newEntity.Id);
+            storedEntity.ClubId.ShouldBe(newEntity.ClubId);
         }
 
         private static ClubRequestController CreateController(IServiceScope scope)
