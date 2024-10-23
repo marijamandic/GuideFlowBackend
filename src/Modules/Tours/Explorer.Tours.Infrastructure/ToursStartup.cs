@@ -33,9 +33,13 @@ public static class ToursStartup
         services.AddScoped<ITourService, TourService>();
         services.AddScoped<ITourEquipmentService, TourEquipmentService>();
 
-
         services.AddScoped<ICheckpointService, CheckpointService>();
         services.AddScoped<ITourObjectService, TourObjectService>();
+        services.AddScoped<IEquipmentManagementService, EquipmentManagementService>();
+        services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
+        services.AddScoped<ITourReviewService, TourReviewService>();
+        services.AddScoped<ITourSpecificationService, TourSpecificationService>();
+
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -47,6 +51,12 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<Checkpoint>), typeof(CrudDatabaseRepository<Checkpoint, ToursContext>));
         services.AddScoped<ICheckpointRepository, CheckpointRepository>();
         services.AddScoped(typeof(ICrudRepository<TourObject>), typeof(CrudDatabaseRepository<TourObject, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<EquipmentManagement>), typeof(CrudDatabaseRepository<EquipmentManagement, ToursContext>));
+        services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
+        services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourSpecifications>), typeof(CrudDatabaseRepository<TourSpecifications, ToursContext>));
+
+        services.AddScoped<ITourSpecificationRepository, TourSpecificationRepository>();
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
