@@ -40,16 +40,16 @@ public class ReviewsCommandTests : BaseToursIntegrationTest
 
         // Assert - Response
         result.ShouldNotBeNull();
-        result.id.ShouldNotBe(0);
+        result.Id.ShouldNotBe(0);
         result.Rating.ShouldBe(newEntity.Rating);
         result.Comment.ShouldBe(newEntity.Comment);
         result.TourDate.ShouldBe(newEntity.TourDate);
         result.CreationDate.ShouldBe(newEntity.CreationDate);
 
         // Assert - Database
-        var storedEntity = dbContext.TourReviews.FirstOrDefault(i => i.Rating == newEntity.Rating);
+        var storedEntity = dbContext.TourReviews.FirstOrDefault(i => i.Comment == newEntity.Comment);
         storedEntity.ShouldNotBeNull();
-        storedEntity.Id.ShouldBe(result.id);
+        storedEntity.Id.ShouldBe(result.Id);
     }
 
     private static TourReviewController CreateController(IServiceScope scope)
