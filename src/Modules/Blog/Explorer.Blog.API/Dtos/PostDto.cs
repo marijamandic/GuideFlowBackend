@@ -9,9 +9,9 @@
         public DateTime PublishDate { get; set; }
         public string? ImageUrl { get; set; }
         public string? ImageBase64 { get; set; }
-        public Status Status { get; set; }     
+        public PostStatus Status { get; set; }     
     }
-    public enum Status
+    public enum PostStatus
     {
         Draft,
         Published,

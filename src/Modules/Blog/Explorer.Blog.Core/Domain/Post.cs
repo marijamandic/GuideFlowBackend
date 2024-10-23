@@ -17,11 +17,11 @@ namespace Explorer.Blog.Core.Domain
         public string Description { get; private set; }
         public DateTime PublishDate { get; private set; }
         public string ImageUrl { get; private set; }
-        public Status Status { get; private set; }
+        public PostStatus Status { get; private set; }
 
         public Post() { }
 
-        public Post(string title , long userId , string description , DateTime publishDate , string imageUrl , Status status) { 
+        public Post(string title , long userId , string description , DateTime publishDate , string imageUrl , PostStatus status) { 
             Title = title;
             UserId = userId;
             Description = description;
@@ -38,7 +38,7 @@ namespace Explorer.Blog.Core.Domain
         }
 
     }
-public enum Status
+public enum PostStatus
 {
     Draft,
     Published,
