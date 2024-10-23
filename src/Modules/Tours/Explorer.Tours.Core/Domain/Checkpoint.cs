@@ -10,7 +10,9 @@ public class Checkpoint : Entity
     public double Longitude { get; private set; }
     public string? ImageUrl { get; private set; }
 
-    public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl)
+    public int TourId { get; private set; } 
+
+    public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl, int tourId)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Invalid Name.");
         if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");
@@ -22,5 +24,6 @@ public class Checkpoint : Entity
         Latitude = latitude;
         Longitude = longitude;
         ImageUrl = imageUrl;
+        TourId = tourId;
     }
 }
