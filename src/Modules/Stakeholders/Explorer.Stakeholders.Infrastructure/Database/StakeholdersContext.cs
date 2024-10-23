@@ -1,7 +1,6 @@
 ﻿using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Club;
 using Microsoft.EntityFrameworkCore;
-
 namespace Explorer.Stakeholders.Infrastructure.Database;
 
 public class StakeholdersContext : DbContext
@@ -15,7 +14,9 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubMember> ClubMembers { get; set; }
     public DbSet<ClubRequest> ClubRequests { get; set; }
 
-    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) {}
+    public DbSet<AppRating> Ratings { get; set; }
+
+    public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
