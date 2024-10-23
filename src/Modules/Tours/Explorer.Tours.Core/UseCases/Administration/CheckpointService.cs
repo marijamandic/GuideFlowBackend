@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
@@ -7,7 +7,8 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.Administration;
 
-public class EquipmentService : CrudService<EquipmentDto, Equipment>, IEquipmentService
+public class CheckpointService : CrudService<CheckpointDto, Checkpoint>, ICheckpointService
 {
-    public EquipmentService(ICrudRepository<Equipment> repository, IMapper mapper) : base(repository, mapper) {}
+    public CheckpointService(ICrudRepository<Checkpoint> repository, IMapper mapper) : base(repository, mapper) { }
+
 }

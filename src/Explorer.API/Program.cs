@@ -1,4 +1,5 @@
 using Explorer.API.Startup;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
