@@ -3,6 +3,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace Explorer.API.Controllers.ProfileInfo
 {
@@ -11,10 +12,12 @@ namespace Explorer.API.Controllers.ProfileInfo
     public class ProfileInfoController : BaseApiController
     {
         private readonly IProfileInfoService _profileInfoService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProfileInfoController(IProfileInfoService profileInfoService)
+        public ProfileInfoController(IProfileInfoService profileInfoService, IWebHostEnvironment webHostEnvironment)
         {
             _profileInfoService = profileInfoService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/administration/profileInfo?page=1&pageSize=10
@@ -29,6 +32,21 @@ namespace Explorer.API.Controllers.ProfileInfo
         [HttpPost]
         public ActionResult<ProfileInfoDto> Create([FromBody] ProfileInfoDto profileInfo)
         {
+
+            if (!string.IsNullOrEmpty(profileInfo.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(profileInfo.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png"; // ili bilo koji format slike
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "profileInfo");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                profileInfo.ImageUrl = $"images/profileInfo/{fileName}";
+            }
+
             var result = _profileInfoService.Create(profileInfo);
             return CreateResponse(result);
         }
@@ -41,6 +59,20 @@ namespace Explorer.API.Controllers.ProfileInfo
             if (id != profileInfo.Id || userId != profileInfo.UserId)
             {
                 return BadRequest("ID ili UserId se ne podudaraju.");
+            }
+
+            if (!string.IsNullOrEmpty(profileInfo.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(profileInfo.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png"; // ili bilo koji format slike
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "profileInfo");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                profileInfo.ImageUrl = $"images/profileInfo/{fileName}";
             }
 
             var result = _profileInfoService.Update(profileInfo);
