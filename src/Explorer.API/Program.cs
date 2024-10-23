@@ -1,4 +1,5 @@
 using Explorer.API.Startup;
+using Microsoft.Extensions.FileProviders;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.UseCases;
 
@@ -27,12 +28,12 @@ else
     app.UseHsts();
 }
 
+app.UseStaticFiles();
 app.UseRouting();
 app.UseCors(corsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
