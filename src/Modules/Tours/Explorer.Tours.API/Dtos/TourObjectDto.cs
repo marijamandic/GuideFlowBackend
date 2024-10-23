@@ -14,4 +14,6 @@ public class TourObjectDto
     public string? ImageUrl { get; set; }
     public string? ImageBase64 { get; set; }
     public ObjectCategory Category { get; set; }
+    public double Latitude { get; set; }
+    public double Longitude { get; set; }
 }

@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Explorer.API.Controllers.Author
 {
-    [Authorize(Policy = "authorPolicy")]
+    //[Authorize(Policy = "authorPolicy")]
     [Route("api/administration/tourObject")]
     public class TourObjectController : BaseApiController
     {
