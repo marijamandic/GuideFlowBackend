@@ -552,8 +552,5 @@ src/**/Migrations/*
 
 #Ignore specific files
 src/BuildingBlocks/Explorer.BuildingBlocks.Infrastructure/Database/DbConnectionStringBuilder.cs
-<<<<<<< HEAD
 src/BuildingBlocks/Explorer.BuildingBlocks.Tests/BaseTestFactory.cs
-=======
-src/BuildingBlocks/Explorer.BuildingBlocks.Tests/BaseTestFactory.cs
->>>>>>> b762cbf2374830af542fa2f1bec2efe5427a0459
+

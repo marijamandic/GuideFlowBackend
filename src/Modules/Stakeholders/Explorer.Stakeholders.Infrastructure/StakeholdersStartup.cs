@@ -30,7 +30,7 @@ public static class StakeholdersStartup
 
     private static void SetupCore(IServiceCollection services)
     {
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.AddScoped<IAuthenticationService, AuthenticationService>(); //Ova linija kaze kada god ti treba IAuthenticationService, koristi konkretnu implementaciju AuthenticationService
         services.AddScoped<ITokenGenerator, JwtGenerator>();
         services.AddScoped<IProfileInfoService, ProfileInfoService>(); // From HEAD
         services.AddScoped<IClubService, ClubService>(); // From the other branch
@@ -39,11 +39,13 @@ public static class StakeholdersStartup
         services.AddScoped<IClubMemberService, ClubMemberService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
+        services.AddScoped<IRatingAppService, RatingAppService>();
+        services.AddScoped<IAccountService, AccountService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
-        services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));      
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<ProfileInfo>), typeof(CrudDatabaseRepository<ProfileInfo, StakeholdersContext>)); // From HEAD
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>)); // From the other branch
@@ -51,6 +53,10 @@ public static class StakeholdersStartup
         services.AddScoped<IClubRequestRepository, ClubRequestDatabaseRepository>();
         services.AddScoped<IClubMemberRepository, ClubMemberDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
+
+        services.AddScoped(typeof(ICrudRepository<AppRating>), typeof(CrudDatabaseRepository<AppRating, StakeholdersContext>));
+        //services.AddScoped<IAppRatingRepository, AppRatingDatabaseRepository>();
+
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),

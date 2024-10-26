@@ -10,7 +10,7 @@ INSERT INTO stakeholders."Users"(
 VALUES (-12, 'autor2@gmail.com', 'autor2', 1, true);
 INSERT INTO stakeholders."Users"(
     "Id", "Username", "Password", "Role", "IsActive")
-VALUES (-13, 'autor3@gmail.com', 'autor3', 1, true);
+VALUES (-13, 'autor3@gmail.com', 'autor3', 1, false);
 
 INSERT INTO stakeholders."Users"(
     "Id", "Username", "Password", "Role", "IsActive")

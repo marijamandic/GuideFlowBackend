@@ -17,5 +17,6 @@ public class StakeholderProfile : Profile
         CreateMap<ClubMemberDto, ClubMember>().ReverseMap();
         CreateMap<UserDto, User>().ReverseMap();
         CreateMap<ProblemDto, Problem>().ReverseMap();
+        CreateMap<RatingAppDto, AppRating>().ReverseMap();
     }
 }
