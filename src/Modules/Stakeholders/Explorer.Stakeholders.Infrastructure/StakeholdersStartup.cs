@@ -39,6 +39,7 @@ public static class StakeholdersStartup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
+        services.AddScoped<IAccountService, AccountService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

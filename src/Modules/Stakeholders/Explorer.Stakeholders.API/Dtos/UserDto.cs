@@ -13,10 +13,4 @@ namespace Explorer.Stakeholders.API.Dtos
         public UserRole Role { get; set; }
     }
 
-    public enum UserRole
-    {
-        Administrator,
-        Author,
-        Tourist
-    }
 }
