@@ -1,4 +1,5 @@
 using Explorer.API.Startup;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,7 +31,6 @@ app.UseCors(corsPolicy);
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

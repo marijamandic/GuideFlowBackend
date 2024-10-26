@@ -30,11 +30,12 @@ namespace Explorer.Stakeholders.Tests.Integration
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var newEntity = new ProfileInfoDto
             {
-               // Id = -28,
+                // Id = -28,
                 UserId = -23,
                 FirstName = "pera",
                 LastName = "peric",
-                //ProfilePicture = "pfp",
+                ImageUrl = "images/profileInfo/6e154d0e-a0e4-4a42-8e0d-dce188f21532.png",
+                //ImageBase64 = null,
                 Biography = "bio",
                 Moto = "moto"
             };
