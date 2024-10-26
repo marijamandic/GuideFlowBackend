@@ -27,25 +27,28 @@ public static class StakeholdersStartup
         SetupInfrastructure(services);
         return services;
     }
-    
+
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IAuthenticationService, AuthenticationService>(); //Ova linija kaze kada god ti treba IAuthenticationService, koristi konkretnu implementaciju AuthenticationService
         services.AddScoped<ITokenGenerator, JwtGenerator>();
-        services.AddScoped<IClubService, ClubService>();
-        services.AddScoped<IClubInvitationService, ClubInvitationService>();    
+        services.AddScoped<IProfileInfoService, ProfileInfoService>(); // From HEAD
+        services.AddScoped<IClubService, ClubService>(); // From the other branch
+        services.AddScoped<IClubInvitationService, ClubInvitationService>();
         services.AddScoped<IClubRequestService, ClubRequestService>();
         services.AddScoped<IClubMemberService, ClubMemberService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
+        services.AddScoped<IAccountService, AccountService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));      
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
-        services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>));
+        services.AddScoped(typeof(ICrudRepository<ProfileInfo>), typeof(CrudDatabaseRepository<ProfileInfo, StakeholdersContext>)); // From HEAD
+        services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>)); // From the other branch
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubRequestRepository, ClubRequestDatabaseRepository>();
         services.AddScoped<IClubMemberRepository, ClubMemberDatabaseRepository>();
