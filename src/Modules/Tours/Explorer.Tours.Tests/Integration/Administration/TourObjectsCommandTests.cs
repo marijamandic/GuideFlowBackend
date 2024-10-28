@@ -26,7 +26,9 @@ public class TourObjectsCommandTests : BaseToursIntegrationTest
             Name = "McDonalds",
             Description = "Super hrana",
             ImageUrl = "slika",
-            Category = ObjectCategory.Restaurant
+            Category = ObjectCategory.Restaurant,
+            Latitude = 10,
+            Longitude = 20,
         };
 
         // Act

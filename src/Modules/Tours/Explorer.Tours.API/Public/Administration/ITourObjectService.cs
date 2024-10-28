@@ -7,4 +7,6 @@ public interface ITourObjectService
 {
     Result<PagedResult<TourObjectDto>> GetPaged(int page, int pageSize);
     Result<TourObjectDto> Create(TourObjectDto tourObject);
+    Result<TourObjectDto> Update(TourObjectDto tourObject);
+
 }
