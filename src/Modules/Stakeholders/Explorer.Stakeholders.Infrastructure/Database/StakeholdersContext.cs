@@ -1,6 +1,8 @@
-﻿using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Club;
 using Microsoft.EntityFrameworkCore;
+
+
 namespace Explorer.Stakeholders.Infrastructure.Database;
 
 public class StakeholdersContext : DbContext
@@ -13,6 +15,7 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubInvitation> ClubInvitations { get; set; }
     public DbSet<ClubMember> ClubMembers { get; set; }
     public DbSet<ClubRequest> ClubRequests { get; set; }
+    public DbSet<ProfileInfo> Profiles { get; set; }
 
     public DbSet<AppRating> Ratings { get; set; }
 
@@ -44,6 +47,11 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<Person>(s => s.UserId);
+
+        modelBuilder.Entity<ProfileInfo>()
+            .HasOne<User>()
+            .WithOne()
+            .HasForeignKey<ProfileInfo>(s => s.UserId);
     }
 
     private static void ConfigureClubInvitation(ModelBuilder modelBuilder)

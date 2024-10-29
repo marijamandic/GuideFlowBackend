@@ -16,9 +16,11 @@ public class TourObject : Entity
     public string? Description { get; init; }
     public string? ImageUrl { get; init; }
     public string? ImageBase64 { get; set; }
+    public double Latitude { get; private set; }
+    public double Longitude { get; private set; }
     public ObjectCategory Category { get; init; }
 
-    public TourObject(string name, string? description, string imageUrl, string imageBase64, ObjectCategory category)
+    public TourObject(string name, string? description, string imageUrl, string imageBase64, ObjectCategory category, double latitude, double longitude)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Invalid Name.");
         if (string.IsNullOrWhiteSpace(imageUrl)) throw new ArgumentException("Invalid Image path.");
@@ -27,5 +29,7 @@ public class TourObject : Entity
         ImageUrl = imageUrl;
         ImageBase64 = imageBase64;
         Category = category;
+        Latitude = latitude;
+        Longitude = longitude;
     }
 }

@@ -1,5 +1,7 @@
 using Explorer.API.Startup;
 using Microsoft.Extensions.FileProviders;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.UseCases;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ builder.Services.ConfigureSwagger(builder.Configuration);
 const string corsPolicy = "_corsPolicy";
 builder.Services.ConfigureCors(corsPolicy);
 builder.Services.ConfigureAuth();
+
 
 builder.Services.RegisterModules();
 
