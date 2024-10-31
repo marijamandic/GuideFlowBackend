@@ -5,5 +5,6 @@ DELETE FROM stakeholders."Clubs";
 DELETE FROM stakeholders."ClubRequests";
 DELETE FROM stakeholders."ClubInvitations";
 DELETE FROM stakeholders."ClubMembers";
-DELETE FROM stakeholders."Problem";
+DELETE FROM stakeholders."Problems";
 DELETE FROM stakeholders."Ratings";
+DELETE FROM stakeholders."Messages";

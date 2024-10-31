@@ -1,7 +1,5 @@
-﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
-using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +22,13 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
+        result.Results.ShouldNotBeNull();
+
+        foreach (var problem in result.Results)
+        {
+            problem.Resolution.ShouldNotBeNull();
+            problem.Messages.ShouldNotBeNull();
+        }
     }
 
     private static Explorer.API.Controllers.Administrator.Administration.ProblemController CreateAdminController(IServiceScope scope)

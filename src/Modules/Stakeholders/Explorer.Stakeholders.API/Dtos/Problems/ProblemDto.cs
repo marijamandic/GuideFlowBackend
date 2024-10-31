@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Explorer.Stakeholders.API.Dtos;
+﻿namespace Explorer.Stakeholders.API.Dtos.Problems;
 public class ProblemDto
 {
     public int Id { get; set; }
@@ -14,6 +8,8 @@ public class ProblemDto
     public ProblemPriority Priority { get; set; }
     public string Description { get; set; }
     public DateOnly ReportedAt { get; set; }
+    public ResolutionDto Resolution { get; set; }
+    public List<MessageDto> Messages { get; set; }
 }
 
 public enum ProblemCategory

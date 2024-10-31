@@ -1,5 +1,5 @@
 ﻿using Explorer.API.Controllers.Tourist;
-using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +25,12 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
             Category = ProblemCategory.Accommodation,
             Priority = ProblemPriority.High,
             Description = "Description",
-            ReportedAt = DateOnly.FromDateTime(DateTime.Today)
+            ReportedAt = DateOnly.FromDateTime(DateTime.Today),
+            Resolution = new ResolutionDto
+            {
+                IsResolved = false,
+                Deadline = DateTime.Today,
+            }
         };
 
         // Act
@@ -37,7 +42,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         result.Category.ShouldBe(newEntity.Category);
 
         // Assert - db
-        var storedEntity = dbContext.Problem.FirstOrDefault(p => p.Description == result.Description);
+        var storedEntity = dbContext.Problems.FirstOrDefault(p => p.Description == result.Description);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }

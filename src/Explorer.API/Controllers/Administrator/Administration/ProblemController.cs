@@ -1,5 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Administrator.Administration
         [HttpGet]
         public ActionResult<PagedResult<ProblemDto>> GetAll()
         {
-            var result = _problemService.GetPaged(0, 0);
+            var result = _problemService.GetAll();
             return CreateResponse(result);
         }
     }
