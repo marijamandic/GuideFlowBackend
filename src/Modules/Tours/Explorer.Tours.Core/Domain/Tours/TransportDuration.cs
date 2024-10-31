@@ -3,29 +3,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain.Tours
 {
-    public class Duration : ValueObject<Duration>
+    public class TransportDuration : ValueObject<TransportDuration>
     {
-        public double Time;
+        public TimeSpan Time{ get; private set; }
 
-        public TransportType TransportType;
+        public TransportType TransportType { get; private set; }
 
-        public Duration()
+        [JsonConstructor]
+        public TransportDuration(TimeSpan time, TransportType transportType)
         {
-        }
-
-        public Duration(double km, TransportType transportType)
-        {
+            this.Time=time;
             this.TransportType = transportType;
-            this.Time = CalculateTime(km,transportType);
+            Validate();
         }
 
+        private void Validate()
+        {
+            if (Time <= TimeSpan.Zero)
+                throw new ArgumentException("Time duration must be greater than zero.");
+        }
+        /*
         public static double CalculateTime(double distanceInKm, TransportType transportType)
         {
-            double speed; // u km/h
+            double speed;
 
             switch (transportType)
             {
@@ -42,17 +47,10 @@ namespace Explorer.Tours.Core.Domain.Tours
                     throw new ArgumentException("Invalid transport type");
             }
 
-           
-            return distanceInKm / speed; // rezultat je u satima
-        }
+            return distanceInKm / speed;
+        }*/
 
-        public void Validate()
-        {
-            //TODO
-        }
-
-
-        protected override bool EqualsCore(Duration other)
+        protected override bool EqualsCore(TransportDuration other)
         {
             return Time == other.Time &&
                     TransportType == other.TransportType;

@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Explorer.Tours.Core.Domain.Tours
 {
@@ -14,27 +16,25 @@ namespace Explorer.Tours.Core.Domain.Tours
         public double Latitude { get; private set; }
         public double Longitude { get; private set; }
         public string? ImageUrl { get; private set; }
+        public string Secret {  get; private set; }
 
-        //dodavanje secret (da se razlikuje od javnih )
-
-        public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl)
+        public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl,string secret)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Invalid Name.");
-            if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");
-            if (latitude < -90 || latitude > 90) throw new ArgumentException("Invalid Latitude value.");
-            if (longitude < -180 || longitude > 180) throw new ArgumentException("Invalid Longitude value.");
-
             Name = name;
             Description = description;
             Latitude = latitude;
             Longitude = longitude;
             ImageUrl = imageUrl;
-           
+            Secret = secret;
+            Validate();
         }
 
-        public void Validate()
+        private void Validate()
         {
-            //TODO
+            if (string.IsNullOrWhiteSpace(Name)) throw new ArgumentException("Invalid Name.");
+            if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description.");
+            if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude value.");
+            if (Longitude < -180 || Longitude > 180) throw new ArgumentException("Invalid Longitude value.");
         }
     }
 

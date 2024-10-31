@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -11,23 +12,23 @@ namespace Explorer.Tours.Core.Domain.Tours
     public class Price : ValueObject<Price>
     {
         public double Cost;
-        public  Currency Currency;
+        public Currency Currency;
 
-        public Price() 
+        [JsonConstructor]
+        public Price(double cost,Currency currency)
         {
-            Cost = 0;
-            Currency = Currency.EUR;
+            this.Cost = cost;
+            this.Currency = currency;
+            Validate();
         }
 
-        public Price(Price price)
+        private void Validate()
         {
-            this.Cost = price.Cost;
-            this.Currency = price.Currency;
-        }
+            if (Cost <= 0)
+                throw new ArgumentException("Cost must be greater than zero.");
 
-        public void Validate()
-        {
-            //TODO
+            if (!Enum.IsDefined(typeof(Currency), Currency))
+                throw new ArgumentException("Invalid currency value.");
         }
 
         protected override bool EqualsCore(Price other)
@@ -51,7 +52,8 @@ namespace Explorer.Tours.Core.Domain.Tours
     public enum Currency 
     {
         RSD,
-        EUR        
+        EUR,
+        USD
     }
 
 }
