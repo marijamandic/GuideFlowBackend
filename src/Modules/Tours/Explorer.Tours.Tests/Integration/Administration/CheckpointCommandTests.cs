@@ -26,7 +26,8 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Description = "Starting checkpoint for the tour.",
             Latitude = 45.2671,
             Longitude = 19.8335,
-            ImageUrl = "/images/start-point.jpg"
+            ImageUrl = "/images/start-point.jpg",
+            TourId = 1
         };
 
         // Act
@@ -78,7 +79,8 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Description = "Updated description.",
             Latitude = 5.2700,
             Longitude = 19.8400,
-            ImageUrl = "/images/updated-checkpoint.jpg"
+            ImageUrl = "/images/updated-checkpoint.jpg",
+            TourId = 1
         };
 
         // Act
@@ -108,7 +110,8 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Description = "Updated description.",
             Latitude = 5.2700,
             Longitude = 19.8400,
-            ImageUrl = "/images/updated-checkpoint.jpg"
+            ImageUrl = "/images/updated-checkpoint.jpg",
+            TourId = 1
         };
 
         // Act

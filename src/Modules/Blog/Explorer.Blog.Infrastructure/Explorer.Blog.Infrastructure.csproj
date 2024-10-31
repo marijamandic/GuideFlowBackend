@@ -8,11 +8,19 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\Explorer.BuildingBlocks.Infrastructure\Explorer.BuildingBlocks.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Tours\Explorer.Tours.Core\Explorer.Tours.Core.csproj" />
     <ProjectReference Include="..\Explorer.Blog.Core\Explorer.Blog.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Database\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

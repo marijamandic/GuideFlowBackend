@@ -9,7 +9,7 @@ using System.IO;
 
 namespace Explorer.API.Controllers.Author
 {
-    [Authorize(Policy = "authorPolicy")]
+    //[Authorize(Policy = "authorPolicy")]
     [Route("api/administration/tourObject")]
     public class TourObjectController : BaseApiController
     {
@@ -48,5 +48,32 @@ namespace Explorer.API.Controllers.Author
             var result = _tourObjectService.Create(tourObject);
             return CreateResponse(result);
         }
+
+        [HttpPut("{id}")]
+        public ActionResult<TourObjectDto> Update(int id, [FromBody] TourObjectDto tourObject)
+        {
+
+            // Ako je poslat novi Base64 string slike, ažurirajte sliku
+            if (!string.IsNullOrEmpty(tourObject.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(tourObject.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "blogs");
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                tourObject.ImageUrl = $"images/blogs/{fileName}";
+            }
+
+            // Ažuriraj tourObject koristeći servis
+            var result = _tourObjectService.Update(tourObject);
+
+            // Kreiraj odgovor
+            return CreateResponse(result);
+        }
+
     }
 }

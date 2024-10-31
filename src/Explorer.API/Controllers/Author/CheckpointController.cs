@@ -52,5 +52,12 @@ namespace Explorer.API.Controllers.Author
             var result = _checkpointService.GetPaged(page,  pageSize);
             return CreateResponse(result);
         }
+
+        [HttpGet("tour/{id:int}")]
+        public List<CheckpointDto> GetAllByTour([FromRoute] int id)
+        {
+            var result = _checkpointService.GetCheckpointsByTour(id);
+            return result;
+        }
     }
 }
