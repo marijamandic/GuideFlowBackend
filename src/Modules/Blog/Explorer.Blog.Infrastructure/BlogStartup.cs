@@ -1,5 +1,5 @@
 using Explorer.Blog.API.Public;
-using Explorer.Blog.Core.Domain;
+using Explorer.Blog.Core.Domain.Posts;
 using Explorer.Blog.Core.Mappers;
 using Explorer.Blog.Core.UseCases;
 using Explorer.Blog.Infrastructure.Database;

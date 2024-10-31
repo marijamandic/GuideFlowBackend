@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
-using Explorer.Blog.Core.Domain;
+using Explorer.Blog.Core.Domain.Posts;
 using Explorer.BuildingBlocks.Core.UseCases;
 using FluentResults;
 using System;

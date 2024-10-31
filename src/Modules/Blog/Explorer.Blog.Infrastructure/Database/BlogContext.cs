@@ -1,4 +1,4 @@
-﻿using Explorer.Blog.Core.Domain;
+﻿using Explorer.Blog.Core.Domain.Posts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Blog.Infrastructure.Database;
@@ -12,5 +12,9 @@ public class BlogContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("blog");
+
+        modelBuilder.Entity<Post>().Property(post => post.Ratings).HasColumnType("jsonb");
+        modelBuilder.Entity<Post>().Property(post => post.Comments).HasColumnType("jsonb");
     }
+
 }
