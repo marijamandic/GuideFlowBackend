@@ -16,7 +16,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         public long UserId { get; private set; }
         public long PostId { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public string Content { get; private set; }
+        public string Content { get; set; } = string.Empty;
         public DateTime LastModified { get; private set; }
 
         public Comment() { }

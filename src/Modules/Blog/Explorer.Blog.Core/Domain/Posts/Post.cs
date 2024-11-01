@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.Domain;
+﻿using Explorer.Blog.API.Dtos;
+using Explorer.BuildingBlocks.Core.Domain;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -11,12 +12,12 @@ namespace Explorer.Blog.Core.Domain.Posts
         private readonly List<Comment> _comments = new();
         private readonly List<BlogRating> _ratings = new();
 
-        public string Title { get; private set; }
-        public long UserId { get; private set; }
-        public string Description { get; private set; }
-        public DateTime PublishDate { get; private set; }
-        public string ImageUrl { get; private set; }
-        public PostStatus Status { get; private set; }
+        public string Title { get; set; }
+        public long UserId { get; set; }
+        public string Description { get; set; }
+        public DateTime PublishDate { get; set; }
+        public string ImageUrl { get; set; }
+        public PostStatus Status { get; set; }
 
         public Post() { }
 
@@ -46,9 +47,9 @@ namespace Explorer.Blog.Core.Domain.Posts
             return Result.Ok();
         }
 
-        public Result AddRating(long userId, long postId, DateTime ratingDate, long upVotesNumber, long downVotesNumber)
+        public Result AddRating(BlogRatingDto blogRatingDto)
         {
-            var result = BlogRating.Create(userId, postId, ratingDate, upVotesNumber, downVotesNumber);
+            var result = BlogRating.Create(blogRatingDto.UserId, blogRatingDto.PostId, blogRatingDto.RatingDate, blogRatingDto.UpVotesNumber, blogRatingDto.DownVotesNumber);
             if (result.IsFailed)
             {
                 return Result.Fail("Greska pri dodavanju ocene bloga!");

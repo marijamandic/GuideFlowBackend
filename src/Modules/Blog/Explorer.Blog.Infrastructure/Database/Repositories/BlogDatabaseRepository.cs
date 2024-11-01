@@ -1,74 +1,66 @@
 ﻿using Explorer.Blog.Core.Domain.Posts;
 using Explorer.Blog.Core.Domain.RepositoryInterfaces;
-using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Blog.Infrastructure.Database;
+using FluentResults;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Blog.Infrastructure.Database.Repositories
 {
-    public class BlogDatabaseRepository : IBlogRepository
+    public class BlogRepository : IBlogRepository
     {
-        private readonly BlogContext _dbContext;
+        private readonly BlogContext _context;
 
-        public BlogDatabaseRepository(BlogContext dbContext)
+        public BlogRepository(BlogContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public async Task<Post?> GetByIdAsync(long postId)
+        public Result<Post> Create(Post post)
         {
-            return await _dbContext.Posts
-                .Where(p => p.Id == postId)
-                .Include(p => p.Comments)      
-                .Include(p => p.Ratings)       
-                .FirstOrDefaultAsync();
+            _context.Posts.Add(post);
+            _context.SaveChanges();
+            return Result.Ok(post);
         }
 
-        public async Task<Post> CreateAsync(Post post)
+        public Result<Post> GetById(long postId)
         {
-            await _dbContext.Posts.AddAsync(post);
+            var post = _context.Posts
+                .FirstOrDefault(p => p.Id == postId);
 
-            await _dbContext.SaveChangesAsync();
-
-            return post;
+            return post != null ? Result.Ok(post) : Result.Fail("Post not found");
         }
 
-        public async Task<Post> UpdateAsync(Post post)
+        public Result<Post> Update(Post post)
         {
-            _dbContext.Entry(post).State = EntityState.Modified;
+            if (!_context.Posts.Any(p => p.Id == post.Id))
+                return Result.Fail("Post not found");
 
-            foreach (var comment in post.Comments)
-            {
-                _dbContext.Entry(comment).State = EntityState.Modified;
-            }
-
-            foreach (var rating in post.Ratings)
-            {
-                _dbContext.Entry(rating).State = EntityState.Modified;
-            }
-
-            await _dbContext.SaveChangesAsync();
-
-            return post;
+            _context.Posts.Update(post);
+            _context.SaveChanges();
+            return Result.Ok(post);
         }
 
-        public async Task DeleteAsync(long postId)
+        public Result Delete(long postId)
         {
-            var post = await _dbContext.Posts.FindAsync(postId);
-            if (post != null)
-            {
-                _dbContext.Posts.Remove(post); 
-                await _dbContext.SaveChangesAsync(); 
-            }
+            var post = _context.Posts.Find(postId);
+            if (post == null)
+                return Result.Fail("Post not found");
+
+            _context.Posts.Remove(post);
+            _context.SaveChanges();
+            return Result.Ok();
         }
 
-        public List<BlogRating>? GetAll()
+        public Result<IEnumerable<Post>> GetAll(int pageNumber, int pageSize)
         {
-            return null;
+            var posts = _context.Posts
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            return Result.Ok(posts.AsEnumerable());
         }
     }
 }
