@@ -29,8 +29,8 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (Rating < 1 || Rating > 5)
                 throw new ArgumentException("Rating must be between 1 and 5.");
 
-            if (string.IsNullOrWhiteSpace(Comment) || Comment.Length < 5)
-                throw new ArgumentException("Comment cannot be empty and must be at least 5 characters long.");
+            if (string.IsNullOrWhiteSpace(Comment))
+                throw new ArgumentException("Comment cannot be empty. ");
 
             if (TourDate > DateTime.Now)
                 throw new ArgumentException("Tour date cannot be in the future.");

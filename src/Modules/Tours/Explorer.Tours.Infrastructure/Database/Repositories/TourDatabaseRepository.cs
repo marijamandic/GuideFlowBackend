@@ -16,14 +16,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
     {
         public TourDatabaseRepository(ToursContext dbContext):base(dbContext) { }
 
-        public override PagedResult<Tour> GetPaged(int page, int pageSize)
+        public new PagedResult<Tour> GetPaged(int page, int pageSize)
         {
             var task = DbContext.Tours.Include(t=>t.Checkpoints).Include(t=>t.Reviews).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
 
-        public override Tour Get(long id)
+        public new Tour Get(long id)
         {
             var entity = DbContext.Tours.Where(t => t.Id == id)
             .Include(t => t.Checkpoints)
@@ -33,7 +33,7 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return entity;
         }
 
-        public override Tour Update(Tour tour)
+        public new Tour Update(Tour tour)
         {
             DbContext.Entry(tour).State = EntityState.Modified;
             DbContext.SaveChanges();

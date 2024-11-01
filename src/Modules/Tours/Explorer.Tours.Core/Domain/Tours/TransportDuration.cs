@@ -11,7 +11,6 @@ namespace Explorer.Tours.Core.Domain.Tours
     public class TransportDuration : ValueObject<TransportDuration>
     {
         public TimeSpan Time{ get; private set; }
-
         public TransportType TransportType { get; private set; }
 
         [JsonConstructor]
@@ -24,8 +23,10 @@ namespace Explorer.Tours.Core.Domain.Tours
 
         private void Validate()
         {
-            if (Time <= TimeSpan.Zero)
-                throw new ArgumentException("Time duration must be greater than zero.");
+            if (Time < TimeSpan.Zero)
+                throw new ArgumentException("Time duration cannot be less than zero.");
+            if (!Enum.IsDefined(typeof(TransportType), TransportType))
+                throw new ArgumentException("Invalid transport type value.");
         }
         /*
         public static double CalculateTime(double distanceInKm, TransportType transportType)

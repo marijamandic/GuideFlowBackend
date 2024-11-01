@@ -11,8 +11,8 @@ namespace Explorer.Tours.Core.Domain.Tours
 {
     public class Price : ValueObject<Price>
     {
-        public double Cost;
-        public Currency Currency;
+        public double Cost { get; private set; }
+        public Currency Currency { get; private set; }
 
         [JsonConstructor]
         public Price(double cost,Currency currency)
@@ -24,8 +24,8 @@ namespace Explorer.Tours.Core.Domain.Tours
 
         private void Validate()
         {
-            if (Cost <= 0)
-                throw new ArgumentException("Cost must be greater than zero.");
+            if (Cost < 0)
+                throw new ArgumentException("Cost cannot be less than zero.");
 
             if (!Enum.IsDefined(typeof(Currency), Currency))
                 throw new ArgumentException("Invalid currency value.");

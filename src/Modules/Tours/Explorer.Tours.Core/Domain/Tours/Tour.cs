@@ -42,14 +42,11 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (string.IsNullOrWhiteSpace(Name))
                 throw new ArgumentException("Name cannot be null or empty.");
 
-            if (string.IsNullOrWhiteSpace(Description) || Description.Length < 10)
-                throw new ArgumentException("Description must be at least 10 characters long.");
+            if (string.IsNullOrWhiteSpace(Description))
+                throw new ArgumentException("Description cannot be null or empty.");
 
-            if (LengthInKm <= 0)
-                throw new ArgumentException("Length in kilometers must be greater than zero.");
-
-            if (Price == null)
-                throw new ArgumentException("Price cannot be null.");
+            if (LengthInKm < 0)
+                throw new ArgumentException("Length in kilometers cannot be less than 0.");
 
             if (!Enum.IsDefined(typeof(Level), Level))
                 throw new ArgumentException("Invalid level value.");
