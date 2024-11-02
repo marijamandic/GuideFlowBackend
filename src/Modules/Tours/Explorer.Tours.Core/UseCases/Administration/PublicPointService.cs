@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Explorer.Tours.API.Public.Administration;
+using FluentResults;
+
 
 namespace Explorer.Tours.Core.UseCases.Administration
 {
@@ -22,6 +24,33 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             _publicPointRepository = publicPointRepository;
             _mapper = mapper;
+        }
+
+        public Result<IEnumerable<PublicPointDto>> GetPendingPublicPoints()
+        {
+            try
+            {
+                var pendingPoints = _publicPointRepository.GetAll()
+                    .Where(p => p.ApprovalStatus == 0)
+                    .Select(p => new PublicPointDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Latitude = p.Latitude,
+                        Longitude = p.Longitude,
+                        ImageUrl = p.ImageUrl,
+                        ApprovalStatus = (API.Dtos.ApprovalStatus)p.ApprovalStatus,
+                        PointType = (API.Dtos.PointType)p.PointType
+                    });
+
+                return Result.Ok(pendingPoints);  
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(new Error("Failed to retrieve pending public points.")
+                    .CausedBy(ex));
+            }
         }
     }
 }

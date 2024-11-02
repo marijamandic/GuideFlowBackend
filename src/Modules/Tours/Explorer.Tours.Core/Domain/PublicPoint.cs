@@ -11,19 +11,22 @@ namespace Explorer.Tours.Core.Domain
         public double Longitude { get; private set; }
         public string ImageUrl { get; private set; }
         public ApprovalStatus ApprovalStatus { get; private set; }
-        public PointType Type { get; private set; } 
+        public PointType PointType { get; private set; } 
 
-        public PublicPoint(string name, string description, double longitude, double latitude, string imageUrl, PointType type)
+        public PublicPoint(string name, string description, double longitude, double latitude, string imageUrl, ApprovalStatus approvalStatus, PointType pointType)
         {
             Name = name;
             Description = description;
             Latitude = latitude;
             Longitude = longitude;
             ImageUrl = imageUrl;
-            ApprovalStatus = ApprovalStatus.Pending;
-            Type = type; 
+            ApprovalStatus = approvalStatus;
+            PointType = pointType;
 
             Validate(); 
+        }
+        public PublicPoint()
+        {
         }
 
         private void Validate()

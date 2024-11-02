@@ -9,5 +9,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface IPublicPointRepository
     {
+        IEnumerable<PublicPoint> GetAll();
     }
 }

@@ -15,5 +15,9 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         {
             _context = context;
         }
+        public IEnumerable<PublicPoint> GetAll()
+        {
+            return _context.PublicPoints.ToList();
+        }
     }
 }

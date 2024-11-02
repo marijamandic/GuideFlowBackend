@@ -16,5 +16,7 @@ namespace Explorer.Tours.API.Public.Administration
         Result Delete(int id);
         Result<PublicPointDto> Get(int id);
         Result<PagedResult<PublicPointDto>> GetPaged(int page, int pageSize);
+        Result<IEnumerable<PublicPointDto>> GetPendingPublicPoints();
+
     }
 }
