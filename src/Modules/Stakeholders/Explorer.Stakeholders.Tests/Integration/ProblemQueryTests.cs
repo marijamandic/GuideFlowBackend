@@ -26,6 +26,7 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
 
         foreach (var problem in result.Results)
         {
+            problem.Details.ShouldNotBeNull();
             problem.Resolution.ShouldNotBeNull();
             problem.Messages.ShouldNotBeNull();
         }

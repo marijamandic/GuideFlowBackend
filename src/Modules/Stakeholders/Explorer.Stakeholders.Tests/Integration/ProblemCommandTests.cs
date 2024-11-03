@@ -22,14 +22,17 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         {
             UserId = 1,
             TourId = 2,
-            Category = ProblemCategory.Accommodation,
-            Priority = ProblemPriority.High,
-            Description = "Description",
-            ReportedAt = DateOnly.FromDateTime(DateTime.Today),
+            Details = new DetailsDto
+            {
+                Category = ProblemCategory.Accommodation,
+                Priority = ProblemPriority.High,
+                Description = "Description",
+            },
             Resolution = new ResolutionDto
             {
+                ReportedAt = DateTime.Now,
                 IsResolved = false,
-                Deadline = DateTime.Today,
+                Deadline = DateTime.Now.AddDays(10),
             }
         };
 
@@ -39,10 +42,10 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         // Assert - response
         result.ShouldNotBeNull();
         result.Id.ShouldNotBe(0);
-        result.Category.ShouldBe(newEntity.Category);
+        result.Details.Category.ShouldBe(newEntity.Details.Category);
 
         // Assert - db
-        var storedEntity = dbContext.Problems.FirstOrDefault(p => p.Description == result.Description);
+        var storedEntity = dbContext.Problems.FirstOrDefault(p => p.Details.Description == result.Details.Description);
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }
