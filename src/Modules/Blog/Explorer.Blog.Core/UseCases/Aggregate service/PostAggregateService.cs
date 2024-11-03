@@ -105,8 +105,16 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             if (postResult.IsFailed || postResult.Value == null)
                 return Result.Fail("Post not found.");
 
-            var addCommentResult = postResult.Value.AddComment(commentDto.UserId, postId, commentDto.CreatedAt, commentDto.Content, commentDto.LastModified);
-            if (addCommentResult.IsFailed) return Result.Fail("Failed to add comment.");
+            var addCommentResult = postResult.Value.AddComment(
+                commentDto.UserId,
+                postId,
+                commentDto.CreatedAt,
+                commentDto.Content,
+                commentDto.LastModified
+            );
+
+            if (addCommentResult.IsFailed)
+                return Result.Fail("Failed to add comment.");
 
             _repository.Update(postResult.Value);
             return Result.Ok();
