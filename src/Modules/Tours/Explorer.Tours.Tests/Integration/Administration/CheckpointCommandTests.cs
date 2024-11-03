@@ -12,7 +12,7 @@ namespace Explorer.Tours.Tests.Integration.Administration;
 public class CheckpointCommandTests : BaseToursIntegrationTest
 {
     public CheckpointCommandTests(ToursTestFactory factory) : base(factory) { }
-    /*
+    
     [Fact]
     public void Creates()
     {
@@ -27,7 +27,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 45.2671,
             Longitude = 19.8335,
             ImageUrl = "/images/start-point.jpg",
-            TourId = 1
+            Secret = "Tajna"
         };
 
         // Act
@@ -80,7 +80,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 5.2700,
             Longitude = 19.8400,
             ImageUrl = "/images/updated-checkpoint.jpg",
-            TourId = 1
+            Secret = "Tajnaa"
         };
 
         // Act
@@ -111,7 +111,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 5.2700,
             Longitude = 19.8400,
             ImageUrl = "/images/updated-checkpoint.jpg",
-            TourId = 1
+            Secret = "Tajna"
         };
 
         // Act
@@ -164,5 +164,5 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
-    */
+    
 }

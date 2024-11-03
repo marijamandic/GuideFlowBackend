@@ -14,14 +14,16 @@ namespace Explorer.Tours.Core.Domain.Tours
         public string? Comment { get; private set; }
         public DateTime TourDate { get; private set; }
         public DateTime CreationDate { get; private set; }
+        public int PercentageCompleted { get; private set; }
 
-        public TourReview(int rating, string comment, DateTime tourDate, DateTime creationDate)
+        public TourReview(int rating, string comment, DateTime tourDate, DateTime creationDate, int percentageCompleted)
         {
             Rating = rating;
             Comment = comment;
             TourDate = tourDate;
             CreationDate = creationDate;
             Validate();
+            PercentageCompleted = percentageCompleted;
         }
 
         private void Validate()
@@ -37,6 +39,9 @@ namespace Explorer.Tours.Core.Domain.Tours
 
             if (CreationDate < TourDate)
                 throw new ArgumentException("Creation date cannot be before the tour date.");
+
+            if (PercentageCompleted < 0 || PercentageCompleted > 100)
+                throw new ArgumentException("Percentage completed must be between 0 and 100.");
         }
     }
 }
