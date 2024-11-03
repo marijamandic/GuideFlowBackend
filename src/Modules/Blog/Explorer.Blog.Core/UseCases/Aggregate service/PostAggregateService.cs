@@ -77,18 +77,26 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             return Result.Ok(commentCount);
         }
 
-        public Result<List<CommentDto>> GetCommentsForPost(long postId, int page, int pageSize)
+        public Result<List<CommentDto>> GetCommentsForPost(long postId)
         {
             var postResult = _repository.GetById(postId);
-            if (postResult.IsFailed || postResult.Value == null) return Result.Fail("Post not found.");
+            if (postResult.IsFailed || postResult.Value == null)
+            {
+                Debug.WriteLine("#### ERROR: Post not found ####");
+                return Result.Fail("Post not found.");
+            }
 
-            var comments = postResult.Value.Comments
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
-
-            var commentDtos = _mapper.Map<List<CommentDto>>(comments);
-            return Result.Ok(commentDtos);
+            try
+            {
+                var comments = postResult.Value.Comments.ToList(); // Retrieve all comments
+                var commentDtos = _mapper.Map<List<CommentDto>>(comments);
+                return Result.Ok(commentDtos);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"#### ERROR in GetCommentsForPost: {ex.Message} ####");
+                return Result.Fail("Error retrieving comments.");
+            }
         }
 
         public Result AddComment(long postId, CommentDto commentDto)

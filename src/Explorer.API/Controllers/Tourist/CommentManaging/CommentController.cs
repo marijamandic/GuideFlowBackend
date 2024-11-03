@@ -23,11 +23,11 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
             _userService = userService;
         }
 
-        [HttpGet]
-        public ActionResult<List<CommentDto>> GetAllForPost([FromQuery] int postId, [FromQuery] int page, [FromQuery] int pageSize)
+        [HttpGet("all")]
+        public ActionResult<List<CommentDto>> GetAllCommentsForPost([FromQuery] long postId)
         {
-            var result = _postAggregateService.GetCommentsForPost(postId, page, pageSize);
-            return CreateResponse(result);
+            var result = _postAggregateService.GetCommentsForPost(postId);
+            return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
         }
 
         [HttpGet("user/{id:int}")]

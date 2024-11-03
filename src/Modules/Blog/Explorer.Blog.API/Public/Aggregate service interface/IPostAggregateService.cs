@@ -17,7 +17,7 @@ namespace Explorer.Blog.API.Public.Aggregate_service_interface
 
         // Comment operations
         public Result<int> GetCommentCountForPost(int postId);
-        Result<List<CommentDto>> GetCommentsForPost(long postId, int page, int pageSize);
+        public Result<List<CommentDto>> GetCommentsForPost(long postId);
         Result AddComment(long postId, CommentDto commentDto);
         Result UpdateComment(long postId, CommentDto commentDto);
         Result DeleteComment(long postId, long userId, DateTime createdAt);

@@ -19,9 +19,9 @@ namespace Explorer.API.Controllers.Author.CommentView
         }
 
         [HttpGet]
-        public ActionResult<List<CommentDto>> GetAllForPost([FromQuery] int postId, [FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<List<CommentDto>> GetAllForPost([FromQuery] int postId)
         {
-            var result = _postAggregateService.GetCommentsForPost(postId, page, pageSize);
+            var result = _postAggregateService.GetCommentsForPost(postId);
             return CreateResponse(result);
         }
     }
