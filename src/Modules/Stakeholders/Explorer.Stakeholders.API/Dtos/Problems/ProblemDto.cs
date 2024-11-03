@@ -6,10 +6,10 @@ public class ProblemDto
     public int TourId { get; set; }
     public ProblemCategory Category { get; set; }
     public ProblemPriority Priority { get; set; }
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
     public DateOnly ReportedAt { get; set; }
-    public ResolutionDto Resolution { get; set; }
-    public List<MessageDto> Messages { get; set; }
+    public ResolutionDto Resolution { get; set; } = new ResolutionDto { IsResolved = false, Deadline = DateTime.Today.AddDays(5) };
+    public List<MessageDto> Messages { get; set; } = new List<MessageDto>();
 }
 
 public enum ProblemCategory
