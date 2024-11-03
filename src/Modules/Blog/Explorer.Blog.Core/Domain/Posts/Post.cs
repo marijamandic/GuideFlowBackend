@@ -11,7 +11,6 @@ namespace Explorer.Blog.Core.Domain.Posts
     {
         private readonly List<Comment> _comments = new();
         private readonly List<BlogRating> _ratings = new();
-
         public string Title { get; set; }
         public long UserId { get; set; }
         public string Description { get; set; }
@@ -35,15 +34,71 @@ namespace Explorer.Blog.Core.Domain.Posts
         public List<Comment> Comments => _comments.ToList();
         public List<BlogRating> Ratings => _ratings.ToList();
 
+        // Method to update Title with validation
+        public void UpdateTitle(string newTitle)
+        {
+            if (string.IsNullOrWhiteSpace(newTitle))
+                throw new ArgumentException("Title cannot be empty");
+
+            Title = newTitle;
+        }
+
+        // Method to update Description
+        public void UpdateDescription(string newDescription)
+        {
+            if (string.IsNullOrWhiteSpace(newDescription))
+                throw new ArgumentException("Description cannot be empty");
+
+            Description = newDescription;
+        }
+
+        // Method to update Status
+        public void UpdateStatus(PostStatus newStatus)
+        {
+            Status = newStatus;
+        }
+
+        // Comment-related methods
         public Result AddComment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
             var result = Comment.Create(userId, postId, createdAt, content, lastModified);
             if (result.IsFailed)
             {
-                return Result.Fail("Greska pri dodavanju komentara!");
+                return Result.Fail("Error adding comment!");
             }
             _comments.Add(result.Value);
+            return Result.Ok();
+        }
 
+        public Result UpdateComment(Comment updatedComment)
+        {
+            var comment = _comments.FirstOrDefault(c =>
+                c.UserId == updatedComment.UserId &&
+                c.PostId == updatedComment.PostId &&
+                c.CreatedAt == updatedComment.CreatedAt);
+
+            if (comment == null)
+            {
+                return Result.Fail("Comment not found.");
+            }
+
+            comment.UpdateContent(updatedComment.Content);
+            return Result.Ok();
+        }
+
+        public Result DeleteComment(long userId, long postId, DateTime createdAt)
+        {
+            var comment = _comments.FirstOrDefault(c =>
+                c.UserId == userId &&
+                c.PostId == postId &&
+                c.CreatedAt == createdAt);
+
+            if (comment == null)
+            {
+                return Result.Fail("Comment not found.");
+            }
+
+            _comments.Remove(comment);
             return Result.Ok();
         }
 

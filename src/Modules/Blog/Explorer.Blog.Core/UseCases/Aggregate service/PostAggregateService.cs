@@ -20,99 +20,112 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             _mapper = mapper;
         }
 
-        public Result<PostDto> CreatePost(PostDto postDto)
+        // Post operations
+        public Result<List<PostDto>> GetAllPosts(int pageNumber, int pageSize)
         {
-            var post = _mapper.Map<Post>(postDto);
-            var result = _repository.Create(post); 
+            var postsResult = _repository.GetAll(pageNumber, pageSize);
+            if (postsResult.IsFailed) return Result.Fail("Failed to retrieve posts.");
 
-            if (result.IsSuccess)
-            {
-                var createdPostDto = _mapper.Map<PostDto>(result.Value);
-                return Result.Ok(createdPostDto);
-            }
-
-            return Result.Fail("Failed to create post.");
+            var postDtos = _mapper.Map<List<PostDto>>(postsResult.Value);
+            return Result.Ok(postDtos);
         }
 
         public Result<PostDto> GetPostById(long postId)
         {
-            var result = _repository.GetById(postId); 
-
-            if (result.IsSuccess && result.Value != null)
-            {
-                var postDto = _mapper.Map<PostDto>(result.Value);
-                return Result.Ok(postDto);
-            }
-
-            return Result.Fail("Post not found.");
-        }
-
-        public Result<IEnumerable<PostDto>> GetAllPosts(int pageNumber, int pageSize)
-        {
-            var result = _repository.GetAll(pageNumber, pageSize); 
-
-            if (result.IsSuccess)
-            {
-                var postDtos = _mapper.Map<IEnumerable<PostDto>>(result.Value);
-                return Result.Ok(postDtos);
-            }
-
-            return Result.Fail("Failed to retrieve posts.");
-        }
-
-        public Result AddComment(long postId, CommentDto commentDto)
-        {
-            var result = _repository.GetById(postId); 
-
-            if (result.IsFailed || result.Value == null)
-            {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
                 return Result.Fail("Post not found.");
-            }
 
-            var post = result.Value;
-            var comment = _mapper.Map<Comment>(commentDto);
-            var addCommentResult = post.AddComment(comment.UserId, postId, comment.CreatedAt, comment.Content, comment.LastModified);
-
-            if (addCommentResult.IsSuccess)
-            {
-                _repository.Update(post); 
-                return Result.Ok();
-            }
-
-            return Result.Fail("Failed to add comment.");
+            var postDto = _mapper.Map<PostDto>(postResult.Value);
+            return Result.Ok(postDto);
         }
 
-
-
-        public Result AddRating(long postId, BlogRatingDto blogRatingDto)
+        public Result CreatePost(PostDto postDto)
         {
-            //1. Učitavanje agregata iz repozitorijuma
-            var result = _repository.GetById(postId);
+            var post = _mapper.Map<Post>(postDto);
+            var result = _repository.Create(post);
+            return result.IsSuccess ? Result.Ok() : Result.Fail("Failed to create post.");
+        }
 
-            if(result.IsFailed || result.Value == null)
-            {
-                return Result.Fail("Post not found.");
-            }
-            var post = result.Value;
-
-            //2. Poziv metode agregata da odgovori na pitanje ili izmeni stanje
-            var addRatingResult = post.AddRating(blogRatingDto);
-
-            if (addRatingResult.IsSuccess)
-            {
-                //3. Čuvanje izmene agregata, ako mu se stanje promenilo,
-                _repository.Update(post);
-                return Result.Ok();
-            }
-
-            //4. Formiranje rezultata operacije koji se vraća kontroleru.
-            return Result.Fail("Failed to add rating.");
+        public Result UpdatePost(PostDto postDto)
+        {
+            var post = _mapper.Map<Post>(postDto);
+            var result = _repository.Update(post);
+            return result.IsSuccess ? Result.Ok() : Result.Fail("Failed to update post.");
         }
 
         public Result DeletePost(long postId)
         {
-            var result = _repository.Delete(postId); 
+            var result = _repository.Delete(postId);
             return result.IsSuccess ? Result.Ok() : Result.Fail("Failed to delete post.");
+        }
+
+        // Comment operations
+        public Result<List<CommentDto>> GetCommentsForPost(long postId, int page, int pageSize)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null) return Result.Fail("Post not found.");
+
+            var comments = postResult.Value.Comments
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var commentDtos = _mapper.Map<List<CommentDto>>(comments);
+            return Result.Ok(commentDtos);
+        }
+
+        public Result AddComment(long postId, CommentDto commentDto)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+                return Result.Fail("Post not found.");
+
+            var addCommentResult = postResult.Value.AddComment(commentDto.UserId, postId, commentDto.CreatedAt, commentDto.Content, commentDto.LastModified);
+            if (addCommentResult.IsFailed) return Result.Fail("Failed to add comment.");
+
+            _repository.Update(postResult.Value);
+            return Result.Ok();
+        }
+
+        public Result UpdateComment(long postId, CommentDto commentDto)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+                return Result.Fail("Post not found.");
+
+            var updateResult = postResult.Value.UpdateComment(_mapper.Map<Comment>(commentDto));
+            if (updateResult.IsFailed) return Result.Fail("Failed to update comment.");
+
+            _repository.Update(postResult.Value);
+            return Result.Ok();
+        }
+
+        public Result DeleteComment(long postId, long userId, DateTime createdAt)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+                return Result.Fail("Post not found.");
+
+            var deleteResult = postResult.Value.DeleteComment(userId, postId, createdAt);
+            if (deleteResult.IsFailed) return Result.Fail("Failed to delete comment.");
+
+            _repository.Update(postResult.Value);
+            return Result.Ok();
+        }
+
+        public Result AddRating(long postId, BlogRatingDto blogRatingDto)
+        {
+            var result = _repository.GetById(postId);
+            if (result.IsFailed || result.Value == null)
+                return Result.Fail("Post not found.");
+
+            var post = result.Value;
+            var addRatingResult = post.AddRating(blogRatingDto);
+            if (addRatingResult.IsFailed) return Result.Fail("Failed to add rating.");
+
+            _repository.Update(post);
+            return Result.Ok();
         }
     }
 }

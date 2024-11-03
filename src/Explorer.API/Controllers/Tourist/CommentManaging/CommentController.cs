@@ -1,5 +1,7 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.API.Public.Aggregate_service_interface;
+using Explorer.Blog.Core.Domain.Posts;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
@@ -12,47 +14,48 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
     [Route("api/commentmanaging/comment")]
     public class CommentController : BaseApiController
     {
-        private readonly ICommentService commentService;
-        private readonly IUserService userService;
+        private readonly IPostAggregateService _postAggregateService;
+        private readonly IUserService _userService;
 
-        public CommentController(ICommentService commentService,IUserService userService)
+        public CommentController(IPostAggregateService postAggregateService, IUserService userService)
         {
-            this.commentService = commentService;
-            this.userService = userService;
+            _postAggregateService = postAggregateService;
+            _userService = userService;
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<CommentDto>> GetAllForPost([FromQuery]int id,[FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<List<CommentDto>> GetAllForPost([FromQuery] int postId, [FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = commentService.GetAllForPost(id,page, pageSize);
+            var result = _postAggregateService.GetCommentsForPost(postId, page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet("user/{id:int}")]
-        public ActionResult<UserDto> GetCommentCreator(int id) 
-        { 
-            var result=userService.GetById(id);
+        public ActionResult<UserDto> GetCommentCreator(int id)
+        {
+            var result = _userService.GetById(id);
             return CreateResponse(result);
         }
 
         [HttpPost]
-        public ActionResult<CommentDto> Create([FromBody] CommentDto comment)
+        public ActionResult Create([FromBody] CommentDto comment)
         {
-            var result = commentService.Create(comment);
+            var result = _postAggregateService.AddComment(comment.PostId, comment);
             return CreateResponse(result);
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<CommentDto> Update([FromBody] CommentDto comment)
+        public ActionResult Update([FromBody] CommentDto comment, int id)
         {
-            var result = commentService.Update(comment);
-            return CreateResponse(result);  
+            comment.Id = id;
+            var result = _postAggregateService.UpdateComment(comment.PostId, comment);
+            return CreateResponse(result);
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id, [FromQuery] long userId, [FromQuery] DateTime createdAt)
         {
-            var result=commentService.Delete(id);
+            var result = _postAggregateService.DeleteComment(id, userId, createdAt);
             return CreateResponse(result);
         }
     }

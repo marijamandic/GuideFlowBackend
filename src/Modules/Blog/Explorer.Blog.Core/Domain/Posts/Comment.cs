@@ -21,7 +21,7 @@ namespace Explorer.Blog.Core.Domain.Posts
 
         public Comment() { }
 
-        [JsonConstructor] //kako radi ovo?
+        [JsonConstructor]
         public Comment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
             UserId = userId;
@@ -32,6 +32,20 @@ namespace Explorer.Blog.Core.Domain.Posts
             Validate();
         }
 
+        public void UpdateContent(string newContent)
+        {
+            if (string.IsNullOrWhiteSpace(newContent))
+                throw new ArgumentException("Content cannot be empty");
+
+            Content = newContent;
+            UpdateLastModified();
+        }
+
+        private void UpdateLastModified()
+        {
+            LastModified = DateTime.UtcNow;
+        }
+
         internal static Result<Comment> Create(
             long userId,
             long postId,
@@ -39,11 +53,10 @@ namespace Explorer.Blog.Core.Domain.Posts
             string content,
             DateTime lastModified)
         {
-            //da validacija vraca Result.Failure?
-            
+
             var comment = new Comment(userId, postId, createdAt, content, lastModified);
 
-            return comment; 
+            return comment;
         }
 
         protected override bool EqualsCore(Comment other)
@@ -67,7 +80,6 @@ namespace Explorer.Blog.Core.Domain.Posts
                 return hashCode;
             }
         }
-
 
         private void Validate()
         {

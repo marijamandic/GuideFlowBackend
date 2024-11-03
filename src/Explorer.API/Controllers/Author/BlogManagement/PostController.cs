@@ -1,5 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.API.Public.Aggregate_service_interface;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,32 +11,36 @@ namespace Explorer.API.Controllers.Author.BlogManagement
     [Route("api/blogManagement/post")]
     public class PostController : BaseApiController
     {
-        private readonly IPostService _postService;
+        private readonly IPostAggregateService _postAggregateService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PostController(IPostService postService , IWebHostEnvironment webHostEnvironment) {
-            _postService = postService;
+        public PostController(IPostAggregateService postAggregateService, IWebHostEnvironment webHostEnvironment)
+        {
+            _postAggregateService = postAggregateService;
             _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<PostDto>> GetAll([FromQuery]int page, [FromQuery]int pageSize) {
-            var result = _postService.GetPaged(page, pageSize);
+        public ActionResult<List<PostDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _postAggregateService.GetAllPosts(page, pageSize);
             return CreateResponse(result);
-        }        
-        
+        }
+
         [HttpGet("{id:int}")]
-        public ActionResult<PagedResult<PostDto>> Get(int id) {
-            var result = _postService.Get(id);
+        public ActionResult<PostDto> Get(int id)
+        {
+            var result = _postAggregateService.GetPostById(id);
             return CreateResponse(result);
         }
 
         [HttpPost]
-        public ActionResult<PostDto> Create([FromBody] PostDto post) {
-
-            if (!string.IsNullOrEmpty(post.ImageBase64)){
+        public ActionResult Create([FromBody] PostDto post)
+        {
+            if (!string.IsNullOrEmpty(post.ImageBase64))
+            {
                 var imageData = Convert.FromBase64String(post.ImageBase64.Split(',')[1]);
-                var fileName = Guid.NewGuid() + ".png"; // ili bilo koji format slike
+                var fileName = Guid.NewGuid() + ".png";
                 var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "blogs");
 
                 if (!Directory.Exists(folderPath))
@@ -48,14 +53,15 @@ namespace Explorer.API.Controllers.Author.BlogManagement
                 post.ImageUrl = $"images/blogs/{fileName}";
             }
 
-            var result = _postService.Create(post);
+            var result = _postAggregateService.CreatePost(post);
             return CreateResponse(result);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<PostDto> Update([FromBody] PostDto post , int id) { 
+        public ActionResult Update([FromBody] PostDto post, int id)
+        {
             post.Id = id;
-            var result = _postService.Update(post);
+            var result = _postAggregateService.UpdatePost(post);
             return CreateResponse(result);
         }
     }
