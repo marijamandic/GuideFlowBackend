@@ -4,5 +4,6 @@ using Explorer.Stakeholders.Core.Domain.Problems;
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 public interface IProblemRepository
 {
+    Problem Create(Problem problem);
     PagedResult<Problem> GetAll();
 }
