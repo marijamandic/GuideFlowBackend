@@ -15,6 +15,13 @@ public class ProblemDatabaseRepository : IProblemRepository
         _problems = _stakeholdersContext.Set<Problem>();
     }
 
+    public Problem Create(Problem problem)
+    {
+        _problems.Add(problem);
+        _stakeholdersContext.SaveChanges();
+        return problem;
+    }
+
     public PagedResult<Problem> GetAll()
     {
         var result = _problems.Include(p => p.Messages).ToList();

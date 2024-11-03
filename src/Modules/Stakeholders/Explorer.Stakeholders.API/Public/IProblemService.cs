@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace Explorer.Stakeholders.API.Public;
 public interface IProblemService
 {
-    Result<PagedResult<ProblemDto>> GetPaged(int page, int pageSize);
     Result<ProblemDto> Create(ProblemDto problem);
 
     /// <summary>
