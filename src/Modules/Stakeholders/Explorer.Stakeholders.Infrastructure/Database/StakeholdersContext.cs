@@ -73,6 +73,10 @@ public class StakeholdersContext : DbContext
     private static void ConfigureProblem(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Problem>()
+            .Property(p => p.Details)
+            .HasColumnType("jsonb");
+
+        modelBuilder.Entity<Problem>()
             .Property(p => p.Resolution)
             .HasColumnType("jsonb");
 

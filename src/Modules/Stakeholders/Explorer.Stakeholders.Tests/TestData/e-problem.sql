@@ -1,9 +1,9 @@
 INSERT INTO stakeholders."Problems"(
-	"Id", "UserId", "TourId", "Category", "Priority", "Description", "ReportedAt", "Resolution")
-	VALUES (-1, 1, 2, 0, 0, 'pa sta znam nije lose', NOW(), json_build_object('IsResolved', TRUE, 'Deadline', NOW()));
+	"Id", "UserId", "TourId", "Details", "Resolution")
+	VALUES (-1, 1, 2, json_build_object('Category', 0, 'Priority', 0, 'Description', 'pa sta znam nije lose'), json_build_object('ReportedAt', NOW(), 'IsResolved', TRUE, 'Deadline', NOW() + INTERVAL '5 days'));
 INSERT INTO stakeholders."Problems"(
-	"Id", "UserId", "TourId", "Category", "Priority", "Description", "ReportedAt", "Resolution")
-	VALUES (-2, 1, 2, 0, 0, 'pa sta znam nije lose', NOW(), json_build_object('IsResolved', FALSE, 'Deadline', NOW()));
+	"Id", "UserId", "TourId", "Details", "Resolution")
+	VALUES (-2, 1, 2, json_build_object('Category', 0, 'Priority', 0, 'Description', 'pa sta znam nije lose'), json_build_object('ReportedAt', NOW(), 'IsResolved', FALSE, 'Deadline', NOW() + INTERVAL '5 days'));
 INSERT INTO stakeholders."Problems"(
-	"Id", "UserId", "TourId", "Category", "Priority", "Description", "ReportedAt", "Resolution")
-	VALUES (-3, 1, 2, 0, 0, 'pa sta znam nije lose', NOW(), json_build_object('IsResolved', FALSE, 'Deadline', NOW()));
+	"Id", "UserId", "TourId", "Details", "Resolution")
+	VALUES (-3, 1, 2, json_build_object('Category', 0, 'Priority', 0, 'Description', 'pa sta znam nije lose'), json_build_object('ReportedAt', NOW(), 'IsResolved', FALSE, 'Deadline', NOW() + INTERVAL '5 days'));

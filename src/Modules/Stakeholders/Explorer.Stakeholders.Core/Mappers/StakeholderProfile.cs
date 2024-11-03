@@ -17,17 +17,23 @@ public class StakeholderProfile : Profile
         CreateMap<ClubRequestDto, ClubRequest>().ReverseMap();
         CreateMap<ClubMemberDto, ClubMember>().ReverseMap();
         CreateMap<UserDto, User>().ReverseMap();
-        //CreateMap<ProblemDto, Problem>().ReverseMap();
         CreateMap<RatingAppDto, AppRating>().ReverseMap();
-        //CreateMap<ResolutionDto, Resolution>().ReverseMap();
-        //CreateMap<MessageDto, Message>().ReverseMap();
         CreateMap<ProfileInfoDto, ProfileInfo>().ReverseMap();
 
         CreateMap<ProblemDto, Problem>().IncludeAllDerived()
-            .ForMember(dest => dest.Resolution, opt => opt.MapFrom(src => new Resolution(src.Resolution.IsResolved, src.Resolution.Deadline)))
+            .ForMember(dest => dest.Details, opt => opt.MapFrom(src =>
+                new Details((Domain.Problems.ProblemCategory)(int)src.Details.Category, (Domain.Problems.ProblemPriority)(int)src.Details.Priority, src.Details.Description)))
+            .ForMember(dest => dest.Resolution, opt => opt.MapFrom(src => new Resolution(src.Resolution.ReportedAt, src.Resolution.IsResolved, src.Resolution.Deadline)))
             .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages.Select(m => new Message(m.ProblemId, m.UserId, m.Content, m.PostedAt))));
         CreateMap<Problem, ProblemDto>().IncludeAllDerived()
-            .ForMember(dest => dest.Resolution, opt => opt.MapFrom(src => new ResolutionDto { IsResolved = src.Resolution.IsResolved, Deadline = src.Resolution.Deadline }))
+            .ForMember(dest => dest.Details, opt => opt.MapFrom(src =>
+                new DetailsDto {
+                    Category = (API.Dtos.Problems.ProblemCategory)(int)src.Details.Category,
+                    Priority = (API.Dtos.Problems.ProblemPriority)(int)src.Details.Priority,
+                    Description = src.Details.Description
+                }
+            ))
+            .ForMember(dest => dest.Resolution, opt => opt.MapFrom(src => new ResolutionDto { ReportedAt = src.Resolution.ReportedAt, IsResolved = src.Resolution.IsResolved, Deadline = src.Resolution.Deadline }))
             .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages.Select(m =>
                 new MessageDto { Id = (int)m.Id, ProblemId = (int)m.ProblemId, UserId = (int)m.UserId, Content = m.Content, PostedAt = m.PostedAt })));
     }

@@ -4,7 +4,6 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Club;
-using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club;
 using Explorer.Stakeholders.Core.Mappers;

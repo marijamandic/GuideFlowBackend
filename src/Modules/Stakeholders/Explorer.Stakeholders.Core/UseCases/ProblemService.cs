@@ -18,6 +18,16 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
 
     public Result<ProblemDto> Create(ProblemDto problem)
     {
+        try
+        {
+            if (problem == null) throw new ArgumentNullException(nameof(problem));
+            var res = MapToDomain(problem);
+        }
+        catch (Exception ex)
+        {
+            
+            throw;
+        }
         var result = _problemRepository.Create(MapToDomain(problem));
         return MapToDto(result);
     }
