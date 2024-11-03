@@ -1,4 +1,5 @@
 ﻿using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
@@ -23,6 +24,13 @@ public class ToursContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("tours");
+        ConfigureTour(modelBuilder);
+    }
+
+    private static void ConfigureTour(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Tour>().Property(tour => tour.TransportDurations).HasColumnType("jsonb");
+        modelBuilder.Entity<Tour>().Property(tour => tour.Price).HasColumnType("jsonb");
     }
 }
 

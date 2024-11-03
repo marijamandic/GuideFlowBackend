@@ -5,6 +5,7 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
@@ -45,7 +46,7 @@ public static class ToursStartup
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
-        services.AddScoped(typeof(ICrudRepository<Tour>), typeof(CrudDatabaseRepository<Tour, ToursContext>));
+        services.AddScoped<ITourRepository,TourDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourEquipment>), typeof(CrudDatabaseRepository<TourEquipment, ToursContext>));
         services.AddScoped<ITourEquipmentRepository, TourEquipmentRepository>();
