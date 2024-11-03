@@ -58,5 +58,13 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
             var result = _postAggregateService.DeleteComment(id, userId, createdAt);
             return CreateResponse(result);
         }
+
+        [HttpGet("count")]
+        public ActionResult<int> GetCommentCount([FromQuery] int postId)
+        {
+            var result = _postAggregateService.GetCommentCountForPost(postId);
+            return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
+        }
+
     }
 }
