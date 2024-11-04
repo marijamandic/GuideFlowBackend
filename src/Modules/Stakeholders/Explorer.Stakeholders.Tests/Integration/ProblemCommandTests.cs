@@ -49,6 +49,31 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         storedEntity.ShouldNotBeNull();
         storedEntity.Id.ShouldBe(result.Id);
     }
+    [Fact]
+    public void Update()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+        /*var entityToChange = new ProblemStatusChangeDto
+        {
+            IsSolved = true;
+            TouristMessage = "usepsno promenjeno";
+        }*/
+        var entity = new ProbStatusChangeDto
+        {
+            IsSolved = true,
+            TouristMessage = "uspesno promenjeno"
+        };
+        var result = ((ObjectResult)controller.Update(-2,entity).Result)?.Value as ProblemDto;
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(-2);
+        result.Resolution.IsResolved.ShouldBe(true);
+
+        var storedEntity = dbContext.Messages.FirstOrDefault(i => i.Content == "uspesno promenjeno");
+        storedEntity.ShouldNotBeNull();
+        storedEntity.ProblemId.ShouldBe(-2);
+    }
 
     private static ProblemController CreateController(IServiceScope scope)
     {

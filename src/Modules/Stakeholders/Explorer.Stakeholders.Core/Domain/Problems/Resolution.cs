@@ -6,7 +6,7 @@ namespace Explorer.Stakeholders.Core.Domain.Problems;
 public class Resolution : ValueObject<Resolution>
 {
     public DateTime ReportedAt { get; }
-    public bool IsResolved { get; }
+    public bool IsResolved { get; set; }
     public DateTime Deadline { get; }
 
     [JsonConstructor]
@@ -38,5 +38,9 @@ public class Resolution : ValueObject<Resolution>
             hashCode = (hashCode * 397) ^ Deadline.GetHashCode();
             return hashCode;
         }
+    }
+    public void ChangeResolveStatus(bool status)
+    {
+        IsResolved = status;
     }
 }

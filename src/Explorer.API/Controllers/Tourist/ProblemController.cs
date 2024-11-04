@@ -23,5 +23,17 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.Create(problem);
             return CreateResponse(result);
         }
+        /*[HttpGet]
+        public ActionResult<PagedResult<ProblemDto>> GetAll()
+        {
+            var result = _problemService.GetAll();
+            return CreateResponse(result);
+        }*/
+        [HttpPut("{id:int}")]
+        public ActionResult<ProblemDto> Update(int id, [FromBody] ProbStatusChangeDto status)
+        {
+            var result = _problemService.Update(status,id);
+            return CreateResponse(result);
+        }
     }
 }

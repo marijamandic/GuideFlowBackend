@@ -18,4 +18,5 @@ public interface IProblemService
     /// </summary>
     /// <returns></returns>
     Result<PagedResult<ProblemDto>> GetAll();
+    Result<ProblemDto> Update(ProbStatusChangeDto status,int id);
 }

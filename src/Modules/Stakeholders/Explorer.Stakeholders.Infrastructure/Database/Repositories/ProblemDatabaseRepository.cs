@@ -27,4 +27,16 @@ public class ProblemDatabaseRepository : IProblemRepository
         var result = _problems.Include(p => p.Messages).ToList();
         return new PagedResult<Problem>(result, result.Count);
     }
+    public Problem Update(Problem problem)
+    {
+        _stakeholdersContext.Entry(problem).State = EntityState.Modified;
+        _stakeholdersContext.SaveChanges();
+        return problem;
+    }
+    public Problem GetById(int id)
+    {
+        var problem = _stakeholdersContext.Problems.FirstOrDefault(p => p.Id == id);
+        if(problem == null) throw new KeyNotFoundException($"Problem with ID {id} not found.");
+        return problem;
+    }
 }

@@ -6,4 +6,6 @@ public interface IProblemRepository
 {
     Problem Create(Problem problem);
     PagedResult<Problem> GetAll();
+    Problem Update(Problem problem);
+    Problem GetById(int id);
 }

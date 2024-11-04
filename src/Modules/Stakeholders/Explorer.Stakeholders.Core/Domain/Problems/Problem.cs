@@ -4,7 +4,7 @@ namespace Explorer.Stakeholders.Core.Domain.Problems;
 
 public class Problem : Entity
 {
-    private readonly List<Message> _messages = new();
+    private List<Message> _messages = new();
 
     public long UserId { get; init; }
     public long TourId { get; init; }
@@ -22,5 +22,11 @@ public class Problem : Entity
     private void Validate()
     {
         
+    }
+    public void ChangeProblemStatus(string touristMessage,bool status)
+    {
+        Resolution.ChangeResolveStatus(status);
+        var message = new Message(Id, UserId, touristMessage, DateTime.UtcNow);
+        _messages.Add(message);
     }
 }
