@@ -23,5 +23,18 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
         public bool IsCompleted() {
             return CompletionTime != DateTime.MinValue;
         }
+        public bool IsTouristNear(double latitude, double longitude)
+        {
+            const double tolerance = 0.0001; // Tolerancija za blizinu (oko 11 metara)
+
+            bool isNearLatitude = Math.Abs(Latitude - latitude) <= tolerance;
+            bool isNearLongitude = Math.Abs(Longitude - longitude) <= tolerance;
+
+            return isNearLatitude && isNearLongitude;
+        }
+        public void MarkAsCompleted() {
+            CompletionTime = DateTime.UtcNow;
+        }
+
     }
 }

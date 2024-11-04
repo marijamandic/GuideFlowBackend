@@ -1,4 +1,5 @@
 ﻿using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Domain.TourExecutions;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
@@ -25,6 +26,13 @@ public class ToursContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("tours");
+        ConfigureTour(modelBuilder);
+    }
+
+    private static void ConfigureTour(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Tour>().Property(tour => tour.TransportDurations).HasColumnType("jsonb");
+        modelBuilder.Entity<Tour>().Property(tour => tour.Price).HasColumnType("jsonb");
         modelBuilder.Entity<TourExecution>().HasMany(te => te.CheckpointsStatus).WithOne().OnDelete(DeleteBehavior.Cascade);
     }
 }
