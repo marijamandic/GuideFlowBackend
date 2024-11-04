@@ -163,6 +163,5 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         {
             ControllerContext = BuildContext("-1")
         };
-    }
-    
+    } 
 }

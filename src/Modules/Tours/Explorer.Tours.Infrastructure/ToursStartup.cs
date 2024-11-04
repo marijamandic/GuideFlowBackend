@@ -3,13 +3,16 @@ using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
+using Explorer.Tours.API.Public.Execution;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.TourExecutions;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
 using Explorer.Tours.Core.UseCases.Author;
+using Explorer.Tours.Core.UseCases.Execution;
 using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +44,7 @@ public static class ToursStartup
         services.AddScoped<ITourReviewService, TourReviewService>();
         services.AddScoped<ITourSpecificationService, TourSpecificationService>();
         services.AddScoped<IPublicPointService, PublicPointService>();
+        services.AddScoped<ITourExecutionService, TourExecutionService>();
 
     }
 
@@ -58,7 +62,8 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourSpecifications>), typeof(CrudDatabaseRepository<TourSpecifications, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<PublicPoint>), typeof(CrudDatabaseRepository<PublicPoint, ToursContext>));
-
+        services.AddScoped<ITourExecutionRepository, TourExecutionRepository>();
+        services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
         services.AddScoped<ITourSpecificationRepository, TourSpecificationRepository>();
         services.AddScoped<IPublicPointRepository, PublicPointRepository>();
 
