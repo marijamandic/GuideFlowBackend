@@ -78,5 +78,7 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
 
             return post != null ? Result.Ok(post) : Result.Fail("Post not found");
         }
+
+        
     }
 }

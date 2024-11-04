@@ -5,24 +5,28 @@ using System.Text.Json.Serialization;
 
 namespace Explorer.Blog.Core.Domain.Posts
 {
+    public enum RatingStatus
+    {
+        Plus,
+        Minus
+    }
     public class BlogRating : ValueObject<BlogRating>
     {
         public long UserId { get; private set; }
         public long PostId { get; private set; }
         public DateTime RatingDate { get; private set; }
-        public long UpVotesNumber { get; private set; }
-        public long DownVotesNumber { get; private set; }
+        
+        public RatingStatus RatingStatus { get; private set; }
 
         public BlogRating() { }  
 
         [JsonConstructor]
-        public BlogRating(long userId, long postId, DateTime ratingDate, long upVotesNumber, long downVotesNumber)
+        public BlogRating(long userId, long postId, DateTime ratingDate, RatingStatus ratingStatus)
         {
             UserId = userId;
             PostId = postId;
             RatingDate = ratingDate;
-            UpVotesNumber = upVotesNumber;
-            DownVotesNumber = downVotesNumber;
+            RatingStatus = ratingStatus;
             Validate();
         }
 
@@ -30,10 +34,10 @@ namespace Explorer.Blog.Core.Domain.Posts
             long userId,
             long postId,
             DateTime ratingDate,
-            long upVotesNumber,
-            long downVotesNumber)
+            RatingStatus ratingStatus
+            )
         {
-            var rating = new BlogRating(userId, postId, ratingDate, upVotesNumber, downVotesNumber);
+            var rating = new BlogRating(userId, postId, ratingDate, ratingStatus);
             return Result.Ok(rating);
         }
 
@@ -42,8 +46,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             return UserId == other.UserId
                 && PostId == other.PostId
                 && RatingDate == other.RatingDate
-                && UpVotesNumber == other.UpVotesNumber
-                && DownVotesNumber == other.DownVotesNumber;
+                && RatingStatus == other.RatingStatus;
         }
 
         protected override int GetHashCodeCore()
@@ -53,8 +56,8 @@ namespace Explorer.Blog.Core.Domain.Posts
                 int hashCode = UserId.GetHashCode();
                 hashCode = (hashCode * 397) ^ PostId.GetHashCode();
                 hashCode = (hashCode * 397) ^ RatingDate.GetHashCode();
-                hashCode = (hashCode * 397) ^ UpVotesNumber.GetHashCode();
-                hashCode = (hashCode * 397) ^ DownVotesNumber.GetHashCode();
+                hashCode = (hashCode * 397) ^ RatingStatus.GetHashCode();
+                
                 return hashCode;
             }
         }
@@ -64,8 +67,8 @@ namespace Explorer.Blog.Core.Domain.Posts
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
             if (PostId == 0) throw new ArgumentException("Invalid PostId");
             if (RatingDate > DateTime.UtcNow) throw new ArgumentException("RatingDate cannot be in the future");
-            if (UpVotesNumber < 0) throw new ArgumentException("UpVotesNumber cannot be negative");
-            if (DownVotesNumber < 0) throw new ArgumentException("DownVotesNumber cannot be negative");
+            /*if (UpVotesNumber < 0) throw new ArgumentException("UpVotesNumber cannot be negative");
+            if (DownVotesNumber < 0) throw new ArgumentException("DownVotesNumber cannot be negative");*/
         }
     }
 }

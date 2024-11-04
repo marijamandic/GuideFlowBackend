@@ -4,6 +4,7 @@ using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Explorer.Blog.Core.Domain.Posts
 {
@@ -102,7 +103,7 @@ namespace Explorer.Blog.Core.Domain.Posts
 
         public Result AddRating(BlogRatingDto blogRatingDto)
         {
-            var result = BlogRating.Create(blogRatingDto.UserId, blogRatingDto.PostId, blogRatingDto.RatingDate, blogRatingDto.UpVotesNumber, blogRatingDto.DownVotesNumber);
+            var result = BlogRating.Create(blogRatingDto.UserId, blogRatingDto.PostId, blogRatingDto.RatingDate, (RatingStatus)blogRatingDto.RatingStatus);
             if (result.IsFailed)
             {
                 return Result.Fail("Greska pri dodavanju ocene bloga!");
@@ -128,6 +129,21 @@ namespace Explorer.Blog.Core.Domain.Posts
             _comments.Remove(comment);
             return Result.Ok();
         }
+
+        public Result DeleteRating(long userId, long postId) { 
+            
+            var rating = _ratings.FirstOrDefault(r => r.UserId == userId && r.PostId == postId);
+
+            if (rating == null)
+            {
+                return Result.Fail("Rating not found.");
+            }
+
+            _ratings.Remove(rating);
+            return Result.Ok();
+
+        }
+    
     }
 
     public enum PostStatus

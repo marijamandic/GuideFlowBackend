@@ -45,5 +45,7 @@ namespace Explorer.API.Controllers.Tourist.PostView
             var result = _postAggregateService.AddRating(postId, blogRatingDto);
             return CreateResponse(result);
         }
+
+        
     }
 }

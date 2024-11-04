@@ -24,5 +24,8 @@ namespace Explorer.Blog.API.Public.Aggregate_service_interface
 
         // Rating operations
         Result AddRating(long postId, BlogRatingDto blogRatingDto);
+        Result<List<BlogRatingDto>> GetRatingsForPost(long postId);
+
+        Result DeleteRating(long userId, long postId);
     }
 }

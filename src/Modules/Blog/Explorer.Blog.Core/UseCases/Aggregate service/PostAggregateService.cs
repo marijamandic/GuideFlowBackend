@@ -168,5 +168,52 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             _repository.Update(post);
             return Result.Ok();
         }
+
+        public Result<List<BlogRatingDto>> GetRatingsForPost(long postId)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+            {
+                Debug.WriteLine("#### ERROR: Post not found ####");
+                return Result.Fail("Post not found.");
+            }
+
+            try
+            {
+                var ratings = postResult.Value.Ratings.ToList();
+                var ratingDtos = _mapper.Map<List<BlogRatingDto>>(ratings);
+                return Result.Ok(ratingDtos);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"#### ERROR in GetRatingsForPost: {ex.Message} ####");
+                return Result.Fail("Error retrieving ratings.");
+            }
+        }
+
+        public Result DeleteRating(long userId, long postId)
+        {
+            // Retrieve the post by postId
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+            {
+                Debug.WriteLine("#### ERROR: Post not found ####");
+                return Result.Fail("Post not found.");
+            }
+
+            var post = postResult.Value;
+
+            
+            var deleteRatingResult = post.DeleteRating(userId, postId);
+            if (deleteRatingResult.IsFailed)
+            {
+                Debug.WriteLine("#### ERROR: " + deleteRatingResult.Errors[0].Message + " ####");
+                return Result.Fail("Failed to delete rating.");
+            }
+
+            var updateRepoResult = _repository.Update(post);
+            return updateRepoResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update repository after deleting rating.");
+        }
+
     }
 }
