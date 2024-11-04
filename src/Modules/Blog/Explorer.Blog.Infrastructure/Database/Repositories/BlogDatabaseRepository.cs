@@ -4,6 +4,7 @@ using Explorer.Blog.Infrastructure.Database;
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Explorer.Blog.Infrastructure.Database.Repositories
@@ -55,12 +56,27 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
 
         public Result<IEnumerable<Post>> GetAll(int pageNumber, int pageSize)
         {
-            var posts = _context.Posts
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            try
+            {
+                var posts = _context.Posts.AsEnumerable(); // Fetch all posts without pagination
 
-            return Result.Ok(posts.AsEnumerable());
+                Debug.WriteLine($"Retrieved {posts.Count()} posts from database.");
+                return Result.Ok(posts);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in GetAll: {ex.Message}");
+                return Result.Fail($"Error retrieving posts: {ex.Message}");
+            }
+        }
+
+        public Result<Post> GetPostByCommentId(long commentId)
+        {
+            var post = _context.Posts
+                .AsEnumerable() 
+                .FirstOrDefault(p => p.Comments.Any(c => c.Id == commentId));
+
+            return post != null ? Result.Ok(post) : Result.Fail("Post not found");
         }
     }
 }

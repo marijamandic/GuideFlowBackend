@@ -12,49 +12,38 @@ namespace Explorer.API.Controllers.Tourist.PostView
     public class PostController : BaseApiController
     {
         private readonly IPostAggregateService _postAggregateService;
-        private readonly IPostService _postService;
-        public PostController(IPostService postService, IPostAggregateService postAggregate)
+
+        public PostController(IPostAggregateService postAggregateService)
         {
-            _postService = postService;
-            _postAggregateService = postAggregate;
+            _postAggregateService = postAggregateService;
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<PostDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<List<PostDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
         {
-            var result = _postService.GetPaged(page, pageSize);
+            var result = _postAggregateService.GetAllPosts(page, pageSize);
             return CreateResponse(result);
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<PagedResult<PostDto>> Get(int id)
-        {
-            var result = _postService.Get(id);
-            return CreateResponse(result);
-        }
-
-        [HttpGet("/blogs")]
-        public ActionResult<PagedResult<PostDto>> GetAggregate(int id)
+        public ActionResult<PostDto> Get(int id)
         {
             var result = _postAggregateService.GetPostById(id);
             return CreateResponse(result);
         }
 
-        [HttpPut("{invitationId:int}/accept")]
-        public ActionResult<PagedResult<PostDto>> AddBlogRating(int invitationId, [FromBody] BlogRatingDto blogRatingDto)
+        [HttpGet("/blogs")]
+        public ActionResult<PostDto> GetAggregate(int id)
         {
-            var result = _postAggregateService.GetPostById(invitationId);
-            var post = result.Value;
-            
-            if (post == null)
-            {
-                return BadRequest("There is no such a post.");
-            }
-
-            var newRatingResult = _postAggregateService.AddRating(post.Id, blogRatingDto);
-
-            return CreateResponse(newRatingResult);
+            var result = _postAggregateService.GetPostById(id);
+            return CreateResponse(result);
         }
 
+        [HttpPut("{postId:int}/rate")]
+        public ActionResult AddBlogRating(int postId, [FromBody] BlogRatingDto blogRatingDto)
+        {
+            var result = _postAggregateService.AddRating(postId, blogRatingDto);
+            return CreateResponse(result);
+        }
     }
 }

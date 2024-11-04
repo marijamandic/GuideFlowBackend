@@ -13,6 +13,7 @@ namespace Explorer.Blog.Core.Domain.Posts
 {
     public class Comment : ValueObject<Comment>
     {
+        public long Id { get; private set; }
         public long UserId { get; private set; }
         public long PostId { get; private set; }
         public DateTime CreatedAt { get; private set; }
@@ -21,9 +22,10 @@ namespace Explorer.Blog.Core.Domain.Posts
 
         public Comment() { }
 
-        [JsonConstructor] //kako radi ovo?
-        public Comment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
+        [JsonConstructor]
+        public Comment(long id, long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
+            Id = id;
             UserId = userId;
             PostId = postId;
             CreatedAt = createdAt;
@@ -32,18 +34,30 @@ namespace Explorer.Blog.Core.Domain.Posts
             Validate();
         }
 
-        internal static Result<Comment> Create(
-            long userId,
-            long postId,
-            DateTime createdAt,
-            string content,
-            DateTime lastModified)
+        public void UpdateContent(string newContent)
         {
-            //da validacija vraca Result.Failure?
-            
-            var comment = new Comment(userId, postId, createdAt, content, lastModified);
+            if (string.IsNullOrWhiteSpace(newContent))
+                throw new ArgumentException("Content cannot be empty");
 
-            return comment; 
+            Content = newContent;
+            UpdateLastModified();
+        }
+
+        private void UpdateLastModified()
+        {
+            LastModified = DateTime.UtcNow;
+        }
+
+        internal static Result<Comment> Create(
+        long id,
+        long userId,
+        long postId,
+        DateTime createdAt,
+        string content,
+        DateTime lastModified)
+        {
+            var comment = new Comment(id, userId, postId, createdAt, content, lastModified);
+            return comment;
         }
 
         protected override bool EqualsCore(Comment other)
@@ -67,7 +81,6 @@ namespace Explorer.Blog.Core.Domain.Posts
                 return hashCode;
             }
         }
-
 
         private void Validate()
         {
