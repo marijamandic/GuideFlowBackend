@@ -5,7 +5,7 @@ using Explorer.Tours.API.Dtos.Execution;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Execution;
-using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.TourExecutions;
 using FluentResults;
@@ -31,10 +31,9 @@ namespace Explorer.Tours.Core.UseCases.Execution
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
             TourDto tour = _tourService.Get(createTourExecutionDto.TourId).Value;
-            List<CheckpointDto> checkpoints = _checkpointService.GetCheckpointsByTour(tour.Id);
 
             var tourExecution = new TourExecution(tour.Id,createTourExecutionDto.UserId,500);
-            tourExecution.AddCheckpointStatuses(checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
+            tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
 
             _tourExecutionRepository.Create(tourExecution);
             return MapToDto(tourExecution);

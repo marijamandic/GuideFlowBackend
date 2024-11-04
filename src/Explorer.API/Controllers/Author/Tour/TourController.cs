@@ -1,5 +1,7 @@
 ﻿using Explorer.API.Controllers;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +27,13 @@ namespace Explorer.API.Controllers.Author.Tour
             return CreateResponse(result);
         }
 
+        [HttpGet("{id:int}")]
+        public ActionResult<UserDto> GetTour(int id)
+        {
+            var result = _tourService.Get(id);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<TourDto> Create([FromBody] TourDto tour)
         {
@@ -35,15 +44,7 @@ namespace Explorer.API.Controllers.Author.Tour
         [HttpPut("{id:int}")]
         public ActionResult<TourDto> Update(int id, [FromBody] TourDto tour)
         {
-            tour.Id = id;
             var result = _tourService.Update(tour);
-            return CreateResponse(result);
-        }
-
-        [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
-        {
-            var result = _tourService.Delete(id);
             return CreateResponse(result);
         }
     }

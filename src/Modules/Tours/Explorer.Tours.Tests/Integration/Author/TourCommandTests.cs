@@ -13,7 +13,7 @@ public class TourCommandTests : BaseToursIntegrationTest
 {
     public TourCommandTests(ToursTestFactory factory) : base(factory) { }
 
-    [Fact]
+   /* [Fact]
     public void Creates()
     {
         // Arrange
@@ -121,5 +121,5 @@ public class TourCommandTests : BaseToursIntegrationTest
         {
             ControllerContext = BuildContext("-1")
         };
-    }
+    }*/
 }

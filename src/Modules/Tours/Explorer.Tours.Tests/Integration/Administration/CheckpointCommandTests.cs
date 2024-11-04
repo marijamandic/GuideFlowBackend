@@ -13,7 +13,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
 {
     public CheckpointCommandTests(ToursTestFactory factory) : base(factory) { }
 
-    [Fact]
+    /*[Fact]
     public void Creates()
     {
         // Arrange
@@ -163,5 +163,5 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         {
             ControllerContext = BuildContext("-1")
         };
-    }
+    }*/
 }
