@@ -10,6 +10,7 @@ namespace Explorer.Tours.Core.Domain.Tours
     public class Tour : Entity
     {
         public string Name { get; private set; }
+        public long AuthorId { get; private set; }
         public string Description { get; private set; }
         public Level Level { get; private set; }
         public TourStatus Status { get; private set; }
@@ -21,9 +22,10 @@ namespace Explorer.Tours.Core.Domain.Tours
         public List<TransportDuration> TransportDurations { get; private set; }
         public List<TourReview> Reviews { get; private set; }
 
-        public Tour(string name, string description, Level level,double lengthInKm,Price price,double averageGrade, TourStatus status = TourStatus.Draft)
+        public Tour(string name,long authorId, string description, Level level,double lengthInKm,Price price,double averageGrade, TourStatus status = TourStatus.Draft)
         {
             Name = name;
+            AuthorId = authorId;
             Description = description;
             Level = level;
             Status = status;
@@ -39,6 +41,8 @@ namespace Explorer.Tours.Core.Domain.Tours
 
         private void Validate()
         {
+            if (AuthorId == 0) throw new ArgumentException("Invalid Author Id");
+
             if (string.IsNullOrWhiteSpace(Name))
                 throw new ArgumentException("Name cannot be null or empty.");
 
