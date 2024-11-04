@@ -1,8 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
-using Explorer.BuildingBlocks.Core.UseCases;
 using FluentResults;
 using System.Collections.Generic;
-using System.Xml.Linq;
 
 namespace Explorer.Blog.API.Public.Aggregate_service_interface
 {
@@ -16,16 +14,19 @@ namespace Explorer.Blog.API.Public.Aggregate_service_interface
         Result DeletePost(long postId);
 
         // Comment operations
-        public Result<int> GetCommentCountForPost(int postId);
-        public Result<List<CommentDto>> GetCommentsForPost(long postId);
+        Result<int> GetCommentCountForPost(int postId);
+        Result<List<CommentDto>> GetCommentsForPost(long postId);
         Result AddComment(long postId, CommentDto commentDto);
         Result UpdateComment(long postId, CommentDto commentDto);
-        public Result DeleteComment(long commentId);
+        Result DeleteComment(long commentId);
 
         // Rating operations
         Result AddRating(long postId, BlogRatingDto blogRatingDto);
         Result<List<BlogRatingDto>> GetRatingsForPost(long postId);
-
         Result DeleteRating(long userId, long postId);
+
+        // EngagementStatus operations
+        Result<int> GetEngagementStatus(long postId);
+        Result UpdateEngagementStatus(long postId);
     }
 }

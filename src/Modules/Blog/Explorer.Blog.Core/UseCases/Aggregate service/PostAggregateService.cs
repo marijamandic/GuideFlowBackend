@@ -163,11 +163,15 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
 
             var post = result.Value;
             var addRatingResult = post.AddRating(blogRatingDto);
+
             if (addRatingResult.IsFailed) return Result.Fail("Failed to add rating.");
+
+            post.UpdateEngagementStatus(); // update status
 
             _repository.Update(post);
             return Result.Ok();
         }
+
 
         public Result<List<BlogRatingDto>> GetRatingsForPost(long postId)
         {
@@ -215,5 +219,37 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             return updateRepoResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update repository after deleting rating.");
         }
 
+
+        // EngagementStatus operations
+        public Result<int> GetEngagementStatus(long postId)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+                return Result.Fail("Post not found.");
+
+            int statusCode = (int)postResult.Value.EngagementStatus;
+            return Result.Ok(statusCode);
+        }
+
+        public Result UpdateEngagementStatus(long postId)
+        {
+            var postResult = _repository.GetById(postId);
+            if (postResult.IsFailed || postResult.Value == null)
+                return Result.Fail("Post not found.");
+
+            var post = postResult.Value;
+            post.UpdateEngagementStatus(); // Ažurira EngagementStatus
+
+            var updateResult = _repository.Update(post);
+            return updateResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update post engagement status.");
+        }
+    }
+
+    public enum EngagementStatus
+    {
+        Inactive,
+        Active,
+        Famous,
+        Closed
     }
 }

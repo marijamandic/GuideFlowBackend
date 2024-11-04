@@ -18,6 +18,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         public DateTime PublishDate { get; set; }
         public string ImageUrl { get; set; }
         public PostStatus Status { get; set; }
+        public EngagementStatus EngagementStatus { get; private set; }
 
         public Post() { }
 
@@ -143,7 +144,31 @@ namespace Explorer.Blog.Core.Domain.Posts
             return Result.Ok();
 
         }
-    
+
+        public void UpdateEngagementStatus()
+        {
+            int rating = Ratings.Count(r => r.RatingStatus == RatingStatus.Plus) -
+                         Ratings.Count(r => r.RatingStatus == RatingStatus.Minus);
+            int commentCount = Comments.Count;
+
+            if (rating < -10)
+            {
+                EngagementStatus = EngagementStatus.Closed;
+            }
+            else if (rating > 500 && commentCount > 30)
+            {
+                EngagementStatus = EngagementStatus.Famous;
+            }
+            else if (rating > 100 || commentCount > 10)
+            {
+                EngagementStatus = EngagementStatus.Active;
+            }
+            else
+            {
+                EngagementStatus = EngagementStatus.Inactive;
+            }
+        }
+
     }
 
     public enum PostStatus
