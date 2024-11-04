@@ -72,10 +72,7 @@ namespace Explorer.Blog.Core.Domain.Posts
 
         public Result UpdateComment(Comment updatedComment)
         {
-            var comment = _comments.FirstOrDefault(c =>
-                c.UserId == updatedComment.UserId &&
-                c.PostId == updatedComment.PostId &&
-                c.CreatedAt == updatedComment.CreatedAt);
+            var comment = _comments.FirstOrDefault(c => c.Id == updatedComment.Id);
 
             if (comment == null)
             {
@@ -85,6 +82,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             comment.UpdateContent(updatedComment.Content);
             return Result.Ok();
         }
+
 
         public Result DeleteComment(long userId, long postId, DateTime createdAt)
         {

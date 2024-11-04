@@ -47,7 +47,7 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
         [HttpPut("{id:int}")]
         public ActionResult Update([FromBody] CommentDto comment, int id)
         {
-            comment.Id = id;
+            comment.Id = id;  
             var result = _postAggregateService.UpdateComment(comment.PostId, comment);
             return CreateResponse(result);
         }
