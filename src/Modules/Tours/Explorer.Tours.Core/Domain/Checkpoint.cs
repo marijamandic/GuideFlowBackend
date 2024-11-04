@@ -12,7 +12,7 @@ public class Checkpoint : Entity
 
     public int TourId { get; private set; } 
 
-    public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl, int tourId)
+    public Checkpoint(string name, string description, double latitude, double longitude, string imageUrl, int tourId)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Invalid Name.");
         if (string.IsNullOrWhiteSpace(description)) throw new ArgumentException("Invalid Description.");

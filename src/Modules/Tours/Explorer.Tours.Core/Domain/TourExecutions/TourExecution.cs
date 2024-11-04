@@ -26,6 +26,23 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             LastActivity = DateTime.UtcNow;
             ExecutionStatus = ExecutionStatus.Active;
         }
+        public void UpdateLocation(double longitude , double latitude) {
+            foreach (var checkpointStatus in CheckpointsStatus)
+            {
+                if (!checkpointStatus.IsCompleted() && checkpointStatus.IsTouristNear(latitude, longitude))
+                {
+                    checkpointStatus.MarkAsCompleted(); 
+                }
+            }
+
+        }
+
+        public void AddCheckpointStatuses(List<Checkpoint> checkpoints) { 
+            foreach( Checkpoint checkpoint in checkpoints)
+            {
+                CheckpointsStatus.Add(new CheckpointStatus(checkpoint.Id,checkpoint.Latitude,checkpoint.Longitude));
+            }
+        }
     }
 }
 
