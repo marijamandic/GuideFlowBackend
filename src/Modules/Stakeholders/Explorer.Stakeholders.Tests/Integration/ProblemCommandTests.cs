@@ -55,11 +55,6 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-        /*var entityToChange = new ProblemStatusChangeDto
-        {
-            IsSolved = true;
-            TouristMessage = "usepsno promenjeno";
-        }*/
         var entity = new ProbStatusChangeDto
         {
             IsSolved = true,
@@ -74,10 +69,28 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         storedEntity.ShouldNotBeNull();
         storedEntity.ProblemId.ShouldBe(-2);
     }
+    [Fact]
+    public void UpdateDeadline()
+    {
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateAdminController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+        var result = ((ObjectResult)controller.UpdateDeadline(-2, DateTime.UtcNow.AddDays(10)).Result)?.Value as ProblemDto;
+        result.ShouldNotBeNull();
+        result.Id.ShouldBe(-2);
+        result.Resolution.Deadline.ShouldBe(DateTime.UtcNow.AddDays(10), TimeSpan.FromSeconds(10));
+    }
 
     private static ProblemController CreateController(IServiceScope scope)
     {
         return new ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        {
+            ControllerContext = BuildContext("-1")
+        };
+    }
+    private static Explorer.API.Controllers.Administrator.Administration.ProblemController CreateAdminController(IServiceScope scope)
+    {
+        return new Explorer.API.Controllers.Administrator.Administration.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };

@@ -21,12 +21,16 @@ public class Problem : Entity
 
     private void Validate()
     {
-        
+
     }
-    public void ChangeProblemStatus(string touristMessage,bool status)
+    public void ChangeProblemStatus(string touristMessage, bool status)
     {
         Resolution.ChangeResolveStatus(status);
         var message = new Message(Id, UserId, touristMessage, DateTime.UtcNow);
         _messages.Add(message);
+    }
+    public void ChangeDeadline(DateTime deadline)
+    {
+        Resolution.SetDeadline(deadline);
     }
 }

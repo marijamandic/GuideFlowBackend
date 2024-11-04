@@ -7,7 +7,7 @@ public class Resolution : ValueObject<Resolution>
 {
     public DateTime ReportedAt { get; }
     public bool IsResolved { get; set; }
-    public DateTime Deadline { get; }
+    public DateTime Deadline { get; set; }
 
     [JsonConstructor]
     public Resolution(DateTime reportedAt, bool isResolved, DateTime deadline)
@@ -42,5 +42,9 @@ public class Resolution : ValueObject<Resolution>
     public void ChangeResolveStatus(bool status)
     {
         IsResolved = status;
+    }
+    public void SetDeadline(DateTime deadline)
+    {
+        Deadline = deadline;
     }
 }

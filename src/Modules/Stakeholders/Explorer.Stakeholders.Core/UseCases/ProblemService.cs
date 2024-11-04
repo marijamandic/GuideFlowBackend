@@ -45,4 +45,11 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
         var result = _problemRepository.Update(problem);
         return MapToDto(result);
     }
+    public Result<ProblemDto> UpdateDeadline(int id,DateTime deadline) 
+    {
+        var problem = _problemRepository.GetById(id);
+        problem.ChangeDeadline(deadline);
+        var result = _problemRepository.Update(problem);
+        return MapToDto(result);
+    }
 }

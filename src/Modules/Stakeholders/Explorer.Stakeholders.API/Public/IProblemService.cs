@@ -19,4 +19,5 @@ public interface IProblemService
     /// <returns></returns>
     Result<PagedResult<ProblemDto>> GetAll();
     Result<ProblemDto> Update(ProbStatusChangeDto status,int id);
+    Result<ProblemDto> UpdateDeadline(int id, DateTime deadline);
 }
