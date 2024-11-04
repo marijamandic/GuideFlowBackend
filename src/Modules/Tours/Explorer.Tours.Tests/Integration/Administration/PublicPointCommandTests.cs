@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers.Author;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
@@ -76,7 +77,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             var updatedPublicPoint = new PublicPointDto
             {
-                Id = 1, // Existing ID
+                Id = -2, // Existing ID
                 Name = "Updated Tourist Spot",
                 Description = "Updated description.",
                 Latitude = 5.2700,
@@ -91,11 +92,11 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
             // Assert - Response
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(1);
+            result.Id.ShouldBe(-2);
             result.Name.ShouldBe(updatedPublicPoint.Name);
 
             // Assert - Database
-            var storedEntity = dbContext.PublicPoints.FirstOrDefault(i => i.Id == 1);
+            var storedEntity = dbContext.PublicPoints.FirstOrDefault(i => i.Id == -2);
             storedEntity.ShouldNotBeNull();
             storedEntity.Description.ShouldBe(updatedPublicPoint.Description);
         }
@@ -136,7 +137,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
             var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
             // Act
-            var result = (OkResult)controller.Delete(1); // Assuming 1 is a valid ID
+            var result = (OkResult)controller.Delete(-1); 
 
 
             // Assert - Response
@@ -144,7 +145,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
             result.StatusCode.ShouldBe(200);
 
             // Assert - Database
-            var storedEntity = dbContext.PublicPoints.FirstOrDefault(i => i.Id == 1);
+            var storedEntity = dbContext.PublicPoints.FirstOrDefault(i => i.Id == -1);
             storedEntity.ShouldBeNull();
         }
 
@@ -171,11 +172,11 @@ namespace Explorer.Tours.Tests.Integration.Administration
             var controller = CreateController(scope);
 
             // Act
-            var result = ((ObjectResult)controller.Get(1).Result)?.Value as PublicPointDto;
+            var result = ((ObjectResult)controller.Get(-2).Result)?.Value as PublicPointDto;
 
             // Assert
             result.ShouldNotBeNull();
-            result.Id.ShouldBe(1); // Assuming 1 is a valid ID
+            result.Id.ShouldBe(-2); // Assuming 1 is a valid ID
         }
 
         [Fact]
