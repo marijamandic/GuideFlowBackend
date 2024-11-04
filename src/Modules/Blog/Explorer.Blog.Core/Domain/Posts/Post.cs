@@ -59,9 +59,9 @@ namespace Explorer.Blog.Core.Domain.Posts
         }
 
         // Comment-related methods
-        public Result AddComment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
+        public Result AddComment(long id, long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
-            var result = Comment.Create(userId, postId, createdAt, content, lastModified);
+            var result = Comment.Create(id, userId, postId, createdAt, content, lastModified);
             if (result.IsFailed)
             {
                 return Result.Fail("Error adding comment!");
@@ -119,6 +119,16 @@ namespace Explorer.Blog.Core.Domain.Posts
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
             if (string.IsNullOrWhiteSpace(Title)) throw new ArgumentException("Invalid Title");
             if (PublishDate == DateTime.MinValue) throw new ArgumentException("Invalid PublishDate");
+        }
+
+        public Result DeleteComment(long commentId)
+        {
+            var comment = _comments.FirstOrDefault(c => c.Id == commentId);
+            if (comment == null)
+                return Result.Fail("Comment not found.");
+
+            _comments.Remove(comment);
+            return Result.Ok();
         }
     }
 

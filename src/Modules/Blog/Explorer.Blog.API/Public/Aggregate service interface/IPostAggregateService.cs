@@ -20,7 +20,7 @@ namespace Explorer.Blog.API.Public.Aggregate_service_interface
         public Result<List<CommentDto>> GetCommentsForPost(long postId);
         Result AddComment(long postId, CommentDto commentDto);
         Result UpdateComment(long postId, CommentDto commentDto);
-        Result DeleteComment(long postId, long userId, DateTime createdAt);
+        public Result DeleteComment(long commentId);
 
         // Rating operations
         Result AddRating(long postId, BlogRatingDto blogRatingDto);

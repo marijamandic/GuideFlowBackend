@@ -53,9 +53,9 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id, [FromQuery] long userId, [FromQuery] DateTime createdAt)
+        public ActionResult Delete(int id)
         {
-            var result = _postAggregateService.DeleteComment(id, userId, createdAt);
+            var result = _postAggregateService.DeleteComment(id);
             return CreateResponse(result);
         }
 

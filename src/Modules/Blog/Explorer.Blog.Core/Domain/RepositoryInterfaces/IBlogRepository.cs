@@ -11,5 +11,6 @@ namespace Explorer.Blog.Core.Domain.RepositoryInterfaces
         Result<Post> Update(Post post);
         Result Delete(long postId);
         Result<IEnumerable<Post>> GetAll(int pageNumber, int pageSize);
+        public Result<Post> GetPostByCommentId(long commentId);
     }
 }

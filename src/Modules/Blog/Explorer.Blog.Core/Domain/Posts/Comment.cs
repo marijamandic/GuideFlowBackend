@@ -13,6 +13,7 @@ namespace Explorer.Blog.Core.Domain.Posts
 {
     public class Comment : ValueObject<Comment>
     {
+        public long Id { get; private set; }
         public long UserId { get; private set; }
         public long PostId { get; private set; }
         public DateTime CreatedAt { get; private set; }
@@ -22,8 +23,9 @@ namespace Explorer.Blog.Core.Domain.Posts
         public Comment() { }
 
         [JsonConstructor]
-        public Comment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
+        public Comment(long id, long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
+            Id = id;
             UserId = userId;
             PostId = postId;
             CreatedAt = createdAt;
@@ -47,15 +49,14 @@ namespace Explorer.Blog.Core.Domain.Posts
         }
 
         internal static Result<Comment> Create(
-            long userId,
-            long postId,
-            DateTime createdAt,
-            string content,
-            DateTime lastModified)
+        long id,
+        long userId,
+        long postId,
+        DateTime createdAt,
+        string content,
+        DateTime lastModified)
         {
-
-            var comment = new Comment(userId, postId, createdAt, content, lastModified);
-
+            var comment = new Comment(id, userId, postId, createdAt, content, lastModified);
             return comment;
         }
 

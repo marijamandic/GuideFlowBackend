@@ -106,6 +106,7 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
                 return Result.Fail("Post not found.");
 
             var addCommentResult = postResult.Value.AddComment(
+                commentDto.Id,  
                 commentDto.UserId,
                 postId,
                 commentDto.CreatedAt,
@@ -122,28 +123,36 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
 
         public Result UpdateComment(long postId, CommentDto commentDto)
         {
+            Debug.WriteLine($"Updating comment for postId: {postId}, commentId: {commentDto.Id}");
             var postResult = _repository.GetById(postId);
             if (postResult.IsFailed || postResult.Value == null)
+            {
+                Debug.WriteLine("Post not found.");
                 return Result.Fail("Post not found.");
+            }
 
             var updateResult = postResult.Value.UpdateComment(_mapper.Map<Comment>(commentDto));
-            if (updateResult.IsFailed) return Result.Fail("Failed to update comment.");
+            if (updateResult.IsFailed)
+            {
+                Debug.WriteLine("Failed to update comment.");
+                return Result.Fail("Failed to update comment.");
+            }
 
-            _repository.Update(postResult.Value);
-            return Result.Ok();
+            var updateRepoResult = _repository.Update(postResult.Value);
+            return updateRepoResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update repository.");
         }
 
-        public Result DeleteComment(long postId, long userId, DateTime createdAt)
+        public Result DeleteComment(long commentId)
         {
-            var postResult = _repository.GetById(postId);
+            var postResult = _repository.GetPostByCommentId(commentId);  
             if (postResult.IsFailed || postResult.Value == null)
                 return Result.Fail("Post not found.");
 
-            var deleteResult = postResult.Value.DeleteComment(userId, postId, createdAt);
+            var deleteResult = postResult.Value.DeleteComment(commentId);
             if (deleteResult.IsFailed) return Result.Fail("Failed to delete comment.");
 
-            _repository.Update(postResult.Value);
-            return Result.Ok();
+            var updateRepoResult = _repository.Update(postResult.Value);
+            return updateRepoResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update repository after deletion.");
         }
 
         public Result AddRating(long postId, BlogRatingDto blogRatingDto)
