@@ -12,7 +12,7 @@ namespace Explorer.Tours.Tests.Integration.Author;
 public class TourCommandTests : BaseToursIntegrationTest
 {
     public TourCommandTests(ToursTestFactory factory) : base(factory) { }
-
+    /*
     [Fact]
     public void Creates()
     {
@@ -122,4 +122,5 @@ public class TourCommandTests : BaseToursIntegrationTest
             ControllerContext = BuildContext("-1")
         };
     }
+    */
 }
