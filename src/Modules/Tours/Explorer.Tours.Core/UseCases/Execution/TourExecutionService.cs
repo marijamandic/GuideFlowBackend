@@ -40,11 +40,52 @@ namespace Explorer.Tours.Core.UseCases.Execution
         }
         public Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto) {
             var tourExecution = _tourExecutionRepository.Get(updateTourExecutionDto.TourExecutionId);
-            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude,updateTourExecutionDto.Latitude);
+            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude);
 
             _tourExecutionRepository.Update(tourExecution);
             return MapToDto(tourExecution);
         }
+
+        public Result<TourExecutionDto> GetSessionsByUserId(long userId)
+        {
+            var sessions = _tourExecutionRepository.GetByUserId(userId);
+            return MapToDto(sessions);   
+        }
+
+        public void CompleteSession(long userId)
+        {
+            var tourExecution = _tourExecutionRepository.GetByUserId(userId);
+
+            if (tourExecution == null)
+            {
+                throw new Exception("Tour execution not found.");
+            }
+
+            if (tourExecution.CheckpointsStatus.All(c => c.IsCompleted()))
+            {
+                tourExecution.CompleteSession();
+                _tourExecutionRepository.Update(tourExecution);
+            }
+            else
+            {
+                throw new InvalidOperationException("All checkpoints must be passed to complete the tour.");
+            }
+        }
+
+        public void AbandonSession(long userId)
+        {
+            var tourExecution = _tourExecutionRepository.GetByUserId(userId);
+
+            if (tourExecution == null)
+            {
+                throw new Exception("Tour execution not found.");
+            }
+
+            tourExecution.AbandonSession();
+            _tourExecutionRepository.Update(tourExecution);
+        }
+
+
 
     }
 }

@@ -12,5 +12,10 @@ namespace Explorer.Tours.API.Public.Execution
     {
         Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto);
         Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto);
+        Result<TourExecutionDto> GetSessionsByUserId(long userId);
+        void CompleteSession(long userId);
+        void AbandonSession(long userId);
+
+
     }
 }

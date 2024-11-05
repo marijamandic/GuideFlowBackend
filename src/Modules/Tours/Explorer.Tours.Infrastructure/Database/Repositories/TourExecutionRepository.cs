@@ -29,12 +29,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return tourExecution;
         }
 
-        public IEnumerable<TourExecution> GetByUserId(long userId)
+        public new TourExecution GetByUserId(long userId)
         {
             return _context.TourExecutions
-                           .Where(te => te.UserId == userId)
-                           .Include(te => te.CheckpointsStatus)
-                           .ToList();
+                           .FirstOrDefault(te => te.UserId == userId);
         }
     }
 }

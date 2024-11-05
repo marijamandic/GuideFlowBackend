@@ -25,5 +25,42 @@ namespace Explorer.API.Controllers.Tourist.Execution
             var result = _tourExecutionService.Update(updateTourExecutionDto);
             return CreateResponse(result);
         }
+
+        [HttpGet("{userId:long}")]
+        public ActionResult<TourExecutionDto> GetByUser(long userId)
+        {
+            var result = _tourExecutionService.GetSessionsByUserId(userId);
+            return CreateResponse(result);
+        }
+
+        // za swagger
+
+        [HttpPut("complete/{userId}")]
+        public IActionResult CompleteTour(long userId)
+        {
+            try
+            {
+                _tourExecutionService.CompleteSession(userId);
+                return Ok("Tour execution completed successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("abandon/{userId}")]
+        public IActionResult AbandonTour(long userId)
+        {
+            try
+            {
+                _tourExecutionService.AbandonSession(userId);
+                return Ok("Tour execution abandoned successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
