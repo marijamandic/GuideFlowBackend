@@ -162,6 +162,7 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
                 return Result.Fail("Post not found.");
 
             var post = result.Value;
+            blogRatingDto.RatingDate = DateTime.Now;
             var addRatingResult = post.AddRating(blogRatingDto);
 
             if (addRatingResult.IsFailed) return Result.Fail("Failed to add rating.");

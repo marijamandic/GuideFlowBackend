@@ -66,7 +66,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         {
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
             if (PostId == 0) throw new ArgumentException("Invalid PostId");
-            if (RatingDate > DateTime.UtcNow) throw new ArgumentException("RatingDate cannot be in the future");
+            if (RatingDate > DateTime.Now) throw new ArgumentException("RatingDate cannot be in the future");
             /*if (UpVotesNumber < 0) throw new ArgumentException("UpVotesNumber cannot be negative");
             if (DownVotesNumber < 0) throw new ArgumentException("DownVotesNumber cannot be negative");*/
         }
