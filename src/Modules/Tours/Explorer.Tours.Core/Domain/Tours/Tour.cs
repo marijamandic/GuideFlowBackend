@@ -55,6 +55,11 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (!Enum.IsDefined(typeof(Level), Level))
                 throw new ArgumentException("Invalid level value.");
         }
+
+        public void ChangeStatusToPublish()
+        {
+            Status = TourStatus.Published;
+        }
     }
 
     public enum TourStatus

@@ -70,5 +70,44 @@ namespace Explorer.Tours.Core.UseCases.Author
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
         }
+
+        public Result Delete(int id)
+        {
+            try
+            {
+               tourRepository.Delete(id);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
+        public Result<TourDto> Publish(TourDto entity)
+        {
+            try
+            {
+                var tour =tourRepository.Get(entity.Id);
+
+                /*if (existingTourResult.IsFailed)
+                {
+                    return Result.Fail(FailureCode.NotFound).WithError("Tour not found.");
+                } */               
+                //var tour = MapToDomain(entity);
+                tour.ChangeStatusToPublish();
+                var updatedTour = tourRepository.Update(tour);
+
+                return MapToDto( updatedTour);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
     }
 }

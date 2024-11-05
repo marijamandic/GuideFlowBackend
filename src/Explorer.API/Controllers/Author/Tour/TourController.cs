@@ -28,7 +28,7 @@ namespace Explorer.API.Controllers.Author.Tour
         }
 
         [HttpGet("{id:int}")]
-        public ActionResult<UserDto> GetTour(int id)
+        public ActionResult<TourDto> GetTour(int id)
         {
             var result = _tourService.Get(id);
             return CreateResponse(result);
@@ -45,6 +45,20 @@ namespace Explorer.API.Controllers.Author.Tour
         public ActionResult<TourDto> Update(int id, [FromBody] TourDto tour)
         {
             var result = _tourService.Update(tour);
+            return CreateResponse(result);
+        }
+
+        [HttpDelete("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            var result = _tourService.Delete(id);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("publish/{id:int}")]
+        public ActionResult<TourDto> Publish(int id, [FromBody] TourDto tour)
+        {
+            var result = _tourService.Publish(tour);
             return CreateResponse(result);
         }
     }
