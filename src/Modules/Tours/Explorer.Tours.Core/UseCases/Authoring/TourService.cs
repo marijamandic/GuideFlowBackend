@@ -146,15 +146,20 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         public Result<TourDto> Publish(int id)
         {
             try
-            {
-                var tour = tourRepository.Get(id);
-                tour.ChangeStatusToPublish();
-                var updatedTour = tourRepository.Update(tour);
-                return MapToDto( updatedTour);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            {   var tour = tourRepository.Get(id);
+
+                if (tour == null)
+                {
+                    return Result.Fail(FailureCode.NotFound).WithError("Tour not found");
+                }
+
+                if (tour.CheckPublishConditions())
+                {
+                    tour.ChangeStatusToPublish();
+                    var updatedTour = tourRepository.Update(tour);
+                    return MapToDto(updatedTour);
+                }
+                    return Result.Fail(FailureCode.InvalidArgument);
             }
             catch (ArgumentException e)
             {

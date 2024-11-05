@@ -55,6 +55,7 @@ namespace Explorer.Tours.Core.Domain.Tours
 
             if (!Enum.IsDefined(typeof(Level), Level))
                 throw new ArgumentException("Invalid level value.");
+
         }
 
         public void AddCheckpoint(Checkpoint checkpoint, double updatedLength)
@@ -78,6 +79,21 @@ namespace Explorer.Tours.Core.Domain.Tours
             StatusChangeDate = DateTime.UtcNow;
         }
 
+        public bool CheckPublishConditions()
+        {
+            if (AuthorId == 0) return false;
+            if (string.IsNullOrWhiteSpace(Name)) return false;
+            if (string.IsNullOrWhiteSpace(Description)) return false;
+            if (!Enum.IsDefined(typeof(Level), Level)) return false;
+            if (Taggs == null || !Taggs.Any()) return false;
+
+            if (Checkpoints == null || Checkpoints.Count < 2) return false;
+
+            if (TransportDurations == null || !TransportDurations.Any()) return false;
+
+            return true;
+
+        }
         public void ChangeStatusToPublish()
         {
             Status = TourStatus.Published;

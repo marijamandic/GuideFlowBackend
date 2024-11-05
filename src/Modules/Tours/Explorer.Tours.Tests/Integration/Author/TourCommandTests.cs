@@ -312,6 +312,35 @@ public class TourCommandTests : BaseToursIntegrationTest
         }
     }
 
+    [Theory]
+    [InlineData(-11, 200, TourStatus.Published)]
+    [InlineData(-12, 400, TourStatus.Draft)]
+    [InlineData(-13, 404, TourStatus.Published)]
+    public void TourPublishes(int tourId, int expectedStatusCode, TourStatus expectedStatus)
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.Publish(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedStatusCode);
+
+        
+    
+        // Assert - Database
+        if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+        {
+            var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Status.ShouldBe(expectedStatus);
+        }
+    }
+
     private static TourController CreateController(IServiceScope scope)
     {
         return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
