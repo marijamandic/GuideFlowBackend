@@ -9,6 +9,7 @@ namespace Explorer.Tours.Core.Domain
 {
     public class Tour : Entity
     {
+        public long AuthorId { get; init; }
         public string Name { get; set; }    
         public string Description { get; set; }
         public int Level { get; set; }

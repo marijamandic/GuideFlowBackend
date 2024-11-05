@@ -36,5 +36,7 @@ public class StakeholderProfile : Profile
             .ForMember(dest => dest.Resolution, opt => opt.MapFrom(src => new ResolutionDto { ReportedAt = src.Resolution.ReportedAt, IsResolved = src.Resolution.IsResolved, Deadline = src.Resolution.Deadline }))
             .ForMember(dest => dest.Messages, opt => opt.MapFrom(src => src.Messages.Select(m =>
                 new MessageDto { Id = (int)m.Id, ProblemId = (int)m.ProblemId, UserId = (int)m.UserId, Content = m.Content, PostedAt = m.PostedAt })));
+
+        CreateMap<MessageDto, Message>().ReverseMap();
     }
 }

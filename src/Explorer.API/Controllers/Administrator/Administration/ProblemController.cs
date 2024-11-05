@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Administrator.Administration
 {
     [Authorize(Policy = "administratorPolicy")]
-    [Route("api/problems")]
+    [Route("api/administrator/problems")]
     public class ProblemController : BaseApiController
     {
         private readonly IProblemService _problemService;

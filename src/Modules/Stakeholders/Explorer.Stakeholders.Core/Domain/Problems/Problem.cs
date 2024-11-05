@@ -23,4 +23,10 @@ public class Problem : Entity
     {
         
     }
+
+    public void AddMessage (Message message)
+    {
+        message.Validate();
+        _messages.Add(message);
+    }
 }
