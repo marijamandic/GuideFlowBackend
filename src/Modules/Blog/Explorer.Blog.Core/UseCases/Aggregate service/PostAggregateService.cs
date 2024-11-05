@@ -228,9 +228,18 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             if (postResult.IsFailed || postResult.Value == null)
                 return Result.Fail("Post not found.");
 
-            int statusCode = (int)postResult.Value.EngagementStatus;
+            var post = postResult.Value;
+
+            post.UpdateEngagementStatus();
+
+            var updateResult = _repository.Update(post);
+            if (updateResult.IsFailed)
+                return Result.Fail("Failed to update engagement status.");
+
+            int statusCode = (int)post.EngagementStatus;
             return Result.Ok(statusCode);
         }
+
 
         public Result UpdateEngagementStatus(long postId)
         {

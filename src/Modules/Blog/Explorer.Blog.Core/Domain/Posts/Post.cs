@@ -30,6 +30,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             PublishDate = publishDate;
             ImageUrl = imageUrl;
             Status = status;
+            EngagementStatus = EngagementStatus.Inactive;
             Validate();
         }
 
