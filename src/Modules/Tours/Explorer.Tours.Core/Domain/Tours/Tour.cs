@@ -55,6 +55,17 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (!Enum.IsDefined(typeof(Level), Level))
                 throw new ArgumentException("Invalid level value.");
         }
+
+        public void AddCheckpoint(Checkpoint checkpoint, double updatedLength)
+        {
+            Checkpoints.Add(checkpoint);
+            LengthInKm = updatedLength;
+        }
+
+        public void AddTransportDuratios(List<TransportDuration> transportDurations)
+        {
+            TransportDurations = transportDurations;
+        }
     }
 
     public enum TourStatus

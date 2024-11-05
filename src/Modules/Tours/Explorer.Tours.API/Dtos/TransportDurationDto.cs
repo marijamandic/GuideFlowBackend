@@ -8,7 +8,7 @@ namespace Explorer.Tours.API.Dtos
 {
     public class TransportDurationDto
     {
-        public TimeSpan Time { get; set; }
+        public int Time { get; set; }
         public TransportType TransportType { get; set; }
     }
     public enum TransportType
