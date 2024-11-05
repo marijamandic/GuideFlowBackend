@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Tours.Core.Domain.Tours;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,27 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             LastActivity = DateTime.UtcNow;
             ExecutionStatus = ExecutionStatus.Active;
         }
+        public void UpdateLocation(double longitude , double latitude) {
+            LastActivity = DateTime.UtcNow;
+            foreach (var checkpointStatus in CheckpointsStatus)
+            {
+                if (!checkpointStatus.IsCompleted() && checkpointStatus.IsTouristNear(latitude, longitude))
+                {
+                    checkpointStatus.MarkAsCompleted(); 
+                }
+            }
+        }
+        public void AddCheckpointStatuses(List<Checkpoint> checkpoints) { 
+            foreach( Checkpoint checkpoint in checkpoints)
+            {
+                CheckpointsStatus.Add(new CheckpointStatus(checkpoint.Id));
+            }
+        }
     }
 }
-
 public enum ExecutionStatus { 
     Active,
     Completed,
     Abandoned
 }
+
