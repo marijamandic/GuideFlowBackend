@@ -14,6 +14,7 @@ namespace Explorer.Tours.Core.Domain.Tours
         public string Description { get; private set; }
         public Level Level { get; private set; }
         public TourStatus Status { get; private set; }
+        public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
         public Price Price { get; private set; }
         public double AverageGrade { get; private set; }  
@@ -56,9 +57,31 @@ namespace Explorer.Tours.Core.Domain.Tours
                 throw new ArgumentException("Invalid level value.");
         }
 
+        public void AddCheckpoint(Checkpoint checkpoint, double updatedLength)
+        {
+            Checkpoints.Add(checkpoint);
+            LengthInKm = updatedLength;
+        }
+
+        public void AddTransportDuratios(List<TransportDuration> transportDurations)
+        {
+            TransportDurations = transportDurations;
+        }
+
+
+        public void Archive()
+        {
+            if (Status != TourStatus.Published)
+                throw new InvalidOperationException("Only published tours can be archived.");
+
+            Status = TourStatus.Archived;
+            StatusChangeDate = DateTime.UtcNow;
+        }
+
         public void ChangeStatusToPublish()
         {
             Status = TourStatus.Published;
+            StatusChangeDate = DateTime.UtcNow;
         }
     }
 
