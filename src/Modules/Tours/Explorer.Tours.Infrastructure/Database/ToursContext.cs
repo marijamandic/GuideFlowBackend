@@ -1,4 +1,5 @@
 ﻿using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Shopping;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
@@ -15,6 +16,8 @@ public class ToursContext : DbContext
     public DbSet<EquipmentManagement> EquipmentManagements { get; set; }
     public DbSet<TourReview> TourReviews { get; set; }
     public DbSet<TourSpecifications> TourSpecifications { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}

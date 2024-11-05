@@ -4,6 +4,7 @@ using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Shopping;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
@@ -13,6 +14,7 @@ using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Explorer.Tours.Core.UseCases.Shopping;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -39,6 +41,7 @@ public static class ToursStartup
         services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
         services.AddScoped<ITourReviewService, TourReviewService>();
         services.AddScoped<ITourSpecificationService, TourSpecificationService>();
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
 
     }
 
@@ -57,6 +60,7 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<TourSpecifications>), typeof(CrudDatabaseRepository<TourSpecifications, ToursContext>));
 
         services.AddScoped<ITourSpecificationRepository, TourSpecificationRepository>();
+        services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),
