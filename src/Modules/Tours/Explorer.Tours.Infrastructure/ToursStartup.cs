@@ -11,7 +11,7 @@ using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Mappers;
 using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
-using Explorer.Tours.Core.UseCases.Author;
+using Explorer.Tours.Core.UseCases.Authoring;
 using Explorer.Tours.Core.UseCases.Execution;
 using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;

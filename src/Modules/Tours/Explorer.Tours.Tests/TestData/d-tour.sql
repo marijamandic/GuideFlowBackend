@@ -1,50 +1,19 @@
 -- First entry
 INSERT INTO tours."Tours"(
-    "Id", "Name", "Description", "Level", "Taggs", "Status", "Price", "LengthInKm", "AverageGrade", "TransportDurations")
+	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "TransportDurations")
 VALUES 
-(
-    -1, 
-    'Tura po planinama', 
-    'Ova tura vodi kroz najlepše planinske predele sa lokalnim vodi?ima. Trajanje ture je 6 sati sa pauzama.', 
-    0,  -- Equivalent to Level.Easy
-    '{"Planine", "Lepota", "Priroda"}', 
-    1, 
-    '{"Cost": 150.00, "Currency": 0}'::jsonb,  -- JSON as a JSONB object
-    150.00, 
-    4.5, 
-    '[{"Time": "00:30:00", "TransportType": 0}, {"Time": "00:45:00", "TransportType": 1}]'::jsonb  -- TransportDurations as a JSONB array
-);
-
--- Second entry
+	(-1, 'Mountain Adventure', 101, 'A thrilling mountain adventure tour.', 0, 0, NULL, 15.5, 
+    '{{"Cost": 120.00, "Currency": 1}}', 4.5, ARRAY['Adventure', 'Mountain', 'Hiking'], 
+    '[{{"Time": 180, "TransportType": 0}}, {{"Time": 60, "TransportType": 1}}]');
 INSERT INTO tours."Tours"(
-    "Id", "Name", "Description", "Level", "Taggs", "Status", "Price", "LengthInKm", "AverageGrade", "TransportDurations")
+	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "TransportDurations")
 VALUES 
-(
-    -2, 
-    'Tura kroz doline', 
-    'Ova tura istražuje doline i livade, pružaju?i odmor i uživanje u prirodnim pejzažima. Trajanje ture je 4 sata.', 
-    1,  -- Equivalent to Level.Advanced
-    '{"Doline", "Priroda", "Relax"}', 
-    0, 
-    '{"Cost": 100.00, "Currency": 0}'::jsonb, 
-    80.00, 
-    4.2,
-    '[{"Time": "00:20:00", "TransportType": 2}, {"Time": "00:40:00", "TransportType": 1}]'::jsonb 
-);
-
--- Third entry
+	(-2, 'City Exploration', 102, 'Explore the city with guided tours and hidden spots.', 1, 1,'2024-11-05T10:00:00Z', 10.0, 
+    '{{"Cost": 50.00, "Currency": 2}}', 4.8, ARRAY['Adventure', 'Mountain', 'Hiking'], 
+    '[{{"Time": 120, "TransportType": 2}}, {{"Time": 30, "TransportType": 0}}]');
 INSERT INTO tours."Tours"(
-    "Id", "Name", "Description", "Level", "Taggs", "Status", "Price", "LengthInKm", "AverageGrade", "TransportDurations")
+	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "TransportDurations")
 VALUES 
-(
-    -3, 
-    'Tura kroz šume', 
-    'Pro?ite kroz guste šumske staze uz stru?ne vodi?e. Trajanje ture je 5 sati sa pauzama.', 
-    2,  -- Equivalent to Level.Expert
-    '{"Šume", "Avantura", "Divljina"}', 
-    0, 
-    '{"Cost": 120.00, "Currency": 0}'::jsonb, 
-    100.00, 
-    4.7,
-    '[{"Time": "00:35:00", "TransportType": 0}, {"Time": "00:50:00", "TransportType": 2}]'::jsonb
-);
+	(-3, 'Beach Getaway', 103, 'Relaxing beach getaway with scenic routes.', 0, 2, '2024-11-05T10:00:00Z', 8.0, 
+    '{{"Cost": 80.00, "Currency": 0}}', 4.0, ARRAY['Adventure', 'Mountain', 'Hiking'], 
+    '[{{"Time": 90, "TransportType": 1}}, {{"Time": 45, "TransportType": 2}}]');

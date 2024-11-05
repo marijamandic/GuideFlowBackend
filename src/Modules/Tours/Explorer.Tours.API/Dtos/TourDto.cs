@@ -12,9 +12,11 @@ namespace Explorer.Tours.API.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int AuthorId {  get; set; }
         public string Description { get; set; }
         public Level Level { get; set; }
         public TourStatus Status { get; set; }
+        public DateTime? StatusChangeDate {  get; set; }
         public double LengthInKm { get; set; }
         public PriceDto Price { get; set; }
         public double AverageGrade { get; set; }
