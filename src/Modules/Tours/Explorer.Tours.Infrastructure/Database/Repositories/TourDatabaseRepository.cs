@@ -39,5 +39,12 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             DbContext.SaveChanges();
             return tour;
         }
+
+        public new void Delete(long id)
+        {
+            var entity = Get(id);
+            DbContext.Tours.Remove(entity);
+            DbContext.SaveChanges();
+        }
     }
 }

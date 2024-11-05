@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
@@ -12,14 +13,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.Core.UseCases.Author
+namespace Explorer.Tours.Core.UseCases.Authoring
 {
     public class TourService : BaseService<TourDto, Tour>, ITourService
     {
         private readonly ITourRepository tourRepository;
+        private readonly IMapper mapper;
         public TourService(ITourRepository tourRepository, IMapper mapper) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
+            this.mapper=mapper;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -69,6 +72,44 @@ namespace Explorer.Tours.Core.UseCases.Author
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+
+
+        public Result Delete(int id)
+        {
+            try
+            {
+                tourRepository.Delete(id);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
+        public Result<TourDto> AddCheckpoint(int Id, CheckpointDto checkpoint, double updatedLength)
+        {
+                Tour tour = tourRepository.Get(Id);
+                if (tour == null)
+                {
+                    return Result.Fail<TourDto>(FailureCode.NotFound).WithError("Tour not found.");
+                }
+                tour.AddCheckpoint(mapper.Map<Checkpoint>(checkpoint), updatedLength);
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
+        }
+
+        public Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations)
+        {
+            Tour tour = tourRepository.Get(id);
+            if (tour == null)
+            {
+                return Result.Fail<TourDto>(FailureCode.NotFound).WithError("Tour not found.");
+            }
+            tour.AddTransportDuratios(transportDurations.Select(dto => mapper.Map<TransportDuration>(dto)).ToList());
+            var result = tourRepository.Update(tour);
+            return MapToDto(result);
         }
     }
 }
