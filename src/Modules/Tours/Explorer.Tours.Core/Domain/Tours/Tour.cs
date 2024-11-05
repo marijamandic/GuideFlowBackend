@@ -10,9 +10,11 @@ namespace Explorer.Tours.Core.Domain.Tours
     public class Tour : Entity
     {
         public string Name { get; private set; }
+        public long AuthorId { get; private set; }
         public string Description { get; private set; }
         public Level Level { get; private set; }
         public TourStatus Status { get; private set; }
+        public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
         public Price Price { get; private set; }
         public double AverageGrade { get; private set; }  
@@ -21,9 +23,10 @@ namespace Explorer.Tours.Core.Domain.Tours
         public List<TransportDuration> TransportDurations { get; private set; }
         public List<TourReview> Reviews { get; private set; }
 
-        public Tour(string name, string description, Level level,double lengthInKm,Price price,double averageGrade, TourStatus status = TourStatus.Draft)
+        public Tour(string name,long authorId, string description, Level level,double lengthInKm,Price price,double averageGrade, TourStatus status = TourStatus.Draft)
         {
             Name = name;
+            AuthorId = authorId;
             Description = description;
             Level = level;
             Status = status;
@@ -39,6 +42,8 @@ namespace Explorer.Tours.Core.Domain.Tours
 
         private void Validate()
         {
+            if (AuthorId == 0) throw new ArgumentException("Invalid Author Id");
+
             if (string.IsNullOrWhiteSpace(Name))
                 throw new ArgumentException("Name cannot be null or empty.");
 
@@ -50,6 +55,33 @@ namespace Explorer.Tours.Core.Domain.Tours
 
             if (!Enum.IsDefined(typeof(Level), Level))
                 throw new ArgumentException("Invalid level value.");
+        }
+
+        public void AddCheckpoint(Checkpoint checkpoint, double updatedLength)
+        {
+            Checkpoints.Add(checkpoint);
+            LengthInKm = updatedLength;
+        }
+
+        public void AddTransportDuratios(List<TransportDuration> transportDurations)
+        {
+            TransportDurations = transportDurations;
+        }
+
+
+        public void Archive()
+        {
+            if (Status != TourStatus.Published)
+                throw new InvalidOperationException("Only published tours can be archived.");
+
+            Status = TourStatus.Archived;
+            StatusChangeDate = DateTime.UtcNow;
+        }
+
+        public void ChangeStatusToPublish()
+        {
+            Status = TourStatus.Published;
+            StatusChangeDate = DateTime.UtcNow;
         }
     }
 

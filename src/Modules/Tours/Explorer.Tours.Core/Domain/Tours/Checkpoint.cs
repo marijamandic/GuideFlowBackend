@@ -38,6 +38,7 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description.");
             if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude value.");
             if (Longitude < -180 || Longitude > 180) throw new ArgumentException("Invalid Longitude value.");
+            if (string.IsNullOrWhiteSpace(Secret)) throw new ArgumentException("Invalid Secret.");
         }
     }
 

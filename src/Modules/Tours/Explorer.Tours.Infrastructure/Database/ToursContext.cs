@@ -17,6 +17,7 @@ public class ToursContext : DbContext
     public DbSet<EquipmentManagement> EquipmentManagements { get; set; }
     public DbSet<TourReview> TourReviews { get; set; }
     public DbSet<TourSpecifications> TourSpecifications { get; set; }
+    public DbSet<PublicPoint> PublicPoints { get; set; }
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<CheckpointStatus> CheckpointStatuses { get; set; }
 
