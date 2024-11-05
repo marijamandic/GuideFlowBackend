@@ -69,5 +69,13 @@ namespace Explorer.API.Controllers.Authoring.Tour
             var result = _tourService.AddTransportDurations(id, transportDurations);
             return CreateResponse(result);
         }
+
+        [HttpPut("archive/{id:int}")]
+        public ActionResult<TourDto> Archive(int id)
+        {
+            var result = _tourService.Archive(id);
+            return CreateResponse(result);
+        }
+
     }
 }

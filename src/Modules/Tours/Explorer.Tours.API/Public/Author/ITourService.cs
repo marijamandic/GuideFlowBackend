@@ -18,5 +18,6 @@ namespace Explorer.Tours.API.Public.Author
         Result Delete(int id);
         Result<TourDto> AddCheckpoint(int tourId, CheckpointDto checkpoint, double updatedLength);
         Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations);
+        Result<TourDto> Archive(int id);
     }
 }
