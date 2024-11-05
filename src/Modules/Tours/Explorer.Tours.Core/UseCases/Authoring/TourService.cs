@@ -111,5 +111,17 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             var result = tourRepository.Update(tour);
             return MapToDto(result);
         }
+
+        public Result<TourDto> Archive(int id)
+        {
+            Tour tour= tourRepository.Get(id);
+            if (tour == null)
+            {
+                return Result.Fail<TourDto>(FailureCode.NotFound).WithError("Tour not found.");
+            }
+            tour.Archive();
+            var result = tourRepository.Update(tour);
+            return MapToDto(result);
+        }
     }
 }

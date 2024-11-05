@@ -16,6 +16,7 @@ namespace Explorer.Tours.API.Dtos
         public string Description { get; set; }
         public Level Level { get; set; }
         public TourStatus Status { get; set; }
+        public DateTime? StatusChangeDate {  get; set; }
         public double LengthInKm { get; set; }
         public PriceDto Price { get; set; }
         public double AverageGrade { get; set; }
