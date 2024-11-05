@@ -21,18 +21,16 @@ namespace Explorer.Tours.Core.UseCases.Execution
     {
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ITourService _tourService;
-        private readonly ICheckpointService _checkpointService;
         private readonly IMapper _mapper;
-        public TourExecutionService(IMapper mapper , ITourExecutionRepository tourExecutionRepository , ITourService tourService , ICheckpointService checkpointService) : base(mapper) {
+        public TourExecutionService(IMapper mapper , ITourExecutionRepository tourExecutionRepository , ITourService tourService) : base(mapper) {
             _tourExecutionRepository = tourExecutionRepository;
             _tourService = tourService;
-            _checkpointService = checkpointService;
             _mapper = mapper;
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
             TourDto tour = _tourService.Get(createTourExecutionDto.TourId).Value;
 
-            var tourExecution = new TourExecution(tour.Id,createTourExecutionDto.UserId,500);
+            var tourExecution = new TourExecution(tour.Id,createTourExecutionDto.UserId,tour.LengthInKm);
             tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
 
             _tourExecutionRepository.Create(tourExecution);
@@ -40,11 +38,40 @@ namespace Explorer.Tours.Core.UseCases.Execution
         }
         public Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto) {
             var tourExecution = _tourExecutionRepository.Get(updateTourExecutionDto.TourExecutionId);
-            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude,updateTourExecutionDto.Latitude);
 
+            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude,updateTourExecutionDto.Latitude);
             _tourExecutionRepository.Update(tourExecution);
-            return MapToDto(tourExecution);
+
+            var tourExecutionDto = MapToDto(tourExecution);
+            SetSecretsForDisplaying(tourExecutionDto);
+            return tourExecutionDto;
+        }
+        public Result<TourExecutionDto> Get(long id)
+        {
+            var tourExecution = _tourExecutionRepository.Get(id);
+            var tourExecutionDto = MapToDto(tourExecution);
+            SetSecretsForDisplaying(tourExecutionDto);
+            return tourExecutionDto;
         }
 
+
+
+
+        #region HelpperMethods
+        public void SetSecretsForDisplaying(TourExecutionDto tourExecutionDto)
+        {
+            foreach (var cs in tourExecutionDto.CheckpointsStatus)
+            {
+                if (cs.CompletionTime == DateTime.MinValue)
+                {
+                    var checkpointStatus = tourExecutionDto.CheckpointsStatus.FirstOrDefault(checkpointStatus => cs.Id == checkpointStatus.Id);
+                    if (checkpointStatus != null && checkpointStatus.CheckpointDto != null)
+                    {
+                        checkpointStatus.CheckpointDto.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }

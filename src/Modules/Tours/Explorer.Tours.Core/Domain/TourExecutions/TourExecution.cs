@@ -28,6 +28,7 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             ExecutionStatus = ExecutionStatus.Active;
         }
         public void UpdateLocation(double longitude , double latitude) {
+            LastActivity = DateTime.UtcNow;
             foreach (var checkpointStatus in CheckpointsStatus)
             {
                 if (!checkpointStatus.IsCompleted() && checkpointStatus.IsTouristNear(latitude, longitude))
@@ -35,20 +36,18 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
                     checkpointStatus.MarkAsCompleted(); 
                 }
             }
-
         }
-
         public void AddCheckpointStatuses(List<Checkpoint> checkpoints) { 
             foreach( Checkpoint checkpoint in checkpoints)
             {
-                CheckpointsStatus.Add(new CheckpointStatus(checkpoint.Id,checkpoint.Latitude,checkpoint.Longitude));
+                CheckpointsStatus.Add(new CheckpointStatus(checkpoint.Id));
             }
         }
     }
 }
-
 public enum ExecutionStatus { 
     Active,
     Completed,
     Abandoned
 }
+
