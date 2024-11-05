@@ -15,8 +15,9 @@ namespace Explorer.Tours.Core.Domain.Tours
         public DateTime TourDate { get; private set; }
         public DateTime CreationDate { get; private set; }
         public int PercentageCompleted { get; private set; }
-
-        public TourReview(int rating, string comment, DateTime tourDate, DateTime creationDate, int percentageCompleted)
+        public int TouristId { get; private set; }
+        public int TourId { get; private set; }
+        public TourReview(int rating, string comment, DateTime tourDate, DateTime creationDate, int percentageCompleted, int touristId, int tourId)
         {
             Rating = rating;
             Comment = comment;
@@ -24,6 +25,8 @@ namespace Explorer.Tours.Core.Domain.Tours
             CreationDate = creationDate;
             Validate();
             PercentageCompleted = percentageCompleted;
+            TouristId = touristId;
+            TourId = tourId;
         }
 
         private void Validate()
