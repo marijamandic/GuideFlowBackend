@@ -28,5 +28,13 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             _context.SaveChanges();
             return tourExecution;
         }
+
+        public IEnumerable<TourExecution> GetByUserId(long userId)
+        {
+            return _context.TourExecutions
+                           .Where(te => te.UserId == userId)
+                           .Include(te => te.CheckpointsStatus)
+                           .ToList();
+        }
     }
 }

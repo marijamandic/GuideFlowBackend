@@ -10,5 +10,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
     public interface ITourExecutionRepository : ICrudRepository<TourExecution>
     {
+        IEnumerable<TourExecution> GetByUserId(long userId);
     }
 }
