@@ -1,4 +1,4 @@
-﻿using Explorer.API.Controllers.Author.Tour;
+﻿using Explorer.API.Controllers.Authoring.Tour;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Infrastructure.Database;
@@ -12,8 +12,8 @@ namespace Explorer.Tours.Tests.Integration.Author;
 public class TourCommandTests : BaseToursIntegrationTest
 {
     public TourCommandTests(ToursTestFactory factory) : base(factory) { }
-
-   /* [Fact]
+    
+    [Fact]
     public void Creates()
     {
         // Arrange
@@ -23,12 +23,20 @@ public class TourCommandTests : BaseToursIntegrationTest
         var newEntity = new TourDto
         {
             Name = "Planinarenje",
+            AuthorId = 101,
             Description = "Planinarska tura sa vodičem kroz najlepše predele.",
-            Level = 3,
-            Price = 120.50m,
-            Status = "Active",
-            Taggs = new List<int> { 1, 2 }
+            Level = Level.Advanced,
+            Status = TourStatus.Published,
+            LengthInKm = 15.0,
+            Price = new PriceDto
+            {
+                Cost = 120.50,
+                Currency = 0
+            },
+            AverageGrade = 4.5,
+            Taggs = new List<string> { "Adventure", "Mountain", "Hiking" }
         };
+
 
         // Act
         var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as TourDto;
@@ -72,17 +80,23 @@ public class TourCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
         var updatedEntity = new TourDto
         {
-            Id = -1,
-            Name = "Planinska tura",
-            Description = "Izmenjena tura sa vodičem.",
-            Level = 2,
-            Price = 100m,
-            Status = "Updated",
-            Taggs = new List<int> { 1 }
+            Id=-1,
+            Name = "Strasna tura",
+            AuthorId = 101,
+            Description = "Planinarska tura sa vodičem kroz najlepše predele.",
+            Level = Level.Advanced,
+            Status = TourStatus.Published,
+            LengthInKm = 15.0,
+            Price = new PriceDto
+            {
+                Cost = 120.50,
+                Currency = 0
+            },
+            AverageGrade = 4.5,
+            Taggs = new List<string> { "Adventure", "Mountain", "Hiking" }
         };
 
-        // Act
-        var result = ((ObjectResult)controller.Update(updatedEntity.Id, updatedEntity).Result)?.Value as TourDto;
+        var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -90,8 +104,9 @@ public class TourCommandTests : BaseToursIntegrationTest
         result.Name.ShouldBe(updatedEntity.Name);
 
         // Assert - Database
-        var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == "Planinska tura");
+        var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Name == "Strasna tura");
         storedEntity.ShouldNotBeNull();
+        storedEntity.Id.ShouldBe(updatedEntity.Id);
         storedEntity.Description.ShouldBe(updatedEntity.Description);
     }
 
@@ -121,5 +136,6 @@ public class TourCommandTests : BaseToursIntegrationTest
         {
             ControllerContext = BuildContext("-1")
         };
-    }*/
+    }
+    
 }

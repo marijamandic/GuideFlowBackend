@@ -2,6 +2,7 @@
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -12,8 +13,8 @@ namespace Explorer.Tours.Tests.Integration.Administration;
 public class CheckpointCommandTests : BaseToursIntegrationTest
 {
     public CheckpointCommandTests(ToursTestFactory factory) : base(factory) { }
-
-    /*[Fact]
+    
+    [Fact]
     public void Creates()
     {
         // Arrange
@@ -27,7 +28,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 45.2671,
             Longitude = 19.8335,
             ImageUrl = "/images/start-point.jpg",
-            TourId = 1
+            Secret = "tajna"
         };
 
         // Act
@@ -80,7 +81,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 5.2700,
             Longitude = 19.8400,
             ImageUrl = "/images/updated-checkpoint.jpg",
-            TourId = 1
+            Secret = "pretajna"
         };
 
         // Act
@@ -110,8 +111,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Description = "Updated description.",
             Latitude = 5.2700,
             Longitude = 19.8400,
-            ImageUrl = "/images/updated-checkpoint.jpg",
-            TourId = 1
+            ImageUrl = "/images/updated-checkpoint.jpg"
         };
 
         // Act
@@ -163,5 +163,5 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         {
             ControllerContext = BuildContext("-1")
         };
-    }*/
+    }
 }

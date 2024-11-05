@@ -10,11 +10,11 @@ namespace Explorer.Tours.Core.Domain.Tours
 {
     public class TransportDuration : ValueObject<TransportDuration>
     {
-        public TimeSpan Time{ get; private set; }
+        public int Time{ get; private set; }
         public TransportType TransportType { get; private set; }
 
         [JsonConstructor]
-        public TransportDuration(TimeSpan time, TransportType transportType)
+        public TransportDuration(int time, TransportType transportType)
         {
             this.Time=time;
             this.TransportType = transportType;
@@ -23,33 +23,11 @@ namespace Explorer.Tours.Core.Domain.Tours
 
         private void Validate()
         {
-            if (Time < TimeSpan.Zero)
+            if (Time < 0)
                 throw new ArgumentException("Time duration cannot be less than zero.");
             if (!Enum.IsDefined(typeof(TransportType), TransportType))
                 throw new ArgumentException("Invalid transport type value.");
         }
-        /*
-        public static double CalculateTime(double distanceInKm, TransportType transportType)
-        {
-            double speed;
-
-            switch (transportType)
-            {
-                case TransportType.Car:
-                    speed = 60; 
-                    break;
-                case TransportType.Bicycle:
-                    speed = 15;
-                    break;
-                case TransportType.Walking:
-                    speed = 5;
-                    break;
-                default:
-                    throw new ArgumentException("Invalid transport type");
-            }
-
-            return distanceInKm / speed;
-        }*/
 
         protected override bool EqualsCore(TransportDuration other)
         {
