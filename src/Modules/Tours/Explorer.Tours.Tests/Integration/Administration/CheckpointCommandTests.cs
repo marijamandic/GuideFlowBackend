@@ -111,7 +111,8 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Description = "Updated description.",
             Latitude = 5.2700,
             Longitude = 19.8400,
-            ImageUrl = "/images/updated-checkpoint.jpg"
+            ImageUrl = "/images/updated-checkpoint.jpg",
+            Secret="tajnaa"
         };
 
         // Act

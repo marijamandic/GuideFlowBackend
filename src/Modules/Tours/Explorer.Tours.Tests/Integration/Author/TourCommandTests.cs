@@ -1,10 +1,14 @@
 ﻿using Explorer.API.Controllers.Authoring.Tour;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
+using Level = Explorer.Tours.API.Dtos.Level;
+using TourStatus = Explorer.Tours.Core.Domain.Tours.TourStatus;
+using TransportType = Explorer.Tours.API.Dtos.TransportType;
 
 namespace Explorer.Tours.Tests.Integration.Author;
 
@@ -26,7 +30,7 @@ public class TourCommandTests : BaseToursIntegrationTest
             AuthorId = 101,
             Description = "Planinarska tura sa vodičem kroz najlepše predele.",
             Level = Level.Advanced,
-            Status = TourStatus.Published,
+            Status = Explorer.Tours.API.Dtos.TourStatus.Published,
             LengthInKm = 15.0,
             Price = new PriceDto
             {
@@ -85,7 +89,7 @@ public class TourCommandTests : BaseToursIntegrationTest
             AuthorId = 101,
             Description = "Planinarska tura sa vodičem kroz najlepše predele.",
             Level = Level.Advanced,
-            Status = TourStatus.Published,
+            Status = Explorer.Tours.API.Dtos.TourStatus.Published,
             LengthInKm = 15.0,
             Price = new PriceDto
             {
@@ -128,6 +132,184 @@ public class TourCommandTests : BaseToursIntegrationTest
         // Assert - Database
         var storedEntity = dbContext.Tours.FirstOrDefault(i => i.Id == -3);
         storedEntity.ShouldBeNull();
+    }
+
+    [Theory]
+    [MemberData(nameof(CheckpointAdding))]
+    public void AddingCheckpoint(int tourId,CheckpointDto checkpoint,double updatedLength,int expectedStatusCode)
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+        var checkpointAddition = new CheckpointAdditionDto
+        {
+            Checkpoint=checkpoint,
+            UpdatedLength=updatedLength
+        };
+        // Act
+        var result = (ObjectResult)controller.AddCheckpoint(tourId,checkpointAddition).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedStatusCode);
+
+        // Assert - Database
+        if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+        {
+            var storedEntity = dbContext.Checkpoint.FirstOrDefault(c => c.Name == checkpoint.Name);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Secret.ShouldBe(checkpoint.Secret);
+        }
+    }
+
+    public static IEnumerable<object[]> CheckpointAdding()
+    {
+        return new List<object[]>
+        {
+            new object[]
+            {
+                -1,
+                new CheckpointDto
+                {
+                    Name = "Novi checkpoint",
+                    Description = "Starting checkpoint for the tour.",
+                    Latitude = 45.2671,
+                    Longitude = 20.8335,
+                    ImageUrl = "/images/start-point.jpg",
+                    Secret = "tajna"
+                },
+                25.0,
+                200
+            },
+            new object[]
+            {
+                -1,
+                new CheckpointDto
+                {
+                    Name = "Lose zadat checkpoint",
+                    Description = "Starting checkpoint for the tour.",
+                    Latitude = 45.2671,
+                    Longitude = 20.8335,
+                    ImageUrl = "/images/start-point.jpg"
+                },
+                22.0,
+                400
+            },
+            new object[]
+            {
+                -5,
+                new CheckpointDto
+                {
+                    Name = "Los id ture checkpoint",
+                    Description = "Starting checkpoint for the tour.",
+                    Latitude = 45.2671,
+                    Longitude = 20.8335,
+                    ImageUrl = "/images/start-point.jpg",
+                    Secret = "tajna"
+                },
+                23.0,
+                404
+            }
+        };
+    }
+
+    [Theory]
+    [MemberData(nameof(TransportDurationsAdding))]
+    public void AddingTransportDurations(int tourId, List<TransportDurationDto> transportDurations,int expectedStatusCode)
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.AddTransportDurations(tourId, transportDurations).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedStatusCode);
+    }
+
+    public static IEnumerable<object[]> TransportDurationsAdding()
+    {
+        return new List<object[]>
+        {
+            new object[]
+            {
+                -1,
+                new List<TransportDurationDto>
+                {
+                    new TransportDurationDto{
+                        Time=20,
+                        TransportType=TransportType.Car
+                    },
+                    new TransportDurationDto{
+                        Time=40,
+                        TransportType=TransportType.Walking
+                    },
+                },
+                200
+            },
+            new object[]
+            {
+                -1,
+                new List<TransportDurationDto>
+                {
+                    new TransportDurationDto{
+                        Time=-10,
+                        TransportType=TransportType.Car
+                    },
+                    new TransportDurationDto{
+                        Time=40,
+                        TransportType=TransportType.Walking
+                    },
+                },
+                400
+            },
+            new object[]
+            {
+                -5,
+                new List<TransportDurationDto>
+                {
+                    new TransportDurationDto{
+                        Time=20,
+                        TransportType=TransportType.Car
+                    },
+                    new TransportDurationDto{
+                        Time=40,
+                        TransportType=TransportType.Walking
+                    },
+                },
+                404
+            }
+        };
+    }
+
+    [Theory]
+    [InlineData(-2,200,TourStatus.Archived)]
+    [InlineData(-4,404,TourStatus.Published)]
+    public void Publishes(int tourId,int expectedStatusCode,TourStatus expectedStatus)
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.Archive(tourId).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedStatusCode);
+
+        // Assert - Database
+        if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+        {
+            var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Status.ShouldBe(expectedStatus);
+        }
     }
 
     private static TourController CreateController(IServiceScope scope)
