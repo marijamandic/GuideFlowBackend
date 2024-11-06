@@ -25,7 +25,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         {
             UserId = userId;
             PostId = postId;
-            RatingDate = ratingDate;
+            RatingDate = ratingDate.ToUniversalTime(); // Ensure UTC
             RatingStatus = ratingStatus;
             Validate();
         }
