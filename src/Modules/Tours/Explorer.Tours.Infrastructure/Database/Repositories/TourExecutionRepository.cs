@@ -30,5 +30,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             _context.SaveChanges();
             return tourExecution;
         }
+        public async Task<TourExecution> GetTourExecutionByIdAsync(long tourExecutionId)
+        {
+            return await _context.TourExecutions
+                                 .Include(te => te.CheckpointsStatus)
+                                 .FirstOrDefaultAsync(te => te.Id == tourExecutionId);
+        }
     }
 }

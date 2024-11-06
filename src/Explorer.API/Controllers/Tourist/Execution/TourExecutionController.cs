@@ -41,5 +41,12 @@ namespace Explorer.API.Controllers.Tourist.Execution
             var result = _tourExecutionService.Update(updateTourExecutionDto);
             return CreateResponse(result);
         }
+
+        [HttpGet("{tourExecutionId}/completion-percentage")]
+        public async Task<ActionResult<int>> GetTourCompletionPercentage(long tourExecutionId)
+        {
+            int completionPercentage = await _tourExecutionService.GetTourCompletionPercentageAsync(tourExecutionId);
+            return Ok(completionPercentage);
+        }
     }
 }
