@@ -10,7 +10,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         Plus,
         Minus
     }
-    public class BlogRating : ValueObject<BlogRating>
+    public class BlogRating : Entity
     {
         public long UserId { get; private set; }
         public long PostId { get; private set; }
@@ -25,7 +25,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         {
             UserId = userId;
             PostId = postId;
-            RatingDate = ratingDate;
+            RatingDate = ratingDate.ToUniversalTime(); // Ensure UTC
             RatingStatus = ratingStatus;
             Validate();
         }
@@ -41,27 +41,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             return Result.Ok(rating);
         }
 
-        protected override bool EqualsCore(BlogRating other)
-        {
-            return UserId == other.UserId
-                && PostId == other.PostId
-                && RatingDate == other.RatingDate
-                && RatingStatus == other.RatingStatus;
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            unchecked
-            {
-                int hashCode = UserId.GetHashCode();
-                hashCode = (hashCode * 397) ^ PostId.GetHashCode();
-                hashCode = (hashCode * 397) ^ RatingDate.GetHashCode();
-                hashCode = (hashCode * 397) ^ RatingStatus.GetHashCode();
-                
-                return hashCode;
-            }
-        }
-
+        
         private void Validate()
         {
             if (UserId == 0) throw new ArgumentException("Invalid UserId");
