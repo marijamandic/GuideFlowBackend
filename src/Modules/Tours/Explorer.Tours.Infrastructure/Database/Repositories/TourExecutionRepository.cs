@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Infrastructure.Database;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.BuildingBlocks.Infrastructure.Database;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.TourExecutions;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,12 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             _context.Entry(tourExecution).State = EntityState.Modified;
             _context.SaveChanges();
             return tourExecution;
+        }
+        public new PagedResult<TourExecution> GetPaged(int page, int pageSize)
+        {
+            var task = _context.TourExecutions.Include(te => te.CheckpointsStatus).ThenInclude(cs => cs.Checkpoint).GetPagedById(page,pageSize);
+            task.Wait();
+            return task.Result;
         }
     }
 }

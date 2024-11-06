@@ -11,7 +11,7 @@ namespace Explorer.Tours.API.Dtos.Execution
         public long Id {  get; set; }
         public long CheckpointId { get;  set; }
         public long TourExecutionId { get;  set; }
-        public CheckpointDto? CheckpointDto { get; set; }
+        public CheckpointDto? Checkpoint { get; set; }
         public DateTime CompletionTime { get;  set; }
     }
 }

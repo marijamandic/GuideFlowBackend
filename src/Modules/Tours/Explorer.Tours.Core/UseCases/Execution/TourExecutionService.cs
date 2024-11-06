@@ -54,7 +54,10 @@ namespace Explorer.Tours.Core.UseCases.Execution
             SetSecretsForDisplaying(tourExecutionDto);
             return tourExecutionDto;
         }
-
+        public Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize) {
+            var result = _tourExecutionRepository.GetPaged(page, pageSize);
+            return MapToDto(result);
+        }
 
 
 
@@ -66,9 +69,9 @@ namespace Explorer.Tours.Core.UseCases.Execution
                 if (cs.CompletionTime == DateTime.MinValue)
                 {
                     var checkpointStatus = tourExecutionDto.CheckpointsStatus.FirstOrDefault(checkpointStatus => cs.Id == checkpointStatus.Id);
-                    if (checkpointStatus != null && checkpointStatus.CheckpointDto != null)
+                    if (checkpointStatus != null && checkpointStatus.Checkpoint != null)
                     {
-                        checkpointStatus.CheckpointDto.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
+                        checkpointStatus.Checkpoint.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
                     }
                 }
             }
