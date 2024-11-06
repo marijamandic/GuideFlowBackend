@@ -1,7 +1,9 @@
 ﻿using System;
 using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.Shopping;
+using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Shopping;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Shopping;
@@ -91,5 +93,6 @@ namespace Explorer.Tours.Core.UseCases.Shopping
             var result = _purchaseTokenRepository.GetByUserId(userId);
             return MapToDto(result);
         }
+
     }
 }
