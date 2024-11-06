@@ -6,3 +6,5 @@ DELETE FROM tours."Equipment";
 DELETE FROM tours."TourObjects";
 DELETE FROM tours."PublicPoints";
 DELETE FROM tours."EquipmentManagements";
+DELETE FROM tours."TourReviews";
+DELETE FROM tours."PurchaseTokens";
