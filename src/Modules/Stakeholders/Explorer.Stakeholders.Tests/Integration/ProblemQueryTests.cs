@@ -1,4 +1,5 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using Explorer.API.Controllers.Administrator.Administration;
+using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
@@ -32,17 +33,9 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
         }
     }
 
-    private static Explorer.API.Controllers.Administrator.Administration.ProblemController CreateAdminController(IServiceScope scope)
+    private static ProblemController CreateAdminController(IServiceScope scope)
     {
-        return new Explorer.API.Controllers.Administrator.Administration.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
-        {
-            ControllerContext = BuildContext("-1")
-        };
-    }
-
-    private static Explorer.API.Controllers.Tourist.ProblemController CreateTouristController(IServiceScope scope)
-    {
-        return new Explorer.API.Controllers.Tourist.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        return new ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };
