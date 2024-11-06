@@ -148,9 +148,15 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             try
             {
                 var tour = tourRepository.Get(id);
-                tour.ChangeStatusToPublish();
-                var updatedTour = tourRepository.Update(tour);
-                return MapToDto(updatedTour);
+
+                if (tour.CheckPublishConditions())
+                {
+                    tour.ChangeStatusToPublish();
+                    var updatedTour = tourRepository.Update(tour);
+                    return MapToDto(updatedTour);
+                }
+
+                return Result.Fail(FailureCode.InvalidArgument);
             }
             catch (KeyNotFoundException e)
             {
