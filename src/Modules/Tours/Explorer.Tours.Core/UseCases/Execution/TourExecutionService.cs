@@ -28,13 +28,14 @@ namespace Explorer.Tours.Core.UseCases.Execution
             _mapper = mapper;
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
-            TourDto tour = _tourService.Get(createTourExecutionDto.TourId).Value;
+                Result<TourDto> tourResult = _tourService.Get(createTourExecutionDto.TourId);
+                if (tourResult.IsFailed) return Result.Fail(FailureCode.NotFound);
+                TourDto tour = tourResult.Value;
+                var tourExecution = new TourExecution(tour.Id, createTourExecutionDto.UserId, tour.LengthInKm);
+                tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
 
-            var tourExecution = new TourExecution(tour.Id,createTourExecutionDto.UserId,tour.LengthInKm);
-            tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
-
-            _tourExecutionRepository.Create(tourExecution);
-            return MapToDto(tourExecution);
+                _tourExecutionRepository.Create(tourExecution);
+                return MapToDto(tourExecution);
         }
         public Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto) {
             var tourExecution = _tourExecutionRepository.Get(updateTourExecutionDto.TourExecutionId);
@@ -74,6 +75,10 @@ namespace Explorer.Tours.Core.UseCases.Execution
             var sessionDto = MapToDto(tourExecution);
             return sessionDto;
         }
+        public Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize) {
+            var result = _tourExecutionRepository.GetPaged(page, pageSize);
+            return MapToDto(result);
+        }
 
         public Result<TourExecutionDto> AbandonSession(long userId)
         {
@@ -94,7 +99,6 @@ namespace Explorer.Tours.Core.UseCases.Execution
 
 
 
-
         #region HelpperMethods
         public void SetSecretsForDisplaying(TourExecutionDto tourExecutionDto)
         {
@@ -103,9 +107,9 @@ namespace Explorer.Tours.Core.UseCases.Execution
                 if (cs.CompletionTime == DateTime.MinValue)
                 {
                     var checkpointStatus = tourExecutionDto.CheckpointsStatus.FirstOrDefault(checkpointStatus => cs.Id == checkpointStatus.Id);
-                    if (checkpointStatus != null && checkpointStatus.CheckpointDto != null)
+                    if (checkpointStatus != null && checkpointStatus.Checkpoint != null)
                     {
-                        checkpointStatus.CheckpointDto.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
+                        checkpointStatus.Checkpoint.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
                     }
                 }
             }
