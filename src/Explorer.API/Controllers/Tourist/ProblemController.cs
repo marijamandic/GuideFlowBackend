@@ -1,8 +1,10 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Tourist
 {
@@ -41,12 +43,18 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPost("messages")]
         public ActionResult<PagedResult<MessageDto>> CreateMessage([FromBody] CreateMessageInputDto messageInput)
         {
-            bool isBadRequest = !int.TryParse(User.FindFirst("id")?.Value, out int authorId) ||
+            bool isBadRequest = !int.TryParse(User.FindFirst("id")?.Value, out int touristId) ||
                 string.IsNullOrWhiteSpace(messageInput.Content);
 
             if (isBadRequest) return BadRequest("Invalid input");
 
-            var result = _problemService.CreateMessage(authorId, messageInput);
+            var jwtUser = new UserDto
+            {
+                Id = touristId,
+                Role = (UserRole)Enum.Parse(typeof(UserRole), User.FindFirst(ClaimTypes.Role)!.Value),
+                Username = User.FindFirst("username")!.Value
+            };
+            var result = _problemService.CreateMessage(messageInput, jwtUser);
             return CreateResponse(result);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain.Problems;
@@ -13,16 +14,19 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
     private readonly IProblemRepository _problemRepository;
 
     private readonly IInternalProblemService _internalProblemService;
-    private IMapper _mapper;
+    private readonly IProblemNotificationService _notificationService;
+    private readonly IMapper _mapper;
 
     public ProblemService(
         IMapper mapper,
         IProblemRepository problemRepository,
-        IInternalProblemService internalProblemService) : base(mapper)
+        IInternalProblemService internalProblemService,
+        IProblemNotificationService notificationService) : base(mapper)
     {
         _problemRepository = problemRepository;
         _internalProblemService = internalProblemService;
         _mapper = mapper;
+        _notificationService = notificationService;
     }
 
     public Result<ProblemDto> Create(CreateProblemInputDto problemInput)
@@ -62,7 +66,7 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
         return MapToDto(problems);
     }
 
-    public Result<PagedResult<MessageDto>> CreateMessage(int userId, CreateMessageInputDto messageInput)
+    private Problem CreateMessage(CreateMessageInputDto messageInput, int userId)
     {
         var message = new MessageDto
         {
@@ -74,10 +78,33 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
 
         var problem = _problemRepository.GetById(messageInput.ProblemId);
         problem.AddMessage(_mapper.Map<Message>(message));
-        problem = _problemRepository.Save(problem);
-        var messages = new List<Message>(problem.Messages);
-        var messageDtos = messages.Select(p => _mapper.Map<MessageDto>(p)).ToList();
-        return new PagedResult<MessageDto>(messageDtos, messageDtos.Count);
+        return _problemRepository.Save(problem);
+    }
+
+    private void SendNewMsgNotification(CreateMessageInputDto messageInput, UserDto jwtUser, Problem problem)
+    {
+        int userId = jwtUser.Role == UserRole.Author ?
+            (int)problem.UserId :
+            _internalProblemService.GetAuthorIdByTourId(problem.TourId).Value;
+
+        var notificationInput = new CreateProblemNotificationInputDto
+        {
+            UserId = userId,
+            Sender = jwtUser.Username,
+            Message = messageInput.Content,
+            ProblemId = messageInput.ProblemId
+        };
+
+        _notificationService.Create(notificationInput);
+    }
+
+    public Result<PagedResult<MessageDto>> CreateMessage(CreateMessageInputDto messageInput, UserDto jwtUser)
+    {
+        var problem = CreateMessage(messageInput, jwtUser.Id);
+        SendNewMsgNotification(messageInput, jwtUser, problem);
+
+        var messages = problem.Messages.Select(p => _mapper.Map<MessageDto>(p)).ToList();
+        return new PagedResult<MessageDto>(messages, messages.Count);
     }
 
     public Result<PagedResult<ProblemDto>> GetByTouristId(int touristId)

@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.Problems;
 using FluentResults;
 
@@ -20,6 +21,8 @@ public interface IProblemService
     /// <param name="authorId"></param>
     /// <returns></returns>
     Result<PagedResult<ProblemDto>> GetByAuthorId(int authorId);
-    Result<PagedResult<MessageDto>> CreateMessage(int userId, CreateMessageInputDto messageInput);
+
+    // samo trenutna implementacija
+    Result<PagedResult<MessageDto>> CreateMessage(CreateMessageInputDto messageInput, UserDto jwtUser);
     Result<PagedResult<ProblemDto>> GetByTouristId(int touristId);
 }

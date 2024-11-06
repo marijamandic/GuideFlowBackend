@@ -38,5 +38,6 @@ public class StakeholderProfile : Profile
                 new MessageDto { Id = (int)m.Id, ProblemId = (int)m.ProblemId, UserId = (int)m.UserId, Content = m.Content, PostedAt = m.PostedAt })));
 
         CreateMap<MessageDto, Message>().ReverseMap();
+        CreateMap<ProblemNotificationDto, ProblemNotification>().ReverseMap();
     }
 }
