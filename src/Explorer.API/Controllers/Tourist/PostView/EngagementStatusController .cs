@@ -21,7 +21,6 @@ namespace Explorer.API.Controllers.Tourist.PostView
             Debug.WriteLine($"Received request for engagement status with postId: {postId}"); 
 
             var result = _postAggregateService.GetEngagementStatus(postId);
-
             Debug.WriteLine($"Result from _postAggregateService: IsSuccess = {result.IsSuccess}, Value = {result.Value}, Errors = {result.Errors}");
 
             return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
