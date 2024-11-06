@@ -25,5 +25,4 @@ namespace Explorer.Stakeholders.Core.Domain.Club
         }
     }
 
-
 }
