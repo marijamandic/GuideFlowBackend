@@ -11,9 +11,8 @@ using System.Xml.Linq;
 
 namespace Explorer.Blog.Core.Domain.Posts
 {
-    public class Comment : ValueObject<Comment>
+    public class Comment : Entity
     {
-        public long Id { get; private set; }
         public long UserId { get; private set; }
         public long PostId { get; private set; }
         public DateTime CreatedAt { get; private set; }
@@ -23,9 +22,8 @@ namespace Explorer.Blog.Core.Domain.Posts
         public Comment() { }
 
         [JsonConstructor]
-        public Comment(long id, long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
+        public Comment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
-            Id = id;
             UserId = userId;
             PostId = postId;
             CreatedAt = createdAt;
@@ -49,37 +47,14 @@ namespace Explorer.Blog.Core.Domain.Posts
         }
 
         internal static Result<Comment> Create(
-        long id,
         long userId,
         long postId,
         DateTime createdAt,
         string content,
         DateTime lastModified)
         {
-            var comment = new Comment(id, userId, postId, createdAt, content, lastModified);
+            var comment = new Comment(userId, postId, createdAt, content, lastModified);
             return comment;
-        }
-
-        protected override bool EqualsCore(Comment other)
-        {
-            return UserId == other.UserId
-                && PostId == other.PostId
-                && CreatedAt == other.CreatedAt
-                && Content == other.Content
-                && LastModified == other.LastModified;
-        }
-
-        protected override int GetHashCodeCore()
-        {
-            unchecked
-            {
-                int hashCode = UserId.GetHashCode();
-                hashCode = (hashCode * 397) ^ PostId.GetHashCode();
-                hashCode = (hashCode * 397) ^ CreatedAt.GetHashCode();
-                hashCode = (hashCode * 397) ^ Content.GetHashCode();
-                hashCode = (hashCode * 397) ^ LastModified.GetHashCode();
-                return hashCode;
-            }
         }
 
         private void Validate()

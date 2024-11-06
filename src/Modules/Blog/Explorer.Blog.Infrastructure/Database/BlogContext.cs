@@ -5,7 +5,7 @@ namespace Explorer.Blog.Infrastructure.Database;
 
 public class BlogContext : DbContext
 {
-    //public DbSet<Comment> Comments { get; set; }
+    public DbSet<Comment> Comments { get; set; }
     public DbSet<Post> Posts { get; set; }
     public BlogContext(DbContextOptions<BlogContext> options) : base(options) {}
 
@@ -13,8 +13,14 @@ public class BlogContext : DbContext
     {
         modelBuilder.HasDefaultSchema("blog");
 
+        modelBuilder.Entity<Post>()
+            .HasMany(p => p.Comments)
+            .WithOne()
+            .HasForeignKey(c => c.PostId)
+            .OnDelete(DeleteBehavior.Cascade); 
+
         modelBuilder.Entity<Post>().Property(post => post.Ratings).HasColumnType("jsonb");
-        modelBuilder.Entity<Post>().Property(post => post.Comments).HasColumnType("jsonb");
     }
+
 
 }

@@ -73,12 +73,13 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
         public Result<Post> GetPostByCommentId(long commentId)
         {
             var post = _context.Posts
-                .AsEnumerable() 
+                .Include(p => p.Comments) 
                 .FirstOrDefault(p => p.Comments.Any(c => c.Id == commentId));
 
             return post != null ? Result.Ok(post) : Result.Fail("Post not found");
         }
 
-        
+
+
     }
 }
