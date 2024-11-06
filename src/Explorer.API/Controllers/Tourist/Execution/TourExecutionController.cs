@@ -1,5 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.Execution;
 using Explorer.Tours.API.Public.Execution;
 using Microsoft.AspNetCore.Authorization;
@@ -47,6 +48,29 @@ namespace Explorer.API.Controllers.Tourist.Execution
         {
             int completionPercentage = await _tourExecutionService.GetTourCompletionPercentageAsync(tourExecutionId);
             return Ok(completionPercentage);
+        }
+
+        [HttpGet("getByUser/{userId:long}")]
+        public ActionResult<TourExecutionDto> GetByUser(long userId)
+        {
+            var result = _tourExecutionService.GetSessionsByUserId(userId);
+            return CreateResponse(result);
+        }
+
+        // za swagger
+
+        [HttpPut("complete/{userId}")]
+        public ActionResult<TourExecutionDto> CompleteSession(long userId)
+        {
+            var result = _tourExecutionService.CompleteSession(userId);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("abandon/{userId}")]
+        public ActionResult<TourExecutionDto> AbandonSession(long userId)
+        {
+            var result = _tourExecutionService.AbandonSession(userId);
+            return CreateResponse(result);
         }
     }
 }

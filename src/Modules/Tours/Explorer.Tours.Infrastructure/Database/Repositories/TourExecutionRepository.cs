@@ -37,11 +37,18 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
                                  .Include(te => te.CheckpointsStatus)
                                  .FirstOrDefaultAsync(te => te.Id == tourExecutionId);
         }
+
+        public TourExecution GetByUserId(long userId)
+        {
+            return _context.TourExecutions
+                           .FirstOrDefault(te => te.UserId == userId) ?? throw new Exception("Id not found");
+        }
         public new PagedResult<TourExecution> GetPaged(int page, int pageSize)
         {
             var task = _context.TourExecutions.Include(te => te.CheckpointsStatus).ThenInclude(cs => cs.Checkpoint).GetPagedById(page,pageSize);
             task.Wait();
             return task.Result;
         }
+
     }
 }

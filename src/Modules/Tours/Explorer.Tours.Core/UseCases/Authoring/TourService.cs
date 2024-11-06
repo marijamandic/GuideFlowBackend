@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
+using Explorer.Tours.API.Public.Shopping;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
@@ -19,10 +20,12 @@ namespace Explorer.Tours.Core.UseCases.Authoring
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
-        public TourService(ITourRepository tourRepository, IMapper mapper) : base(mapper) 
+        private readonly IPurchaseTokensService _purchaseTokenService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IPurchaseTokensService purchaseTokenService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
+            _purchaseTokenService=purchaseTokenService;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -160,6 +163,21 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+
+        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        {
+            var tokens = _purchaseTokenService.GetTokensByUserId(userId).Value.Results.Where(t => t.UserId == userId);
+            var purchased = new List<TourDto>();
+
+            foreach (var token in tokens)
+            {
+                var tour = Get(token.TourId).Value;
+                if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                    purchased.Add(tour);
+            }
+
+            return purchased;
         }
     }
 }

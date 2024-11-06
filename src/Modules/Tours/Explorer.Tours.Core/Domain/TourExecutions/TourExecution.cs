@@ -27,6 +27,26 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             LastActivity = DateTime.UtcNow;
             ExecutionStatus = ExecutionStatus.Active;
         }
+
+        public void CompleteSession()
+        {
+            if (ExecutionStatus == ExecutionStatus.Active && CheckpointsStatus.All(cs => cs.IsCompleted())) 
+            {
+                ExecutionStatus = ExecutionStatus.Completed;
+                EndTime = DateTime.UtcNow;
+                LastActivity = DateTime.UtcNow;
+            }
+        }
+
+        public void AbandonSession()
+        {
+            if( ExecutionStatus == ExecutionStatus.Active )
+            {
+                ExecutionStatus = ExecutionStatus.Abandoned;
+                EndTime = DateTime.UtcNow;
+                LastActivity = DateTime.UtcNow;
+            }
+        }
         public void UpdateLocation(double longitude , double latitude) {
             LastActivity = DateTime.UtcNow;
             foreach (var checkpointStatus in CheckpointsStatus)

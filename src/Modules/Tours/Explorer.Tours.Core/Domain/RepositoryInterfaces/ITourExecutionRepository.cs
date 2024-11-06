@@ -11,5 +11,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     public interface ITourExecutionRepository : ICrudRepository<TourExecution>
     {
         Task<TourExecution> GetTourExecutionByIdAsync(long tourExecutionId);
+        TourExecution GetByUserId(long userId);
     }
 }

@@ -28,19 +28,18 @@ namespace Explorer.Tours.Core.UseCases.Execution
             _mapper = mapper;
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
-                Result<TourDto> tourResult = _tourService.Get(createTourExecutionDto.TourId);
-                if (tourResult.IsFailed) return Result.Fail(FailureCode.NotFound);
-                TourDto tour = tourResult.Value;
-                var tourExecution = new TourExecution(tour.Id, createTourExecutionDto.UserId, tour.LengthInKm);
-                tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
+            Result<TourDto> tourResult = _tourService.Get(createTourExecutionDto.TourId);
+            if (tourResult.IsFailed) return Result.Fail(FailureCode.NotFound);
+            TourDto tour = tourResult.Value;
+            var tourExecution = new TourExecution(tour.Id, createTourExecutionDto.UserId, tour.LengthInKm);
+            tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
 
-                _tourExecutionRepository.Create(tourExecution);
-                return MapToDto(tourExecution);
+            _tourExecutionRepository.Create(tourExecution);
+            return MapToDto(tourExecution);
         }
         public Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto) {
             var tourExecution = _tourExecutionRepository.Get(updateTourExecutionDto.TourExecutionId);
-
-            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude,updateTourExecutionDto.Latitude);
+            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude);
             _tourExecutionRepository.Update(tourExecution);
 
             var tourExecutionDto = MapToDto(tourExecution);
@@ -59,10 +58,49 @@ namespace Explorer.Tours.Core.UseCases.Execution
             var tourExecution = await _tourExecutionRepository.GetTourExecutionByIdAsync(tourExecutionId);
             return tourExecution?.GetTourCompletionPercentage() ?? 0;
         }
+
+        public Result<TourExecutionDto> GetSessionsByUserId(long userId)
+        {
+            var session = _tourExecutionRepository.GetByUserId(userId);
+            var sessionDto = MapToDto(session);
+            return sessionDto;   
+        }
+
+        public Result<TourExecutionDto> CompleteSession(long userId)
+        {
+            var tourExecution = _tourExecutionRepository.GetByUserId(userId);
+
+            if (tourExecution == null)
+            {
+                throw new Exception("Tour execution not found.");
+            }
+
+            tourExecution.CompleteSession();
+            _tourExecutionRepository.Update(tourExecution);
+            var sessionDto = MapToDto(tourExecution);
+            return sessionDto;
+        }
         public Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize) {
             var result = _tourExecutionRepository.GetPaged(page, pageSize);
             return MapToDto(result);
         }
+
+        public Result<TourExecutionDto> AbandonSession(long userId)
+        {
+            var tourExecution = _tourExecutionRepository.GetByUserId(userId);
+
+            if (tourExecution == null)
+            {
+                throw new Exception("Tour execution not found.");
+            }
+
+            tourExecution.AbandonSession();
+            _tourExecutionRepository.Update(tourExecution);
+            var sessionDto = MapToDto(tourExecution);
+            return sessionDto;
+        }
+
+
 
 
 
