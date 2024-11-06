@@ -57,9 +57,16 @@ namespace Explorer.API.Controllers.Authoring.Tour
         }
 
         [HttpPut("addingCheckpoint/{id:int}")]
-        public ActionResult<TourDto> AddCheckpoint(int id,[FromBody] CheckpointAdditionDto checkpointAddition)
+        public ActionResult<TourDto> AddCheckpoint(int id,[FromBody] CheckpointDto checkpoint)
         {
-            var result = _tourService.AddCheckpoint(id, checkpointAddition.Checkpoint,checkpointAddition.UpdatedLength);
+            var result = _tourService.AddCheckpoint(id,checkpoint);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("updatingLength/{id:int}")]
+        public ActionResult<TourDto> UpdateLength(int id, [FromBody] double length)
+        {
+            var result = _tourService.UpdateLength(id, length);
             return CreateResponse(result);
         }
 
@@ -70,12 +77,21 @@ namespace Explorer.API.Controllers.Authoring.Tour
             return CreateResponse(result);
         }
 
-        [HttpPut("archive/{id:int}")]
-        public ActionResult<TourDto> Archive(int id)
+        [HttpPut("changeStatus/{id:int}")]
+        public ActionResult<TourDto> ChangeStatus(int id, [FromBody] string status)
         {
-            var result = _tourService.Archive(id);
+            FluentResults.Result<TourDto> result;
+
+            if (status.Equals("Archive"))
+            {
+                result = _tourService.Archive(id);
+            }
+            else
+            {
+                result = _tourService.Publish(id);
+            }
+
             return CreateResponse(result);
         }
-
     }
 }

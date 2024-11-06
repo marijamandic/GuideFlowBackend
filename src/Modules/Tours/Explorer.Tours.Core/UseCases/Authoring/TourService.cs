@@ -88,40 +88,103 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<TourDto> AddCheckpoint(int Id, CheckpointDto checkpoint, double updatedLength)
+        public Result<TourDto> AddCheckpoint(int id, CheckpointDto checkpoint)
         {
-                Tour tour = tourRepository.Get(Id);
-                if (tour == null)
-                {
-                    return Result.Fail<TourDto>(FailureCode.NotFound).WithError("Tour not found.");
-                }
-                tour.AddCheckpoint(mapper.Map<Checkpoint>(checkpoint), updatedLength);
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.AddCheckpoint(mapper.Map<Checkpoint>(checkpoint));
                 var result = tourRepository.Update(tour);
                 return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
         }
 
         public Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations)
         {
-            Tour tour = tourRepository.Get(id);
-            if (tour == null)
+            try
             {
-                return Result.Fail<TourDto>(FailureCode.NotFound).WithError("Tour not found.");
+                Tour tour = tourRepository.Get(id);
+                tour.AddTransportDuratios(transportDurations.Select(dto => mapper.Map<TransportDuration>(dto)).ToList());
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
             }
-            tour.AddTransportDuratios(transportDurations.Select(dto => mapper.Map<TransportDuration>(dto)).ToList());
-            var result = tourRepository.Update(tour);
-            return MapToDto(result);
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
         }
 
         public Result<TourDto> Archive(int id)
         {
-            Tour tour= tourRepository.Get(id);
-            if (tour == null)
+            try
             {
-                return Result.Fail<TourDto>(FailureCode.NotFound).WithError("Tour not found.");
+                Tour tour = tourRepository.Get(id);
+                tour.Archive();
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
             }
-            tour.Archive();
-            var result = tourRepository.Update(tour);
-            return MapToDto(result);
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
+        
+
+        public Result<TourDto> Publish(int id)
+        {
+            try
+            {
+                var tour = tourRepository.Get(id);
+
+                if (tour.CheckPublishConditions())
+                {
+                    tour.ChangeStatusToPublish();
+                    var updatedTour = tourRepository.Update(tour);
+                    return MapToDto(updatedTour);
+                }
+
+                return Result.Fail(FailureCode.InvalidArgument);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result<TourDto> UpdateLength(int id, double length)
+        {
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.UpdateLength(length);
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
         }
     }
 }
