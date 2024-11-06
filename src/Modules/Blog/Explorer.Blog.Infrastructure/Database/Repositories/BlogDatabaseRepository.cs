@@ -29,6 +29,7 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
         {
             var post = _context.Posts
                 .Include(p => p.Comments)
+                .Include(p => p.Ratings)
                 .FirstOrDefault(p => p.Id == postId);
 
             return post != null ? Result.Ok(post) : Result.Fail("Post not found");
