@@ -162,10 +162,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public List<TourDto> SearchTours(double lat, double lon, double distance, int page, int pageSize)
+        public Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize)
         {
-            /*try
-            {*/
+            try
+            {
                 var publishedTours = tourRepository.GetPaged(page, pageSize).Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
                 var matchingTours = new List<TourDto>();
                 foreach (var tour in publishedTours)
@@ -178,8 +178,8 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                         break;
                     }
                 }
-                return matchingTours;
-            /*}
+                return Result.Ok(matchingTours);
+            }
             catch (KeyNotFoundException e)
             {
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
@@ -187,7 +187,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             catch (ArgumentException e)
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
-            }*/
+            }
         }
 
         private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
