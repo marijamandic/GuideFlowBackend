@@ -12,21 +12,18 @@ public class Problem : Entity
     public Resolution Resolution { get; private set; }
     public IReadOnlyList<Message> Messages => new List<Message>(_messages);
 
-    public Problem(long userId, long tourId)
+    public Problem(long id, long userId, long tourId)
     {
+        Id = id;
         UserId = userId;
         TourId = tourId;
-        //Validate();
-    }
-
-    private void Validate()
-    {
-        
     }
 
     public void AddMessage (Message message)
     {
+        if (message.ProblemId != Id) throw new Exception("Problem ID mismatch");
         message.Validate();
+
         _messages.Add(message);
     }
 }

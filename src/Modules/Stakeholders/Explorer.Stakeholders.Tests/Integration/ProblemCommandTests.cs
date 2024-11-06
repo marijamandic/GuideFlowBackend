@@ -18,22 +18,13 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-        var newEntity = new ProblemDto
+        var newEntity = new CreateProblemInputDto
         {
             UserId = 1,
             TourId = 2,
-            Details = new DetailsDto
-            {
-                Category = ProblemCategory.Accommodation,
-                Priority = ProblemPriority.High,
-                Description = "Description",
-            },
-            Resolution = new ResolutionDto
-            {
-                ReportedAt = DateTime.Now,
-                IsResolved = false,
-                Deadline = DateTime.Now.AddDays(10),
-            }
+            Category = ProblemCategory.Accommodation,
+            Priority = ProblemPriority.Medium,
+            Description = "unique description"
         };
 
         // Act
@@ -42,7 +33,7 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         // Assert - response
         result.ShouldNotBeNull();
         result.Id.ShouldNotBe(0);
-        result.Details.Category.ShouldBe(newEntity.Details.Category);
+        result.Details.Category.ShouldBe(newEntity.Category);
 
         // Assert - db
         var storedEntity = dbContext.Problems.FirstOrDefault(p => p.Details.Description == result.Details.Description);

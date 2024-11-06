@@ -19,6 +19,6 @@ public class Message : Entity
 
     public void Validate()
     {
-        if (string.IsNullOrWhiteSpace(Content)) throw new ArgumentNullException("Invalid content");
+        if (string.IsNullOrWhiteSpace(Content)) throw new ArgumentException("Invalid content");
     }
 }
