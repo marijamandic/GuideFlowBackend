@@ -18,11 +18,11 @@ namespace Explorer.API.Controllers.Tourist.Execution
             _tourExecutionService = tourExecutionService;
         }
 
-        /*[HttpGet]
+        [HttpGet]
         public ActionResult<PagedResult<TourExecutionDto>> GetAll([FromQuery] int page , [FromQuery] int pageSize) {
             var result = _tourExecutionService.GetPaged(page, pageSize);
             return CreateResponse(result);
-        }*/
+        }
 
         [HttpGet("{id:int}")]
         public ActionResult<TourExecutionDto> GetById(int id)

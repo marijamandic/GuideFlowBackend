@@ -8,6 +8,7 @@ namespace Explorer.Tours.API.Dtos.Execution
 {
     public class TourExecutionDto
     {
+        public long Id { get; set; }
         public long TourId { get; set; }
         public long UserId { get; set; }
         public double TourRange { get; set; }

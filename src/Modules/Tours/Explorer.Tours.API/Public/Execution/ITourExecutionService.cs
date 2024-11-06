@@ -16,6 +16,6 @@ namespace Explorer.Tours.API.Public.Execution
         Result<TourExecutionDto> Get(long id);
         //Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize);
         Task<int> GetTourCompletionPercentageAsync(long tourExecutionId);
-
+        Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize);
     }
 }
