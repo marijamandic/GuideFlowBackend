@@ -75,7 +75,11 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var controller = CreateAdminController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-        var result = ((ObjectResult)controller.UpdateDeadline(-2, DateTime.UtcNow.AddDays(10)).Result)?.Value as ProblemDto;
+        var entity = new DeadlineDto
+        {
+            Date = DateTime.UtcNow.AddDays(10)
+        };
+        var result = ((ObjectResult)controller.UpdateDeadline(-2, entity).Result)?.Value as ProblemDto;
         result.ShouldNotBeNull();
         result.Id.ShouldBe(-2);
         result.Resolution.Deadline.ShouldBe(DateTime.UtcNow.AddDays(10), TimeSpan.FromSeconds(10));

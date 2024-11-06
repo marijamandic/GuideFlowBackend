@@ -8,4 +8,5 @@ public interface IProblemRepository
     PagedResult<Problem> GetAll();
     Problem Update(Problem problem);
     Problem GetById(int id);
+    PagedResult<Problem> GetUserProblems(int userId);
 }

@@ -39,4 +39,9 @@ public class ProblemDatabaseRepository : IProblemRepository
         if(problem == null) throw new KeyNotFoundException($"Problem with ID {id} not found.");
         return problem;
     }
+    public PagedResult<Problem> GetUserProblems(int userId)
+    {
+        var result = _problems.Include(p => p.Messages).Where(i => i.UserId == userId).ToList();
+        return new PagedResult<Problem>(result,result.Count);
+    }
 }

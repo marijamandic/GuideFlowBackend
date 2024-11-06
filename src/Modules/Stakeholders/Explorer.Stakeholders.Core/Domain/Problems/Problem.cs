@@ -23,7 +23,7 @@ public class Problem : Entity
     {
 
     }
-    public void ChangeProblemStatus(string touristMessage, bool status)
+    public void ChangeStatus(string touristMessage, bool status)
     {
         Resolution.ChangeResolveStatus(status);
         var message = new Message(Id, UserId, touristMessage, DateTime.UtcNow);

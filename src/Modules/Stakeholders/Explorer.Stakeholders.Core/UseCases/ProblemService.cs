@@ -37,11 +37,16 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
         var problems = _problemRepository.GetAll();
         return MapToDto(problems);
     }
+    public Result<PagedResult<ProblemDto>> GetUserProblems(int userId)
+    {
+        var problems = _problemRepository.GetUserProblems(userId);
+        return MapToDto(problems);
+    }
 
     public Result<ProblemDto> Update(ProbStatusChangeDto status, int id)
     {
         var problem = _problemRepository.GetById(id);
-        problem.ChangeProblemStatus(status.TouristMessage, status.IsSolved);
+        problem.ChangeStatus(status.TouristMessage, status.IsSolved);
         var result = _problemRepository.Update(problem);
         return MapToDto(result);
     }
