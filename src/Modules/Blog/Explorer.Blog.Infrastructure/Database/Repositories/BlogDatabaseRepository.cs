@@ -28,10 +28,12 @@ namespace Explorer.Blog.Infrastructure.Database.Repositories
         public Result<Post> GetById(long postId)
         {
             var post = _context.Posts
+                .Include(p => p.Comments)
                 .FirstOrDefault(p => p.Id == postId);
 
             return post != null ? Result.Ok(post) : Result.Fail("Post not found");
         }
+
 
         public Result<Post> Update(Post post)
         {

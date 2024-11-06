@@ -62,9 +62,9 @@ namespace Explorer.Blog.Core.Domain.Posts
         }
 
         // Comment-related methods
-        public Result AddComment(long id, long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
+        public Result AddComment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
-            var result = Comment.Create(id, userId, postId, createdAt, content, lastModified);
+            var result = Comment.Create(userId, postId, createdAt, content, lastModified);
             if (result.IsFailed)
             {
                 return Result.Fail("Error adding comment!");

@@ -106,7 +106,6 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
                 return Result.Fail("Post not found.");
 
             var addCommentResult = postResult.Value.AddComment(
-                commentDto.Id,  
                 commentDto.UserId,
                 postId,
                 commentDto.CreatedAt,
