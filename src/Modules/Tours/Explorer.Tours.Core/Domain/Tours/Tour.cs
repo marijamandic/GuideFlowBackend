@@ -57,10 +57,9 @@ namespace Explorer.Tours.Core.Domain.Tours
                 throw new ArgumentException("Invalid level value.");
         }
 
-        public void AddCheckpoint(Checkpoint checkpoint, double updatedLength)
+        public void AddCheckpoint(Checkpoint checkpoint)
         {
             Checkpoints.Add(checkpoint);
-            LengthInKm = updatedLength;
         }
 
         public void AddTransportDuratios(List<TransportDuration> transportDurations)
@@ -82,6 +81,14 @@ namespace Explorer.Tours.Core.Domain.Tours
         {
             Status = TourStatus.Published;
             StatusChangeDate = DateTime.UtcNow;
+        }
+
+        public void UpdateLength(double length)
+        {
+            if (length < 0)
+                throw new ArgumentException("Length in kilometers cannot be less than 0.");
+            else
+                LengthInKm =length;
         }
     }
 
