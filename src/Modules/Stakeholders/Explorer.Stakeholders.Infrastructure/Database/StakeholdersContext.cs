@@ -33,8 +33,9 @@ public class StakeholdersContext : DbContext
        );
 
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
+        modelBuilder.Entity<User>().Property(tour => tour.Location).HasColumnType("jsonb");
 
-        
+
         ConfigureStakeholder(modelBuilder);
         ConfigureClubInvitation(modelBuilder);
         
