@@ -68,12 +68,19 @@ namespace Explorer.Tours.Core.Domain.Tours
             TransportDurations = transportDurations;
         }
 
+
         public void Archive()
         {
             if (Status != TourStatus.Published)
                 throw new InvalidOperationException("Only published tours can be archived.");
 
             Status = TourStatus.Archived;
+            StatusChangeDate = DateTime.UtcNow;
+        }
+
+        public void ChangeStatusToPublish()
+        {
+            Status = TourStatus.Published;
             StatusChangeDate = DateTime.UtcNow;
         }
     }

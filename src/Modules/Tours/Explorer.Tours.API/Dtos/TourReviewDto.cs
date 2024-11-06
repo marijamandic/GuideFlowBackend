@@ -13,4 +13,7 @@ public class TourReviewDto
     public string? Comment { get; set; }
     public DateTime TourDate { get; set; }
     public DateTime CreationDate { get; set; }
+    public int PercentageCompleted { get; set; }
+    public int TouristId { get; private set; }
+    public int TourId { get; private set; }
 }

@@ -9,16 +9,16 @@ using System.Xml.Linq;
 
 namespace Explorer.Tours.Core.Domain.Tours
 {
-    public class Checkpoint: Entity
+    public class Checkpoint : Entity
     {
         public string Name { get; private set; }
         public string Description { get; private set; }
         public double Latitude { get; private set; }
         public double Longitude { get; private set; }
         public string? ImageUrl { get; private set; }
-        public string Secret {  get; private set; }
+        public string Secret { get; private set; }
 
-        public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl,string secret)
+        public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl, string secret)
         {
             Name = name;
             Description = description;
@@ -28,6 +28,9 @@ namespace Explorer.Tours.Core.Domain.Tours
             Secret = secret;
             Validate();
         }
+        public void SetSecret(string secret) {
+            Secret = secret;
+        }
 
         private void Validate()
         {
@@ -35,6 +38,7 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid Description.");
             if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude value.");
             if (Longitude < -180 || Longitude > 180) throw new ArgumentException("Invalid Longitude value.");
+            if (string.IsNullOrWhiteSpace(Secret)) throw new ArgumentException("Invalid Secret.");
         }
     }
 

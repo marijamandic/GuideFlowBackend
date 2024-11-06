@@ -1,3 +1,4 @@
+-- First entry
 INSERT INTO tours."Tours"(
 	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "TransportDurations")
 VALUES 

@@ -1,4 +1,6 @@
-﻿using Explorer.Tours.API.Dtos.Execution;
+﻿using Explorer.Blog.API.Dtos;
+using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Tours.API.Dtos.Execution;
 using Explorer.Tours.API.Public.Execution;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +17,20 @@ namespace Explorer.API.Controllers.Tourist.Execution
         {
             _tourExecutionService = tourExecutionService;
         }
+
+        /*[HttpGet]
+        public ActionResult<PagedResult<TourExecutionDto>> GetAll([FromQuery] int page , [FromQuery] int pageSize) {
+            var result = _tourExecutionService.GetPaged(page, pageSize);
+            return CreateResponse(result);
+        }*/
+
+        [HttpGet("{id:int}")]
+        public ActionResult<TourExecutionDto> GetById(int id)
+        {
+            var result = _tourExecutionService.Get(id);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<TourExecutionDto> Create([FromBody] CreateTourExecutionDto createTourExecutionDto) {
             var result = _tourExecutionService.Create(createTourExecutionDto);
@@ -26,7 +42,7 @@ namespace Explorer.API.Controllers.Tourist.Execution
             return CreateResponse(result);
         }
 
-        [HttpGet("{userId:long}")]
+        [HttpGet("getByUser/{userId:long}")]
         public ActionResult<TourExecutionDto> GetByUser(long userId)
         {
             var result = _tourExecutionService.GetSessionsByUserId(userId);
@@ -36,31 +52,17 @@ namespace Explorer.API.Controllers.Tourist.Execution
         // za swagger
 
         [HttpPut("complete/{userId}")]
-        public IActionResult CompleteTour(long userId)
+        public ActionResult<TourExecutionDto> CompleteSession(long userId)
         {
-            try
-            {
-                _tourExecutionService.CompleteSession(userId);
-                return Ok("Tour execution completed successfully.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = _tourExecutionService.CompleteSession(userId);
+            return CreateResponse(result);
         }
 
         [HttpPut("abandon/{userId}")]
-        public IActionResult AbandonTour(long userId)
+        public ActionResult<TourExecutionDto> AbandonSession(long userId)
         {
-            try
-            {
-                _tourExecutionService.AbandonSession(userId);
-                return Ok("Tour execution abandoned successfully.");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = _tourExecutionService.AbandonSession(userId);
+            return CreateResponse(result);
         }
     }
 }

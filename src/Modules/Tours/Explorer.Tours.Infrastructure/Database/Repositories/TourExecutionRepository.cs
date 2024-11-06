@@ -21,7 +21,9 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public new TourExecution Get(long id)
         {
-            return _context.TourExecutions.Where(te => te.Id == id).Include(te => te.CheckpointsStatus).FirstOrDefault() ?? throw new Exception("Id not found");
+            return _context.TourExecutions.Where(te => te.Id == id)
+                .Include(te => te.CheckpointsStatus)
+                .ThenInclude(cs => cs.Checkpoint).FirstOrDefault() ?? throw new Exception("Id not found");
         }
         public new TourExecution Update(TourExecution tourExecution) { 
             _context.Entry(tourExecution).State = EntityState.Modified;
@@ -29,10 +31,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return tourExecution;
         }
 
-        public new TourExecution GetByUserId(long userId)
+        public TourExecution GetByUserId(long userId)
         {
             return _context.TourExecutions
-                           .FirstOrDefault(te => te.UserId == userId);
+                           .FirstOrDefault(te => te.UserId == userId) ?? throw new Exception("Id not found");
         }
     }
 }

@@ -8,10 +8,10 @@ namespace Explorer.Tours.API.Dtos.Execution
 {
     public class CheckPointStatusDto
     {
+        public long Id {  get; set; }
         public long CheckpointId { get;  set; }
         public long TourExecutionId { get;  set; }
-        public double Latitude { get;  set; }
-        public double Longitude { get;  set; }
+        public CheckpointDto? CheckpointDto { get; set; }
         public DateTime CompletionTime { get;  set; }
     }
 }
