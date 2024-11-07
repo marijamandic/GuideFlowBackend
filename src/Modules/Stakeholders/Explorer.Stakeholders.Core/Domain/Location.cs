@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using Explorer.BuildingBlocks.Core.Domain;
 
 namespace Explorer.Stakeholders.Core.Domain
@@ -8,7 +9,8 @@ namespace Explorer.Stakeholders.Core.Domain
         public double Longitude { get; private set; }
         public double Latitude { get; private set; }
 
-        public Location() { }   
+        public Location() { }
+        [JsonConstructor]
         public Location(double longitude, double latitude)
         {
             Longitude = longitude;
