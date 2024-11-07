@@ -28,7 +28,7 @@ namespace Explorer.Tours.Tests.Integration.Execution
             var newEntity = new CreateTourExecutionDto
             {
                 TourId = -3,
-                UserId = 1
+                UserId = 3
             };
 
 

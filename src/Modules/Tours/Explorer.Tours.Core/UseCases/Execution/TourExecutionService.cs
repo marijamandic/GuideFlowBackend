@@ -32,11 +32,12 @@ namespace Explorer.Tours.Core.UseCases.Execution
 
             if (existingSession != null && existingSession.ExecutionStatus == ExecutionStatus.Active)
             {
-                return Result.Fail("You already have an active session. Finish it before starting a new one.");
+                return Result.Fail(FailureCode.Forbidden);
             }
 
             Result<TourDto> tourResult = _tourService.Get(createTourExecutionDto.TourId);
-            if (tourResult.IsFailed) return Result.Fail(FailureCode.NotFound);
+            if (tourResult.IsFailed) 
+                return Result.Fail(FailureCode.NotFound);
             TourDto tour = tourResult.Value;
             var tourExecution = new TourExecution(tour.Id, createTourExecutionDto.UserId, tour.LengthInKm);
             tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
