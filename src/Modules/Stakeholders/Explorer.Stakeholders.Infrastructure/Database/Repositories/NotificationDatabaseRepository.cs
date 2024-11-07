@@ -5,17 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Explorer.Stakeholders.Infrastructure.Database.Repositories;
 
-public class ProblemNotificationDatabaseRepository : IProblemNotificationRepository
+public class NotificationDatabaseRepository : INotificationRepository
 {
     private readonly StakeholdersContext _stakeholdersContext;
     private readonly DbSet<ProblemNotification> _notifications;
 
-    public ProblemNotificationDatabaseRepository(StakeholdersContext stakeholdersContext)
+    public NotificationDatabaseRepository(StakeholdersContext stakeholdersContext)
     {
         _stakeholdersContext = stakeholdersContext;
         _notifications = _stakeholdersContext.Set<ProblemNotification>();
     }
-
 
     public void Create(ProblemNotification notification)
     {

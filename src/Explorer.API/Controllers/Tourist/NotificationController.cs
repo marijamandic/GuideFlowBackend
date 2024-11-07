@@ -4,10 +4,10 @@ using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers.Author;
+namespace Explorer.API.Controllers.Tourist;
 
-[Authorize(Policy = "authorPolicy")]
-[Route("api/notifications/author/problem")]
+[Authorize(Policy = "touristPolicy")]
+[Route("api/notifications/tourist/problem")]
 public class NotificationController : BaseApiController
 {
     private readonly INotificationService _notificationService;

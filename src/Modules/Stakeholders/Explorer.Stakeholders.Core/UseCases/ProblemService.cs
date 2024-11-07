@@ -14,14 +14,14 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
     private readonly IProblemRepository _problemRepository;
 
     private readonly IInternalProblemService _internalProblemService;
-    private readonly IProblemNotificationService _notificationService;
+    private readonly INotificationService _notificationService;
     private readonly IMapper _mapper;
 
     public ProblemService(
         IMapper mapper,
         IProblemRepository problemRepository,
         IInternalProblemService internalProblemService,
-        IProblemNotificationService notificationService) : base(mapper)
+        INotificationService notificationService) : base(mapper)
     {
         _problemRepository = problemRepository;
         _internalProblemService = internalProblemService;

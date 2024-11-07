@@ -2,7 +2,7 @@
 
 namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 
-public interface IProblemNotificationRepository
+public interface INotificationRepository
 {
     void Create(ProblemNotification notification);
     PagedResult<ProblemNotification> GetByUserId(long userId);

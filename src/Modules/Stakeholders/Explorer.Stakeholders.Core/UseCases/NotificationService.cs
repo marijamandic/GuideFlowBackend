@@ -8,11 +8,11 @@ using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases;
 
-public class ProblemNotificationService : BaseService<ProblemNotificationDto, ProblemNotification> , IProblemNotificationService
+public class NotificationService : BaseService<ProblemNotificationDto, ProblemNotification> , INotificationService
 {
-    private readonly IProblemNotificationRepository _notificationRepository;
+    private readonly INotificationRepository _notificationRepository;
 
-    public ProblemNotificationService(IMapper mapper, IProblemNotificationRepository notificationRepository) : base(mapper)
+    public NotificationService(IMapper mapper, INotificationRepository notificationRepository) : base(mapper)
     {
         _notificationRepository = notificationRepository;
     }
