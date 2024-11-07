@@ -45,11 +45,12 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             return Result.Ok(postDto);
         }
 
-        public Result CreatePost(PostDto postDto)
+        public Result<PostDto> CreatePost(PostDto postDto)
         {
             var post = _mapper.Map<Post>(postDto);
             var result = _repository.Create(post);
-            return result.IsSuccess ? Result.Ok() : Result.Fail("Failed to create post.");
+            var createdPostDto = _mapper.Map<PostDto>(post);
+            return result.IsSuccess ? Result.Ok(createdPostDto) : Result.Fail("Failed to create post.");
         }
 
         public Result UpdatePost(PostDto postDto)
@@ -99,7 +100,7 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             }
         }
 
-        public Result AddComment(long postId, CommentDto commentDto)
+        public Result<CommentDto> AddComment(long postId, CommentDto commentDto)
         {
             var postResult = _repository.GetById(postId);
             if (postResult.IsFailed || postResult.Value == null)
@@ -117,10 +118,12 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
                 return Result.Fail("Failed to add comment.");
 
             _repository.Update(postResult.Value);
-            return Result.Ok();
+            var createdCommentDto = _mapper.Map<CommentDto>(addCommentResult.Value);
+
+            return Result.Ok(createdCommentDto);
         }
 
-        public Result UpdateComment(long postId, CommentDto commentDto)
+        public Result<CommentDto> UpdateComment(long postId, CommentDto commentDto)
         {
             Debug.WriteLine($"Updating comment for postId: {postId}, commentId: {commentDto.Id}");
             var postResult = _repository.GetById(postId);
@@ -138,7 +141,8 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             }
 
             var updateRepoResult = _repository.Update(postResult.Value);
-            return updateRepoResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update repository.");
+            var updatedCommentDto = _mapper.Map<CommentDto>(updateResult.Value);
+            return updateRepoResult.IsSuccess ? Result.Ok(updatedCommentDto) : Result.Fail("Failed to update repository.");
         }
 
         public Result DeleteComment(long commentId)
@@ -148,13 +152,24 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
                 return Result.Fail("Post not found.");
 
             var deleteResult = postResult.Value.DeleteComment(commentId);
-            if (deleteResult.IsFailed) return Result.Fail("Failed to delete comment.");
+            if (deleteResult.IsFailed && deleteResult.Errors.Any(e => e.Message == "Comment not found"))
+            {
+                Console.WriteLine("Comment not found for deletion.");
+                return Result.Fail("Comment not found"); // Return specific message for controller to handle 404
+            }
 
+            if (deleteResult.IsFailed)
+            {
+                Console.WriteLine("Failed to delete comment due to an unknown error.");
+                return Result.Fail("Failed to delete comment.");
+            }
+
+            // Update repository and ensure changes are saved
             var updateRepoResult = _repository.Update(postResult.Value);
             return updateRepoResult.IsSuccess ? Result.Ok() : Result.Fail("Failed to update repository after deletion.");
         }
 
-        public Result AddRating(long postId, BlogRatingDto blogRatingDto)
+        public Result<BlogRatingDto> AddRating(long postId, BlogRatingDto blogRatingDto)
         {
             var result = _repository.GetById(postId);
             if (result.IsFailed || result.Value == null)
@@ -167,9 +182,10 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
             if (addRatingResult.IsFailed) return Result.Fail("Failed to add rating.");
 
             post.UpdateEngagementStatus(); // update status
+            var addedRatingResult = _mapper.Map<BlogRatingDto>(addRatingResult.Value);
 
             _repository.Update(post);
-            return Result.Ok();
+            return Result.Ok(addedRatingResult);
         }
 
 
