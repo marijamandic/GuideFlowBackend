@@ -23,10 +23,15 @@ namespace Explorer.API.Controllers.Tourist.BlogRatingManaging
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] BlogRatingDto blogRating)
+        public ActionResult<BlogRatingDto> Create([FromBody] BlogRatingDto blogRating)
         {
             var result = _postAggregateService.AddRating(blogRating.PostId, blogRating);
-            return CreateResponse(result);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault()?.Message);
         }
 
         [HttpGet]
@@ -40,7 +45,20 @@ namespace Explorer.API.Controllers.Tourist.BlogRatingManaging
         public ActionResult Delete([FromQuery] long userId, [FromQuery] long postId)
         {
             var result = _postAggregateService.DeleteRating(userId, postId);
-            return CreateResponse(result);
+            if (result.IsSuccess)
+            {
+                return Ok(); // Return 200 OK on successful deletion
+            }
+
+            // Check if the error is "Comment not found" and return 404 if so
+            if (result.Errors.Any(e => e.Message == "Comment not found"))
+            {
+                return NotFound("Comment not found."); // Return 404 Not Found for missing comments
+            }
+
+            // Log other errors and return 500 for unexpected issues
+            Console.WriteLine($"Delete failed with error: {result.Errors.FirstOrDefault()?.Message}");
+            return StatusCode(500, "An unexpected error occurred.");
         }
     }
 }

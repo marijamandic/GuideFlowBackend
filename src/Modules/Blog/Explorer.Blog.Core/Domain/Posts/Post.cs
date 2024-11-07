@@ -62,7 +62,7 @@ namespace Explorer.Blog.Core.Domain.Posts
         }
 
         // Comment-related methods
-        public Result AddComment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
+        public Result<Comment> AddComment(long userId, long postId, DateTime createdAt, string content, DateTime lastModified)
         {
             var result = Comment.Create(userId, postId, createdAt, content, lastModified);
             if (result.IsFailed)
@@ -70,10 +70,10 @@ namespace Explorer.Blog.Core.Domain.Posts
                 return Result.Fail("Error adding comment!");
             }
             _comments.Add(result.Value);
-            return Result.Ok();
+            return Result.Ok(result.Value);
         }
 
-        public Result UpdateComment(Comment updatedComment)
+        public Result<Comment> UpdateComment(Comment updatedComment)
         {
             var comment = _comments.FirstOrDefault(c => c.Id == updatedComment.Id);
 
@@ -83,7 +83,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             }
 
             comment.UpdateContent(updatedComment.Content);
-            return Result.Ok();
+            return Result.Ok(comment);
         }
 
 
@@ -103,7 +103,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             return Result.Ok();
         }
 
-        public Result AddRating(BlogRatingDto blogRatingDto)
+        public Result<BlogRating> AddRating(BlogRatingDto blogRatingDto)
         {
             var result = BlogRating.Create(blogRatingDto.UserId, blogRatingDto.PostId, blogRatingDto.RatingDate, (RatingStatus)blogRatingDto.RatingStatus);
             if (result.IsFailed)
@@ -112,7 +112,7 @@ namespace Explorer.Blog.Core.Domain.Posts
             }
             _ratings.Add(result.Value);
 
-            return Result.Ok();
+            return Result.Ok(result.Value);
         }
 
         private void Validate()

@@ -2,8 +2,10 @@
 using Explorer.Blog.API.Public;
 using Explorer.Blog.API.Public.Aggregate_service_interface;
 using Explorer.BuildingBlocks.Core.UseCases;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 using System.IO;
 namespace Explorer.API.Controllers.Author.BlogManagement
 {
@@ -35,7 +37,7 @@ namespace Explorer.API.Controllers.Author.BlogManagement
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] PostDto post)
+        public ActionResult<PostDto> Create([FromBody] PostDto post)
         {
             if (!string.IsNullOrEmpty(post.ImageBase64))
             {
@@ -54,7 +56,17 @@ namespace Explorer.API.Controllers.Author.BlogManagement
             }
 
             var result = _postAggregateService.CreatePost(post);
-            return CreateResponse(result);
+
+            Debug.WriteLine("Service Result Success: " + result.IsSuccess);
+            Debug.WriteLine("Created PostDto ID: " + result.Value?.Id);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value); // Now returns the created PostDto
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault()?.Message);
+
         }
 
         [HttpPut("{id}")]

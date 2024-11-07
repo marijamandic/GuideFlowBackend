@@ -38,25 +38,50 @@ namespace Explorer.API.Controllers.Tourist.CommentManaging
         }
 
         [HttpPost]
-        public ActionResult Create([FromBody] CommentDto comment)
+        public ActionResult<CommentDto> Create([FromBody] CommentDto comment)
         {
             var result = _postAggregateService.AddComment(comment.PostId, comment);
-            return CreateResponse(result);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value); 
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault()?.Message);
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult Update([FromBody] CommentDto comment, int id)
+        public ActionResult<CommentDto> Update([FromBody] CommentDto comment, int id)
         {
             comment.Id = id;  
             var result = _postAggregateService.UpdateComment(comment.PostId, comment);
-            return CreateResponse(result);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value); // Returns the updated CommentDto
+            }
+
+            // Log the error message for easier troubleshooting
+            Console.WriteLine($"Update failed with error: {result.Errors.FirstOrDefault()?.Message}");
+            return BadRequest(result.Errors.FirstOrDefault()?.Message);
         }
 
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
             var result = _postAggregateService.DeleteComment(id);
-            return CreateResponse(result);
+            if (result.IsSuccess)
+            {
+                return Ok(); // Return 200 OK on successful deletion
+            }
+
+            // Check if the error is "Comment not found" and return 404 if so
+            if (result.Errors.Any(e => e.Message == "Comment not found"))
+            {
+                return NotFound("Comment not found."); // Return 404 Not Found for missing comments
+            }
+
+            // Log other errors and return 500 for unexpected issues
+            Console.WriteLine($"Delete failed with error: {result.Errors.FirstOrDefault()?.Message}");
+            return StatusCode(500, "An unexpected error occurred.");
         }
 
         [HttpGet("count")]
