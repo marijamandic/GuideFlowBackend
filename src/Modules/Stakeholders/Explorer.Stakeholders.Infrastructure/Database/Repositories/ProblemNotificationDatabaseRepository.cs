@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,5 +21,13 @@ public class ProblemNotificationDatabaseRepository : IProblemNotificationReposit
     {
         _notifications.Add(notification);
         _stakeholdersContext.SaveChanges();
+    }
+
+    public PagedResult<ProblemNotification> GetByUserId(long userId)
+    {
+        var notifications = _notifications
+            .Where(n => n.UserId == userId)
+            .ToList();
+        return new PagedResult<ProblemNotification>(notifications, notifications.Count());
     }
 }

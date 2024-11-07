@@ -31,4 +31,10 @@ public class ProblemNotificationService : BaseService<ProblemNotificationDto, Pr
         _notificationRepository.Create(MapToDomain(notification));
         return Result.Ok();
     }
+
+    public Result<PagedResult<ProblemNotificationDto>> GetByUserId(int userId)
+    {
+        var result = _notificationRepository.GetByUserId(userId);
+        return MapToDto(result);
+    }
 }
