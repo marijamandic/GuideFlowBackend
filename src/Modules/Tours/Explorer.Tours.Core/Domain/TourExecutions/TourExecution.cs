@@ -64,10 +64,13 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             }
         }
     }
+
+    public enum ExecutionStatus
+    {
+        Active,
+        Completed,
+        Abandoned
+    }
 }
-public enum ExecutionStatus { 
-    Active,
-    Completed,
-    Abandoned
-}
+
 

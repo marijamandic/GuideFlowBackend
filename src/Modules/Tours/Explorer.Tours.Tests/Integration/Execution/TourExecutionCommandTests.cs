@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExecutionStatus = Explorer.Tours.Core.Domain.TourExecutions.ExecutionStatus;
+
 
 namespace Explorer.Tours.Tests.Integration.Execution
 {
@@ -28,7 +30,7 @@ namespace Explorer.Tours.Tests.Integration.Execution
             var newEntity = new CreateTourExecutionDto
             {
                 TourId = -3,
-                UserId = 3
+                UserId = 4
             };
 
 
@@ -53,7 +55,7 @@ namespace Explorer.Tours.Tests.Integration.Execution
             var controller = CreateController(scope);
             var updatedEntity = new CreateTourExecutionDto
             {
-                UserId = 2,
+                UserId = 15,
                 TourId = -100,
             };
 
@@ -65,6 +67,57 @@ namespace Explorer.Tours.Tests.Integration.Execution
             result.StatusCode.ShouldBe(404);
         }
 
+        [Theory]
+        [InlineData(1, 200, ExecutionStatus.Completed)]
+        [InlineData(2, 500, ExecutionStatus.Active)]
+        public void CompleteSession(int userId, int expectedStatusCode, ExecutionStatus expectedStatus)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            // Act
+            var result = (ObjectResult)controller.CompleteSession(userId).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(expectedStatusCode);
+
+            // Assert - Database
+            if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+            {
+                var storedEntity = dbContext.TourExecutions.FirstOrDefault(t => t.UserId == userId);
+                storedEntity.ShouldNotBeNull();
+                storedEntity.ExecutionStatus.ShouldBe(expectedStatus);
+            }
+        }
+
+        [Theory]
+        [InlineData(3, 200, ExecutionStatus.Abandoned)]
+        [InlineData(4, 500, ExecutionStatus.Completed)]
+        public void AbandonSession(int userId, int expectedStatusCode, ExecutionStatus expectedStatus)
+        {
+            // Arrange
+            using var scope = Factory.Services.CreateScope();
+            var controller = CreateController(scope);
+            var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+            // Act
+            var result = (ObjectResult)controller.AbandonSession(userId).Result;
+
+            // Assert - Response
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldBe(expectedStatusCode);
+
+            // Assert - Database
+            if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+            {
+                var storedEntity = dbContext.TourExecutions.FirstOrDefault(t => t.UserId == userId);
+                storedEntity.ShouldNotBeNull();
+                storedEntity.ExecutionStatus.ShouldBe(expectedStatus);
+            }
+        }
 
 
         private static TourExecutionController CreateController(IServiceScope scope)

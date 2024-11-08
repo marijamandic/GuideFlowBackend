@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExecutionStatus = Explorer.Tours.Core.Domain.TourExecutions.ExecutionStatus;
 
 namespace Explorer.Tours.Core.UseCases.Execution
 {
@@ -100,7 +101,7 @@ namespace Explorer.Tours.Core.UseCases.Execution
 
             if (tourExecution == null)
             {
-                throw new Exception("Tour execution not found.");
+                return Result.Fail("Tour execution not found.");
             }
 
             tourExecution.AbandonSession();

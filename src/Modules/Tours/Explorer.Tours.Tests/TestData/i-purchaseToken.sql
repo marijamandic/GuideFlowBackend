@@ -7,3 +7,6 @@ INSERT INTO tours."PurchaseTokens"(
 INSERT INTO tours."PurchaseTokens"(
 	"Id", "UserId", "TourId")
 	VALUES (-3, 1, 2);
+INSERT INTO tours."PurchaseTokens"(
+	"Id", "UserId", "TourId")
+	VALUES (-4, 4, -3);
