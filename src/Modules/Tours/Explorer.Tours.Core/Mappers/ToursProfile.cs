@@ -33,5 +33,6 @@ public class ToursProfile : Profile
         CreateMap<CheckPointStatusDto, CheckpointStatus>().ReverseMap();    
         CreateMap<ShoppingCartDto, ShoppingCart>().ReverseMap();
         CreateMap<PurchaseTokenDto, PurchaseToken>().ReverseMap();
+        CreateMap<PublicPointNotificationDto, PublicPointNotification>().ReverseMap();
     }
 }

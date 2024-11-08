@@ -50,6 +50,7 @@ public static class ToursStartup
         services.AddScoped<ITourExecutionService, TourExecutionService>();
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
         services.AddScoped<IPurchaseTokensService, PurchaseTokenService>();
+        services.AddScoped<IPublicPointNotificationService, PublicPointNotificationService>();
 
     }
 
@@ -73,6 +74,8 @@ public static class ToursStartup
         services.AddScoped<IPublicPointRepository, PublicPointRepository>();
         services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
         services.AddScoped<IPurchaseTokenRepository, PurchaseTokenRepository>();
+        services.AddScoped<IPublicPointNotificationRepository, PublicPointNotificationRepository>();
+        services.AddScoped(typeof(ICrudRepository<PublicPointNotification>), typeof(CrudDatabaseRepository<PublicPointNotification, ToursContext>));
         
 
         services.AddDbContext<ToursContext>(opt =>

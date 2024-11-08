@@ -24,6 +24,7 @@ public class ToursContext : DbContext
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<PurchaseToken> PurchaseTokens { get; set; }
+    public DbSet<PublicPointNotification> PublicPointNotifications { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
