@@ -41,7 +41,8 @@ namespace Explorer.Tours.Core.UseCases.Administration
                         Longitude = p.Longitude,
                         ImageUrl = p.ImageUrl,
                         ApprovalStatus = (API.Dtos.ApprovalStatus)p.ApprovalStatus,
-                        PointType = (API.Dtos.PointType)p.PointType
+                        PointType = (API.Dtos.PointType)p.PointType,
+                        AuthorId = p.AuthorId
                     });
 
                 return Result.Ok(pendingPoints);  

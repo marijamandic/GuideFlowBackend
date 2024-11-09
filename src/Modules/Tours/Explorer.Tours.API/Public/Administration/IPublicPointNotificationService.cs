@@ -17,6 +17,6 @@ namespace Explorer.Tours.API.Public.Administration
         Result<PagedResult<PublicPointNotificationDto>> GetPaged(int page, int pageSize);
         Result<PublicPointNotificationDto> Get(int id);
         Result<IEnumerable<PublicPointNotificationDto>> GetUnreadByAuthor(int authorId);
-
+        Result<IEnumerable<PublicPointNotificationDto>> GetAllByAuthor(int authorId);
     }
 }

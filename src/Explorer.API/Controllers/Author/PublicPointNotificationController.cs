@@ -56,5 +56,12 @@ namespace Explorer.API.Controllers.Author
             var result = _publicPointNotificationService.GetUnreadByAuthor(authorId);
             return CreateResponse(result);
         }
+
+        [HttpGet("author/{authorId}")]
+        public ActionResult<IEnumerable<PublicPointNotificationDto>> GetAllByAuthor(int authorId)
+        {
+            var result = _publicPointNotificationService.GetAllByAuthor(authorId);
+            return CreateResponse(result);
+        }
     }
 }

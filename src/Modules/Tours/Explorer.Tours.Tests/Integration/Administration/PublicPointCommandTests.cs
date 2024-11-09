@@ -30,7 +30,8 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Longitude = 19.8335,
                 ImageUrl = "/images/tourist-spot.jpg",
                 ApprovalStatus = ApprovalStatus.Pending,
-                PointType = PointType.Checkpoint
+                PointType = PointType.Checkpoint,
+                AuthorId = 1
             };
 
             // Act
@@ -84,7 +85,8 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Longitude = 19.8400,
                 ImageUrl = "/images/updated-tourist-spot.jpg",
                 ApprovalStatus = ApprovalStatus.Pending,
-                PointType = PointType.Checkpoint
+                PointType = PointType.Checkpoint,
+                AuthorId = 1
             };
 
             // Act
@@ -117,7 +119,8 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Longitude = 19.8400,
                 ImageUrl = "/images/updated-tourist-spot.jpg",
                 ApprovalStatus = ApprovalStatus.Pending,
-                PointType = PointType.Checkpoint
+                PointType = PointType.Checkpoint,
+                AuthorId = 1
             };
 
             // Act

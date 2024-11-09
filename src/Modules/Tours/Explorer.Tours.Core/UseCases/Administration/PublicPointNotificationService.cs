@@ -47,6 +47,22 @@ namespace Explorer.Tours.Core.UseCases.Administration
             }
         }
 
-        // Optional: Add other methods for different operations if needed (e.g. mark as read, get all notifications, etc.)
+        public Result<IEnumerable<PublicPointNotificationDto>> GetAllByAuthor(int authorId)
+        {
+            try
+            {
+                // Retrieve unread notifications for the specific author
+                var unreadNotifications = _publicPointNotificationRepository.GetAllByAuthor(authorId)
+                    .ToList();
+
+                var dtoList = _mapper.Map<IEnumerable<PublicPointNotificationDto>>(unreadNotifications);
+
+                return Result.Ok(dtoList);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(new Error("Failed to retrieve unread notifications by author.").CausedBy(ex));
+            }
+        }
     }
 }
