@@ -25,4 +25,7 @@ public interface IProblemService
     // samo trenutna implementacija
     Result<PagedResult<MessageDto>> CreateMessage(CreateMessageInputDto messageInput, UserDto jwtUser);
     Result<PagedResult<ProblemDto>> GetByTouristId(int touristId);
+    Result<ProblemDto> Update(ProbStatusChangeDto status,int id);
+    Result<ProblemDto> UpdateDeadline(int id, DateTime deadline);
+    Result<PagedResult<ProblemDto>> GetUserProblems(int userId);
 }

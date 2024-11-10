@@ -10,4 +10,6 @@ public interface IProblemRepository
     Problem GetById(long id);
     Problem Save(Problem problem);
     PagedResult<Problem> GetByTouristId(long touristId);
+    Problem Update(Problem problem);
+    PagedResult<Problem> GetUserProblems(int userId);
 }
