@@ -1,4 +1,4 @@
-﻿using Explorer.Tours.Core.Domain.Tours;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
 {
-    public interface ICheckpointRepository
+    public interface IPublicPointRepository
     {
-        List<Checkpoint> GetByTour(int id);
+        IEnumerable<PublicPoint> GetAll();
     }
 }

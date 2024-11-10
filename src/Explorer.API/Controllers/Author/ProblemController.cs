@@ -44,7 +44,7 @@ public class ProblemController : BaseApiController
         var jwtUser = new UserDto
         {
             Id = authorId,
-            Role = (UserRole)Enum.Parse(typeof(UserRole), User.FindFirst(ClaimTypes.Role)!.Value),
+            Role = (UserRole)Enum.Parse(typeof(UserRole), User.FindFirst(ClaimTypes.Role)!.Value, ignoreCase: true),
             Username = User.FindFirst("username")!.Value
         };
         var result = _problemService.CreateMessage(messageInput, jwtUser);
