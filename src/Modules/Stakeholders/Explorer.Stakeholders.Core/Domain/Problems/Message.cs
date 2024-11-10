@@ -14,8 +14,11 @@ public class Message : Entity
         UserId = userId;
         Content = content;
         PostedAt = postedAt;
-        //Validate();
+        Validate();
     }
 
-    //Validate()
+    public void Validate()
+    {
+        if (string.IsNullOrWhiteSpace(Content)) throw new ArgumentException("Invalid content");
+    }
 }

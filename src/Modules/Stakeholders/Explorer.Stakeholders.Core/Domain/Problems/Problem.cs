@@ -4,7 +4,7 @@ namespace Explorer.Stakeholders.Core.Domain.Problems;
 
 public class Problem : Entity
 {
-    private readonly List<Message> _messages = new();
+    private List<Message> _messages = new();
 
     public long UserId { get; init; }
     public long TourId { get; init; }
@@ -12,15 +12,28 @@ public class Problem : Entity
     public Resolution Resolution { get; private set; }
     public IReadOnlyList<Message> Messages => new List<Message>(_messages);
 
-    public Problem(long userId, long tourId)
+    public Problem(long id, long userId, long tourId)
     {
+        Id = id;
         UserId = userId;
         TourId = tourId;
-        //Validate();
     }
 
-    private void Validate()
+    public void AddMessage (Message message)
     {
-        
+        if (message.ProblemId != Id) throw new Exception("Problem ID mismatch");
+        message.Validate();
+
+        _messages.Add(message);
+    }
+    public void ChangeStatus(string touristMessage, bool status)
+    {
+        Resolution.ChangeResolveStatus(status);
+        var message = new Message(Id, UserId, touristMessage, DateTime.UtcNow);
+        _messages.Add(message);
+    }
+    public void ChangeDeadline(DateTime deadline)
+    {
+        Resolution.SetDeadline(deadline);
     }
 }

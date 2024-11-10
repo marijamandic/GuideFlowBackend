@@ -27,4 +27,54 @@ public class ProblemDatabaseRepository : IProblemRepository
         var result = _problems.Include(p => p.Messages).ToList();
         return new PagedResult<Problem>(result, result.Count);
     }
+
+    public Problem GetById(long id)
+    {
+        var result = _problems
+            .Include(p => p.Messages)
+            .FirstOrDefault(p => p.Id == id);
+
+        return result!;
+    }
+
+    public PagedResult<Problem> GetByTourIds(List<long> tourIds)
+    {
+        var result = _problems
+            .Where(p => tourIds.Contains(p.TourId))
+            .Include(p => p.Messages).ToList();
+        return new PagedResult<Problem>(result, result.Count);
+    }
+
+    public Problem Save(Problem problem)
+    {
+        _stakeholdersContext.Entry(problem).State = EntityState.Modified;
+        _stakeholdersContext.SaveChanges();
+        return problem;
+    }
+
+    public PagedResult<Problem> GetByTouristId(long touristId)
+    {
+        var result = _problems
+            .Where(p => p.UserId == touristId)
+            .Include(p => p.Messages)
+            .ToList();
+        return new PagedResult<Problem> (result, result.Count);
+    }
+    public Problem Update(Problem problem)
+    {
+        _stakeholdersContext.Entry(problem).State = EntityState.Modified;
+        _stakeholdersContext.SaveChanges();
+        return problem;
+    }
+    //public Problem GetById(int id)
+    //{
+    //    var problem = _stakeholdersContext.Problems.FirstOrDefault(p => p.Id == id);
+    //    if(problem == null) throw new KeyNotFoundException($"Problem with ID {id} not found.");
+    //    return problem;
+    //}
+    public PagedResult<Problem> GetUserProblems(int userId)
+    {
+        var result = _problems.Include(p => p.Messages).Where(i => i.UserId == userId).ToList();
+        return new PagedResult<Problem>(result,result.Count);
+    }
 }

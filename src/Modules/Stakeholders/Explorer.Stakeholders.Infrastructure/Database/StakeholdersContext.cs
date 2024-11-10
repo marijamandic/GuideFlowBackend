@@ -17,6 +17,8 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubRequest> ClubRequests { get; set; }
     public DbSet<ProfileInfo> Profiles { get; set; }
     public DbSet<AppRating> Ratings { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<ProblemNotification> ProblemNotifications { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
 
@@ -36,6 +38,7 @@ public class StakeholdersContext : DbContext
         ConfigureStakeholder(modelBuilder);
         ConfigureClubInvitation(modelBuilder);
         ConfigureProblem(modelBuilder);
+        ConfigureNotifications(modelBuilder);
     }
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
@@ -85,5 +88,20 @@ public class StakeholdersContext : DbContext
             .WithOne()
             .HasForeignKey(m => m.ProblemId)
             .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private static void ConfigureNotifications(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Notification>()
+            .ToTable("Notifications")
+            .HasKey(n => n.Id);
+
+        modelBuilder.Entity<Notification>()
+            .Property(n => n.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        modelBuilder.Entity<ProblemNotification>()
+            .ToTable("ProblemNotifications")
+            .HasBaseType<Notification>();
     }
 }
