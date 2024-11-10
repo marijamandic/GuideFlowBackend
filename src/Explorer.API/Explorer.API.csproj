@@ -26,12 +26,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Tourist\" />
 	<Folder Include="wwwroot\" />
 	<Folder Include="wwwroot\images\tourObjects\" />
     <Folder Include="wwwroot\images\blogs\" />
     <Folder Include="Controllers\Author\" />
     <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\images\blogs\42e3228f-a504-42a1-9275-584b948975f2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
