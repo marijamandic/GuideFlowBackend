@@ -17,6 +17,8 @@ namespace Explorer.Tours.API.Public.Execution
         Result<TourExecutionDto> CompleteSession(long userId);
         Result<TourExecutionDto> AbandonSession(long userId);
         Result<TourExecutionDto> Get(long id);
+        //Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize);
+        Task<int> GetTourCompletionPercentageAsync(long tourExecutionId);
         Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize);
     }
 }

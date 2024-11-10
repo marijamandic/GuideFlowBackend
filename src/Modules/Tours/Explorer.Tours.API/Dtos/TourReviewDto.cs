@@ -14,6 +14,6 @@ public class TourReviewDto
     public DateTime TourDate { get; set; }
     public DateTime CreationDate { get; set; }
     public int PercentageCompleted { get; set; }
-    public int TouristId { get; private set; }
-    public int TourId { get; private set; }
+    public int TouristId { get; set; }
+    public int TourId { get; set; }
 }

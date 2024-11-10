@@ -43,6 +43,13 @@ namespace Explorer.API.Controllers.Tourist.Execution
             return CreateResponse(result);
         }
 
+        [HttpGet("{tourExecutionId}/completion-percentage")]
+        public async Task<ActionResult<int>> GetTourCompletionPercentage(long tourExecutionId)
+        {
+            int completionPercentage = await _tourExecutionService.GetTourCompletionPercentageAsync(tourExecutionId);
+            return Ok(completionPercentage);
+        }
+
         [HttpGet("getByUser/{userId:long}")]
         public ActionResult<TourExecutionDto> GetByUser(long userId)
         {

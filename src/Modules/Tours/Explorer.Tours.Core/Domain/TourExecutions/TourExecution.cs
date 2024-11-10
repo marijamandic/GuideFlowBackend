@@ -63,6 +63,17 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
                 CheckpointsStatus.Add(new CheckpointStatus(checkpoint.Id));
             }
         }
+
+        public int GetTourCompletionPercentage()
+        {
+            if (CheckpointsStatus == null || !CheckpointsStatus.Any())
+                return 0; 
+
+            int completedCheckpoints = CheckpointsStatus.Count(c => c.IsCompleted());
+            double completionPercentage = (double)completedCheckpoints / CheckpointsStatus.Count * 100;
+
+            return (int)Math.Round(completionPercentage);
+        }
     }
 
     public enum ExecutionStatus

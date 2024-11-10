@@ -62,6 +62,11 @@ namespace Explorer.Tours.Core.UseCases.Execution
             SetSecretsForDisplaying(tourExecutionDto);
             return tourExecutionDto;
         }
+        public async Task<int> GetTourCompletionPercentageAsync(long tourExecutionId)
+        {
+            var tourExecution = await _tourExecutionRepository.GetTourExecutionByIdAsync(tourExecutionId);
+            return tourExecution?.GetTourCompletionPercentage() ?? 0;
+        }
 
         public Result<TourExecutionDto> GetSessionsByUserId(long userId)
         {

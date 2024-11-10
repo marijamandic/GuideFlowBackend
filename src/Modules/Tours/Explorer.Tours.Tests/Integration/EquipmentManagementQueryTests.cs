@@ -31,8 +31,8 @@ namespace Explorer.Tours.Tests.Integration
 
             // Assert
             result.ShouldNotBeNull();
-            result.Results.Count.ShouldBe(3);
-            result.TotalCount.ShouldBe(3);
+            result.Results.Count.ShouldBe(4);
+            result.TotalCount.ShouldBe(4);
         }
 
         private static EquipmentManagementController CreateController(IServiceScope scope)
