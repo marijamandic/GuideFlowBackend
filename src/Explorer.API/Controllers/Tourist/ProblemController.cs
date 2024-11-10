@@ -51,7 +51,7 @@ namespace Explorer.API.Controllers.Tourist
             var jwtUser = new UserDto
             {
                 Id = touristId,
-                Role = (UserRole)Enum.Parse(typeof(UserRole), User.FindFirst(ClaimTypes.Role)!.Value),
+                Role = (UserRole)Enum.Parse(typeof(UserRole), User.FindFirst(ClaimTypes.Role)!.Value, ignoreCase: true),
                 Username = User.FindFirst("username")!.Value
             };
             var result = _problemService.CreateMessage(messageInput, jwtUser);

@@ -1,4 +1,4 @@
-﻿using Explorer.API.Controllers.Author.Tour;
+﻿using Explorer.API.Controllers.Authoring.Tour;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
@@ -21,12 +21,12 @@ public class TourQueryTests : BaseToursIntegrationTest
         var controller = CreateController(scope);
 
         // Act
-        var result = ((ObjectResult)controller.GetPaged(0, 10).Result)?.Value as PagedResult<TourDto>;
+        var result = ((ObjectResult)controller.GetPaged(0, 0).Result)?.Value as PagedResult<TourDto>;
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(3); // Adjust expected count based on the actual data
-        result.TotalCount.ShouldBe(3);
+        result.Results.Count.ShouldBe(5); // Adjust expected count based on the actual data
+        result.TotalCount.ShouldBe(5);
     }
 
     private static TourController CreateController(IServiceScope scope)
