@@ -16,6 +16,7 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubMember> ClubMembers { get; set; }
     public DbSet<ClubRequest> ClubRequests { get; set; }
     public DbSet<ProfileInfo> Profiles { get; set; }
+    public DbSet<ClubPost> ClubPosts { get; set; }
 
     public DbSet<AppRating> Ratings { get; set; }
 
