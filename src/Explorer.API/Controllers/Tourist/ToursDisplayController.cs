@@ -24,6 +24,12 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
         {
             var result = _tourService.GetPurchasedAndArchivedByUser(userId);
+
+            if (result == null)
+            {
+                return Ok(new { message = "There is no purchased tours yet" });
+            }
+
             return CreateResponse(result);
         }
     }

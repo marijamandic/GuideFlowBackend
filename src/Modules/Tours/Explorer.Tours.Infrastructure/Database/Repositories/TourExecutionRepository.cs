@@ -40,8 +40,8 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public TourExecution GetByUserId(long userId)
         {
-            return _context.TourExecutions
-                           .FirstOrDefault(te => te.UserId == userId) ?? throw new Exception("Id not found");
+            return _context.TourExecutions.Include(te => te.CheckpointsStatus)
+                    .ThenInclude(cs => cs.Checkpoint).FirstOrDefault(te => te.UserId == userId && te.ExecutionStatus == 0);
         }
         public new PagedResult<TourExecution> GetPaged(int page, int pageSize)
         {

@@ -52,8 +52,6 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
                 .Where(pt => pt.UserId == userId)
                 .ToList();
 
-            if (!tokens.Any()) throw new KeyNotFoundException("No purchase tokens found for user: " + userId);
-
             return new PagedResult<PurchaseToken>(tokens, tokens.Count);
         }
 

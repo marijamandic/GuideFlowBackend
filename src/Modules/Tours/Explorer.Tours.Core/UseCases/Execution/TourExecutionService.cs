@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ExecutionStatus = Explorer.Tours.Core.Domain.TourExecutions.ExecutionStatus;
 
 namespace Explorer.Tours.Core.UseCases.Execution
 {
@@ -28,8 +29,16 @@ namespace Explorer.Tours.Core.UseCases.Execution
             _mapper = mapper;
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
+            var existingSession = _tourExecutionRepository.GetByUserId(createTourExecutionDto.UserId);
+
+            if (existingSession != null && existingSession.ExecutionStatus == ExecutionStatus.Active)
+            {
+                return Result.Fail(FailureCode.Forbidden);
+            }
+
             Result<TourDto> tourResult = _tourService.Get(createTourExecutionDto.TourId);
-            if (tourResult.IsFailed) return Result.Fail(FailureCode.NotFound);
+            if (tourResult.IsFailed) 
+                return Result.Fail(FailureCode.NotFound);
             TourDto tour = tourResult.Value;
             var tourExecution = new TourExecution(tour.Id, createTourExecutionDto.UserId, tour.LengthInKm);
             tourExecution.AddCheckpointStatuses(tour.Checkpoints.Select(c => _mapper.Map<Checkpoint>(c)).ToList());
@@ -63,7 +72,9 @@ namespace Explorer.Tours.Core.UseCases.Execution
         {
             var session = _tourExecutionRepository.GetByUserId(userId);
             var sessionDto = MapToDto(session);
-            return sessionDto;   
+            if(sessionDto != null)
+                return sessionDto;
+            return Result.Fail("There is no active session to show");
         }
 
         public Result<TourExecutionDto> CompleteSession(long userId)
@@ -75,10 +86,14 @@ namespace Explorer.Tours.Core.UseCases.Execution
                 throw new Exception("Tour execution not found.");
             }
 
-            tourExecution.CompleteSession();
-            _tourExecutionRepository.Update(tourExecution);
-            var sessionDto = MapToDto(tourExecution);
-            return sessionDto;
+            if (tourExecution.CheckpointsStatus.All(cs => cs.IsCompleted()))
+            {
+                tourExecution.CompleteSession();
+                _tourExecutionRepository.Update(tourExecution);
+                var sessionDto = MapToDto(tourExecution);
+                return sessionDto;
+            }
+            return Result.Fail("You cant complete this session");
         }
         public Result<PagedResult<TourExecutionDto>> GetPaged(int page , int pageSize) {
             var result = _tourExecutionRepository.GetPaged(page, pageSize);
@@ -91,7 +106,7 @@ namespace Explorer.Tours.Core.UseCases.Execution
 
             if (tourExecution == null)
             {
-                throw new Exception("Tour execution not found.");
+                return Result.Fail("Tour execution not found.");
             }
 
             tourExecution.AbandonSession();

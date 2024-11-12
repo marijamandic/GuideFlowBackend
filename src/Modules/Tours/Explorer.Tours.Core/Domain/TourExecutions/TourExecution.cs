@@ -75,10 +75,13 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             return (int)Math.Round(completionPercentage);
         }
     }
+
+    public enum ExecutionStatus
+    {
+        Active,
+        Completed,
+        Abandoned
+    }
 }
-public enum ExecutionStatus { 
-    Active,
-    Completed,
-    Abandoned
-}
+
 
