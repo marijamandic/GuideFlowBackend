@@ -90,15 +90,16 @@ namespace Explorer.API.Controllers.ProfileInfo
         [HttpGet("{userId:long}")]
         public ActionResult<ProfileInfoDto> GetByUserId(int userId)
         {
+            Console.WriteLine("Fetching profile info for userId: " + userId);
             var result = _profileInfoService.GetByUserId(userId);
             if (result.IsSuccess)
             {
-                return Ok(result.Value); // Ako je uspešno, vraćamo profil
+                Console.WriteLine("Profile found: " + result.Value);
+                return Ok(result.Value);
             }
-
-            return NotFound(result.Errors); // Ako nije, vraćamo grešku
+            Console.WriteLine("Profile not found or an error occurred for userId: " + userId);
+            return NotFound(result.Errors);
         }
-
     }
 }
 
