@@ -1,5 +1,6 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.Blog.API.Public;
+using Explorer.Blog.API.Public.Aggregate_service_interface;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,17 +11,17 @@ namespace Explorer.API.Controllers.Author.CommentView
     [Route("api/commentview/comment")]
     public class CommentController : BaseApiController
     {
-        private readonly ICommentService commentService;
+        private readonly IPostAggregateService _postAggregateService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(IPostAggregateService postAggregateService)
         {
-            this.commentService = commentService;
+            _postAggregateService = postAggregateService;
         }
 
         [HttpGet]
-        public ActionResult<PagedResult<CommentDto>> GetAllForPost([FromQuery] int id, [FromQuery] int page, [FromQuery] int pageSize)
+        public ActionResult<List<CommentDto>> GetAllForPost([FromQuery] int postId)
         {
-            var result = commentService.GetAllForPost(id, page, pageSize);
+            var result = _postAggregateService.GetCommentsForPost(postId);
             return CreateResponse(result);
         }
     }
