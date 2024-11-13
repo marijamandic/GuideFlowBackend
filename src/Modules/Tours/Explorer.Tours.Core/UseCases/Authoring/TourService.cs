@@ -239,6 +239,18 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 
             return purchased;
         }
+        public Result<List<long>> GetTourIdsByAuthorId(int authorId)
+        {
+            try
+            {
+                var result = tourRepository.GetByAuthorId(authorId);
+                return result.Results.Select(t => t.Id).ToList();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(ex.Message);
+            }
+        }
 
     }
 }

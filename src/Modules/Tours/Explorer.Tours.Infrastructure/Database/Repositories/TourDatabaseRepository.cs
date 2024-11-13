@@ -46,5 +46,11 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             DbContext.Tours.Remove(entity);
             DbContext.SaveChanges();
         }
+
+        public PagedResult<Tour> GetByAuthorId(int authorId)
+        {
+            var result = DbContext.Tours.Where(t => t.AuthorId == authorId).ToList();
+            return new PagedResult<Tour>(result, result.Count);
+        }
     }
 }

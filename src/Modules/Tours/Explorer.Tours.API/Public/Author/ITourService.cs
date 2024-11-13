@@ -25,5 +25,6 @@ namespace Explorer.Tours.API.Public.Author
         Result<TourDto> UpdateLength(int id, double length);
         Result<TourDto> UpdateCheckpoint(int id, CheckpointDto checkpoint);
         Result DeleteCheckpoint(int id, CheckpointDto checkpoint);
+        Result<List<long>> GetTourIdsByAuthorId(int authorId);
     }
 }
