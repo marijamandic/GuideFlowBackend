@@ -8,13 +8,13 @@ VALUES
 INSERT INTO tours."Tours"(
 	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "TransportDurations")
 VALUES 
-	(-2, 'City Exploration', 102, 'Explore the city with guided tours and hidden spots.', 1, 1,'2024-11-05T10:00:00Z', 10.0, 
+	(-2, 'City Exploration', 102, 'Explore the city with guided tours and hidden spots.', 1, 1,NULL, 10.0, 
     '{{"Cost": 50.00, "Currency": 2}}', 4.8, ARRAY['Adventure', 'Mountain', 'Hiking'], 
     '[{{"Time": 120, "TransportType": 2}}, {{"Time": 30, "TransportType": 0}}]');
 INSERT INTO tours."Tours"(
 	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "TransportDurations")
 VALUES 
-	(-3, 'Beach Getaway', 103, 'Relaxing beach getaway with scenic routes.', 0, 2, '2024-11-05T10:00:00Z', 8.0, 
+	(-3, 'Beach Getaway', 103, 'Relaxing beach getaway with scenic routes.', 0, 2, NULL, 8.0, 
     '{{"Cost": 80.00, "Currency": 0}}', 4.0, ARRAY['Adventure', 'Mountain', 'Hiking'], 
     '[{{"Time": 90, "TransportType": 1}}, {{"Time": 45, "TransportType": 2}}]'); 
 INSERT INTO tours."Tours"(

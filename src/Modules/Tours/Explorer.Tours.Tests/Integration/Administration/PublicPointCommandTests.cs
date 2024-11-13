@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -29,6 +30,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Latitude = 45.2671,
                 Longitude = 19.8335,
                 ImageUrl = "/images/tourist-spot.jpg",
+                ImageBase64 = "",
                 ApprovalStatus = ApprovalStatus.Pending,
                 PointType = PointType.Checkpoint,
                 AuthorId = 1
@@ -84,6 +86,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Latitude = 5.2700,
                 Longitude = 19.8400,
                 ImageUrl = "/images/updated-tourist-spot.jpg",
+                ImageBase64 = "",
                 ApprovalStatus = ApprovalStatus.Pending,
                 PointType = PointType.Checkpoint,
                 AuthorId = 1
@@ -118,6 +121,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
                 Latitude = 5.2700,
                 Longitude = 19.8400,
                 ImageUrl = "/images/updated-tourist-spot.jpg",
+                ImageBase64 = "",
                 ApprovalStatus = ApprovalStatus.Pending,
                 PointType = PointType.Checkpoint,
                 AuthorId = 1
@@ -201,7 +205,7 @@ namespace Explorer.Tours.Tests.Integration.Administration
 
         private static PublicPointController CreateController(IServiceScope scope)
         {
-            return new PublicPointController(scope.ServiceProvider.GetRequiredService<IPublicPointService>())
+            return new PublicPointController(scope.ServiceProvider.GetRequiredService<IPublicPointService>(), scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>())
             {
                 ControllerContext = BuildContext("-1")
             };
