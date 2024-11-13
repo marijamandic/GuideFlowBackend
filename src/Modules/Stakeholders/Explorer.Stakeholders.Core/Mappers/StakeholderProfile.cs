@@ -15,9 +15,14 @@ public class StakeholderProfile : Profile
         CreateMap<ClubInvitationDto, ClubInvitation>().ReverseMap();
         CreateMap<ClubRequestDto, ClubRequest>().ReverseMap();
         CreateMap<ClubMemberDto, ClubMember>().ReverseMap();
-        CreateMap<UserDto, User>().ReverseMap();
+        CreateMap<Location, LocationDto>().ReverseMap(); 
+        CreateMap<User, UserDto>()
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
+        CreateMap<UserDto, User>()
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
         CreateMap<ProblemDto, Problem>().ReverseMap();
         CreateMap<RatingAppDto, AppRating>().ReverseMap();
+        CreateMap<LocationDto, Location>().ReverseMap();
         CreateMap<ProfileInfoDto, ProfileInfo>().ReverseMap();
     }
 }

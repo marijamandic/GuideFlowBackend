@@ -17,14 +17,14 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
         _dbSet = DbContext.Set<TEntity>();
     }
 
-    public PagedResult<TEntity> GetPaged(int page, int pageSize)
+    public virtual PagedResult<TEntity> GetPaged(int page, int pageSize)
     {
         var task = _dbSet.GetPagedById(page, pageSize);
         task.Wait();
         return task.Result;
     }
 
-    public TEntity Get(long id)
+    public virtual TEntity Get(long id)
     {
         var entity = _dbSet.Find(id);
         if (entity == null) throw new KeyNotFoundException("Not found: " + id);
@@ -38,7 +38,7 @@ public class CrudDatabaseRepository<TEntity, TDbContext> : ICrudRepository<TEnti
         return entity;
     }
 
-    public TEntity Update(TEntity entity)
+    public virtual TEntity Update(TEntity entity)
     {
         try
         {

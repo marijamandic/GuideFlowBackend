@@ -27,6 +27,26 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
             LastActivity = DateTime.UtcNow;
             ExecutionStatus = ExecutionStatus.Active;
         }
+
+        public void CompleteSession()
+        {
+            if (ExecutionStatus == ExecutionStatus.Active && CheckpointsStatus.All(cs => cs.IsCompleted())) 
+            {
+                ExecutionStatus = ExecutionStatus.Completed;
+                EndTime = DateTime.UtcNow;
+                LastActivity = DateTime.UtcNow;
+            }
+        }
+
+        public void AbandonSession()
+        {
+            if( ExecutionStatus == ExecutionStatus.Active )
+            {
+                ExecutionStatus = ExecutionStatus.Abandoned;
+                EndTime = DateTime.UtcNow;
+                LastActivity = DateTime.UtcNow;
+            }
+        }
         public void UpdateLocation(double longitude , double latitude) {
             LastActivity = DateTime.UtcNow;
             foreach (var checkpointStatus in CheckpointsStatus)
@@ -43,11 +63,25 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
                 CheckpointsStatus.Add(new CheckpointStatus(checkpoint.Id));
             }
         }
+
+        public int GetTourCompletionPercentage()
+        {
+            if (CheckpointsStatus == null || !CheckpointsStatus.Any())
+                return 0; 
+
+            int completedCheckpoints = CheckpointsStatus.Count(c => c.IsCompleted());
+            double completionPercentage = (double)completedCheckpoints / CheckpointsStatus.Count * 100;
+
+            return (int)Math.Round(completionPercentage);
+        }
+    }
+
+    public enum ExecutionStatus
+    {
+        Active,
+        Completed,
+        Abandoned
     }
 }
-public enum ExecutionStatus { 
-    Active,
-    Completed,
-    Abandoned
-}
+
 
