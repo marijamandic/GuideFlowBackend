@@ -48,6 +48,10 @@ namespace Explorer.Tours.Core.Domain.Shopping
 
         public void ClearCart()
         {
+            foreach(var item in Items)
+            {
+
+            }
             Items.Clear();
         }
     }

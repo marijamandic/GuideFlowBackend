@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.API.Public.Shopping;
 
 namespace Explorer.Tours.Core.UseCases.Shopping
 {
@@ -18,11 +19,13 @@ namespace Explorer.Tours.Core.UseCases.Shopping
     {
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IMapper mapper;
-        
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IMapper mapper) : base(mapper)
+        private readonly IPurchaseTokensService _purchaseTokenService;
+
+        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IMapper mapper, IPurchaseTokensService purchaseTokenService) : base(mapper)
         {
             this._shoppingCartRepository = shoppingCartRepository;
             this.mapper = mapper;
+            _purchaseTokenService = purchaseTokenService;
         }
 
         public Result<PagedResult<ShoppingCartDto>> GetPaged(int page, int pageSize)
@@ -137,6 +140,13 @@ namespace Explorer.Tours.Core.UseCases.Shopping
             if (shoppingCart == null)
             {
                 return Result.Fail<ShoppingCartDto>(FailureCode.NotFound).WithError("Shopping cart not founr");
+            }
+            foreach ( var item in shoppingCart.Items)
+            {
+                PurchaseTokenDto token = new PurchaseTokenDto();
+                token.UserId = (int)shoppingCart.TouristId;
+                token.TourId = (int)item.TourID;
+                _purchaseTokenService.Create(token);
             }
             shoppingCart.ClearCart();
             var result = _shoppingCartRepository.Update(shoppingCart);
