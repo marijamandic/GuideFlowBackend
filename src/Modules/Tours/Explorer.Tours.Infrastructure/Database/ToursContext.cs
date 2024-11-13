@@ -1,6 +1,7 @@
 ﻿using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Domain.TourExecutions;
+using Explorer.Tours.Core.Domain.Shopping;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
@@ -20,6 +21,10 @@ public class ToursContext : DbContext
     public DbSet<PublicPoint> PublicPoints { get; set; }
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<CheckpointStatus> CheckpointStatuses { get; set; }
+    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<PurchaseToken> PurchaseTokens { get; set; }
+    public DbSet<PublicPointNotification> PublicPointNotifications { get; set; }
 
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
@@ -39,6 +44,7 @@ public class ToursContext : DbContext
             .HasOne(cs => cs.Checkpoint)
             .WithMany()
             .HasForeignKey(cs => cs.CheckpointId);
+        modelBuilder.Entity<Tour>().HasMany(tr => tr.Reviews).WithOne().HasForeignKey(r=>r.TourId);
     }
 }
 

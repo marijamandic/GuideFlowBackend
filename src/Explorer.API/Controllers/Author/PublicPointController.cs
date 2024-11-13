@@ -26,7 +26,7 @@ namespace Explorer.API.Controllers.Author
         }
 
         [HttpPut("{id}")]
-        public ActionResult<PublicPointDto> Update([FromRoute] int id, [FromBody] PublicPointDto publicPoint)
+        public ActionResult<PublicPointDto> Update([FromRoute] double id, [FromBody] PublicPointDto publicPoint)
         {
             if (id != publicPoint.Id) 
             {
@@ -47,8 +47,15 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<PublicPointDto> Get(int id)
         {
             var result = _publicPointService.Get(id);
+
+            if (!result.IsSuccess)
+            {
+                return NotFound(); // Return a 404 Not Found response
+            }
+
             return CreateResponse(result);
         }
+
 
         [HttpGet]
         public ActionResult<IEnumerable<PublicPointDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)

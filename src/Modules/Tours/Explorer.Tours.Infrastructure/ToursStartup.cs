@@ -5,6 +5,7 @@ using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Execution;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Shopping;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.TourExecutions;
 using Explorer.Tours.Core.Domain.Tours;
@@ -17,6 +18,8 @@ using Explorer.Tours.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Explorer.Tours.Core.UseCases.Shopping;
+using Explorer.Tours.API.Public.Shopping;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -43,8 +46,11 @@ public static class ToursStartup
         services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
         services.AddScoped<ITourReviewService, TourReviewService>();
         services.AddScoped<ITourSpecificationService, TourSpecificationService>();
-        services.AddScoped<ITourExecutionService, TourExecutionService>();
         services.AddScoped<IPublicPointService, PublicPointService>();
+        services.AddScoped<ITourExecutionService, TourExecutionService>();
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
+        services.AddScoped<IPurchaseTokensService, PurchaseTokenService>();
+        services.AddScoped<IPublicPointNotificationService, PublicPointNotificationService>();
 
     }
 
@@ -61,12 +67,16 @@ public static class ToursStartup
         services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
         services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<TourSpecifications>), typeof(CrudDatabaseRepository<TourSpecifications, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<PublicPoint>), typeof(CrudDatabaseRepository<PublicPoint, ToursContext>));
         services.AddScoped<ITourExecutionRepository, TourExecutionRepository>();
         services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
-        services.AddScoped(typeof(ICrudRepository<PublicPoint>), typeof(CrudDatabaseRepository<PublicPoint, ToursContext>));
-
         services.AddScoped<ITourSpecificationRepository, TourSpecificationRepository>();
         services.AddScoped<IPublicPointRepository, PublicPointRepository>();
+        services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+        services.AddScoped<IPurchaseTokenRepository, PurchaseTokenRepository>();
+        services.AddScoped<IPublicPointNotificationRepository, PublicPointNotificationRepository>();
+        services.AddScoped(typeof(ICrudRepository<PublicPointNotification>), typeof(CrudDatabaseRepository<PublicPointNotification, ToursContext>));
+        
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

@@ -18,10 +18,12 @@ namespace Explorer.Tours.API.Dtos.Execution
         public ExecutionStatus ExecutionStatus { get; set; }
         public ICollection<CheckPointStatusDto> CheckpointsStatus { get; set; }
     }
+
+    public enum ExecutionStatus
+    {
+        Active,
+        Completed,
+        Abandoned
+    }
 }
-public enum ExecutionStatus
-{
-    Active,
-    Completed,
-    Abandoned
-}
+

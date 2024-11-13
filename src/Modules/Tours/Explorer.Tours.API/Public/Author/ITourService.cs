@@ -20,5 +20,7 @@ namespace Explorer.Tours.API.Public.Author
         Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations);
         Result<TourDto> Archive(int id);   
         Result<TourDto> Publish(int id);
+        Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId);
+
     }
 }
