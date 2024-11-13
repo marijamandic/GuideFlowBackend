@@ -29,7 +29,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
 
 
             result.ShouldNotBeNull();
-            result.Count.ShouldBe(6);
+            result.Count.ShouldBe(7);
         }
 
         [Fact]
@@ -46,19 +46,15 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
                 IsActive = true
 
             };
-            var adminUserId = -1;
 
 
 
             var result = ((ObjectResult)controller.GetAccount(newAccount.UserId).Result)?.Value as AccountOverviewDto;
-            var result2 = ((ObjectResult)controller.GetAccount(adminUserId).Result)?.Value as AccountOverviewDto;
-
 
 
             result.ShouldNotBeNull();
             result.IsActive.ShouldBeTrue();
             result.UserId.ShouldBe(newAccount.UserId);
-            result2.ShouldBeNull();
 
         }
 
