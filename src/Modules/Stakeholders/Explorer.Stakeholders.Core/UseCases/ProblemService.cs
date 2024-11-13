@@ -92,7 +92,8 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
             UserId = userId,
             Sender = jwtUser.Username,
             Message = messageInput.Content,
-            ProblemId = messageInput.ProblemId
+            ProblemId = messageInput.ProblemId,
+            IsNewDeadline = false
         };
 
         _notificationService.Create(notificationInput);
@@ -112,6 +113,7 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
         var problems = _problemRepository.GetByTouristId(touristId);
         return MapToDto(problems);
     }
+
     public Result<PagedResult<ProblemDto>> GetUserProblems(int userId)
     {
         var problems = _problemRepository.GetUserProblems(userId);
@@ -125,11 +127,26 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
         var result = _problemRepository.Update(problem);
         return MapToDto(result);
     }
-    public Result<ProblemDto> UpdateDeadline(int id,DateTime deadline) 
+    public Result<ProblemDto> UpdateDeadline(int id, DateTime deadline, UserDto jwtUser)
     {
         var problem = _problemRepository.GetById(id);
         problem.ChangeDeadline(deadline);
         var result = _problemRepository.Update(problem);
+
+        // send notification
+        var userId = _internalProblemService.GetAuthorIdByTourId(problem.TourId);
+
+        var notification = new CreateProblemNotificationInputDto
+        {
+            UserId = userId.Value,
+            Sender = jwtUser.Username,
+            Message = $"New problem resoltion deadline set to {deadline.ToShortDateString()}",
+            ProblemId = id,
+            IsNewDeadline = true
+        };
+
+        _notificationService.Create(notification);
+
         return MapToDto(result);
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Explorer.API.Controllers.Administrator.Administration
 {
@@ -27,7 +29,14 @@ namespace Explorer.API.Controllers.Administrator.Administration
         [HttpPut("{id:int}/deadline")]
         public ActionResult<ProblemDto> UpdateDeadline(int id, [FromBody] DeadlineDto deadline)
         {
-            var result = _problemService.UpdateDeadline(id, deadline.Date);
+            var jwtUser = new UserDto
+            {
+                Id = int.Parse(User.FindFirst("id")!.Value),
+                Role = (UserRole)Enum.Parse(typeof(UserRole), User.FindFirst(ClaimTypes.Role)!.Value, ignoreCase: true),
+                Username = User.FindFirst("username")!.Value
+            };
+
+            var result = _problemService.UpdateDeadline(id, deadline.Date, jwtUser);
             return CreateResponse(result);
         }
     }
