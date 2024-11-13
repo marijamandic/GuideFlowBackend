@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "touristPolicy")]
+    //[Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/tourReview")]
     public class TourReviewController : BaseApiController
     {
@@ -32,7 +32,6 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tourReviewService.Create(tourReview);
             return CreateResponse(result);
         }
-
     }
 }
 
