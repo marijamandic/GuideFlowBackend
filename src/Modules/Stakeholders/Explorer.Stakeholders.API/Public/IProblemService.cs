@@ -26,6 +26,6 @@ public interface IProblemService
     Result<PagedResult<MessageDto>> CreateMessage(CreateMessageInputDto messageInput, UserDto jwtUser);
     Result<PagedResult<ProblemDto>> GetByTouristId(int touristId);
     Result<ProblemDto> Update(ProbStatusChangeDto status,int id);
-    Result<ProblemDto> UpdateDeadline(int id, DateTime deadline);
+    Result<ProblemDto> UpdateDeadline(int id, DateTime deadline, UserDto jwtUser);
     Result<PagedResult<ProblemDto>> GetUserProblems(int userId);
 }

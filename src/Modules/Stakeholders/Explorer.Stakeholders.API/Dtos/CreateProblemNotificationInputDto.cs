@@ -6,4 +6,5 @@ public class CreateProblemNotificationInputDto
     public string Sender { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
     public int ProblemId { get; set; }
+    public bool IsNewDeadline { get; set; }
 }

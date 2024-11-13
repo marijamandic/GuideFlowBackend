@@ -25,7 +25,8 @@ public class NotificationService : BaseService<ProblemNotificationDto, ProblemNo
             Sender = notificationInput.Sender,
             Message = notificationInput.Message,
             IsOpened = false,
-            ProblemId = notificationInput.ProblemId
+            ProblemId = notificationInput.ProblemId,
+            IsNewDeadline = notificationInput.IsNewDeadline
         };
 
         _notificationRepository.Create(MapToDomain(notification));

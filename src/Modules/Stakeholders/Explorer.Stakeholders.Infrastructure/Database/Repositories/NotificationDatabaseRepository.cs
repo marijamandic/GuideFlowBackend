@@ -25,7 +25,7 @@ public class NotificationDatabaseRepository : INotificationRepository
     public PagedResult<ProblemNotification> GetByUserId(long userId)
     {
         var notifications = _notifications
-            .Where(n => n.UserId == userId)
+            .Where(n => (n.UserId == userId) && (n.Type == NotificationType.ProblemNotification))
             .ToList();
         return new PagedResult<ProblemNotification>(notifications, notifications.Count());
     }
