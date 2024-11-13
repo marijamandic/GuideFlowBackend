@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -173,6 +174,7 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Latitude = 45.2671,
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
+                    ImageBase64 = "",
                     Secret = "tajna"
                 },
                 200
@@ -186,7 +188,8 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Description = "Starting checkpoint for the tour.",
                     Latitude = 45.2671,
                     Longitude = 20.8335,
-                    ImageUrl = "/images/start-point.jpg"
+                    ImageUrl = "/images/start-point.jpg",
+                    ImageBase64 = ""
                 },
                 400
             },
@@ -200,6 +203,7 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Latitude = 45.2671,
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
+                    ImageBase64 = "",
                     Secret = "tajna"
                 },
                 404
@@ -362,7 +366,7 @@ public class TourCommandTests : BaseToursIntegrationTest
 
     private static TourController CreateController(IServiceScope scope)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>())
         {
             ControllerContext = BuildContext("-1")
         };
