@@ -5,14 +5,16 @@ using Explorer.Tours.API.Dtos.Shopping;
 using Explorer.Tours.API.Public;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Shopping;
+using Explorer.Tours.API.Internal;
 using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Explorer.Tours.Core.Domain;
 
 namespace Explorer.Tours.Core.UseCases.Shopping
 {
-    public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService
+    public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService, IInternalShoppingCartService
     {
         private readonly IShoppingCartRepository _shoppingCartRepository;
         private readonly IMapper mapper;
@@ -43,11 +45,15 @@ namespace Explorer.Tours.Core.UseCases.Shopping
 
         }
 
-        public Result<ShoppingCartDto> Create(ShoppingCartDto entity)
+        public Result<ShoppingCartDto> Create(long userId)
         {
+            var shoppingCart = new ShoppingCartDto
+            {
+                UserId = userId,
+            };
             try
             {
-                var result = _shoppingCartRepository.Create(MapToDomain(entity));
+                var result = _shoppingCartRepository.Create(MapToDomain(shoppingCart));
                 return MapToDto(result);
 
             }
@@ -87,7 +93,7 @@ namespace Explorer.Tours.Core.UseCases.Shopping
             }
         }
 
-        public Result<ShoppingCartDto> AddToCart(OrderItemDto orderItemDto, long touristId)
+        public Result<ShoppingCartDto> AddItemToCart(long touristId, OrderItemDto orderItemDto)
         {
 
             ShoppingCart shoppingCart = _shoppingCartRepository.Get(touristId);
@@ -96,6 +102,18 @@ namespace Explorer.Tours.Core.UseCases.Shopping
                 return Result.Fail<ShoppingCartDto>(FailureCode.NotFound).WithError("Shopping cart not founr");
             }
             shoppingCart.AddItemToCart(mapper.Map<OrderItem>(orderItemDto));
+            var result = _shoppingCartRepository.Update(shoppingCart);
+            return MapToDto(result);
+        }
+
+        public Result<ShoppingCartDto> RemoveItemFromCart(long touristId, long tourId)
+        {
+            ShoppingCart shoppingCart = _shoppingCartRepository.Get(touristId);
+            if (shoppingCart == null)
+            {
+                return Result.Fail<ShoppingCartDto>(FailureCode.NotFound).WithError("Shopping cart not founr");
+            }
+            shoppingCart.RemoveItemFromCart(tourId);
             var result = _shoppingCartRepository.Update(shoppingCart);
             return MapToDto(result);
         }
@@ -111,6 +129,18 @@ namespace Explorer.Tours.Core.UseCases.Shopping
             // Mapiranje domen entiteta u DTO i vraćanje rezultata
             var shoppingCartDto = mapper.Map<ShoppingCartDto>(shoppingCart);
             return Result.Ok(shoppingCartDto);
+        }
+
+        public Result<ShoppingCartDto> ClearCart(long touristId)
+        {
+            ShoppingCart shoppingCart = _shoppingCartRepository.Get(touristId);
+            if (shoppingCart == null)
+            {
+                return Result.Fail<ShoppingCartDto>(FailureCode.NotFound).WithError("Shopping cart not founr");
+            }
+            shoppingCart.ClearCart();
+            var result = _shoppingCartRepository.Update(shoppingCart);
+            return MapToDto(result);
         }
 
     }

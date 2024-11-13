@@ -8,7 +8,7 @@ namespace Explorer.Tours.API.Dtos.Shopping
 {
     public class ShoppingCartDto
     {
-        public long? Id { get; set; }
+        public long Id { get; set; }
         public List<OrderItemDto> Items { get; set; }
         public long UserId { get; set; }
         public decimal TotalPrice { get; set; }

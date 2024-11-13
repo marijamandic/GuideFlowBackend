@@ -15,6 +15,7 @@ using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Explorer.Tours.Core.UseCases.Shopping;
+using Explorer.Tours.API.Internal;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -42,6 +43,7 @@ public static class ToursStartup
         services.AddScoped<ITourReviewService, TourReviewService>();
         services.AddScoped<ITourSpecificationService, TourSpecificationService>();
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
+        services.AddScoped<IInternalShoppingCartService, ShoppingCartService>();
 
     }
 
