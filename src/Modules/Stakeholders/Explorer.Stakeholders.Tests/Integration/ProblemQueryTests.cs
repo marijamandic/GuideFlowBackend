@@ -1,7 +1,6 @@
 ﻿using Explorer.API.Controllers.Administrator.Administration;
-using Explorer.API.Controllers.Tourist;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,19 +23,19 @@ public class ProblemQueryTests : BaseStakeholdersIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-    }
+        result.Results.ShouldNotBeNull();
 
-    private static Explorer.API.Controllers.Administrator.Administration.ProblemController CreateAdminController(IServiceScope scope)
-    {
-        return new Explorer.API.Controllers.Administrator.Administration.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        foreach (var problem in result.Results)
         {
-            ControllerContext = BuildContext("-1")
-        };
+            problem.Details.ShouldNotBeNull();
+            problem.Resolution.ShouldNotBeNull();
+            problem.Messages.ShouldNotBeNull();
+        }
     }
 
-    private static Explorer.API.Controllers.Tourist.ProblemController CreateTouristController(IServiceScope scope)
+    private static ProblemController CreateAdminController(IServiceScope scope)
     {
-        return new Explorer.API.Controllers.Tourist.ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
+        return new ProblemController(scope.ServiceProvider.GetRequiredService<IProblemService>())
         {
             ControllerContext = BuildContext("-1")
         };

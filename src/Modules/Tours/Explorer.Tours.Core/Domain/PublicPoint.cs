@@ -24,7 +24,7 @@ namespace Explorer.Tours.Core.Domain
             ApprovalStatus = approvalStatus;
             PointType = pointType;
 
-            Validate();
+            Validate(); 
             AuthorId = authorId;
         }
         public PublicPoint()

@@ -1,4 +1,5 @@
 ﻿using Explorer.API.Controllers;
+using Explorer.Blog.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.UseCases;
@@ -6,6 +7,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.Tours;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Authoring.Tour
@@ -15,10 +17,12 @@ namespace Explorer.API.Controllers.Authoring.Tour
     public class TourController : BaseApiController
     {
         private readonly ITourService _tourService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public TourController(ITourService tourService)
+        public TourController(ITourService tourService, IWebHostEnvironment webHostEnvironment)
         {
             _tourService = tourService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -57,9 +61,70 @@ namespace Explorer.API.Controllers.Authoring.Tour
         }
 
         [HttpPut("addingCheckpoint/{id:int}")]
-        public ActionResult<TourDto> AddCheckpoint(int id,[FromBody] CheckpointAdditionDto checkpointAddition)
+        public ActionResult<TourDto> AddCheckpoint(int id,[FromBody] CheckpointDto checkpoint)
         {
-            var result = _tourService.AddCheckpoint(id, checkpointAddition.Checkpoint,checkpointAddition.UpdatedLength);
+            if (!string.IsNullOrEmpty(checkpoint.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(checkpoint.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "checkpoints");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                checkpoint.ImageUrl = $"images/checkpoints/{fileName}";
+            }
+            var result = _tourService.AddCheckpoint(id,checkpoint);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("editingCheckpoint/{id:int}")]
+        public ActionResult<TourDto> UpdateCheckpoint(int id, [FromBody] CheckpointDto checkpoint)
+        {
+            if (!string.IsNullOrEmpty(checkpoint.ImageUrl))
+            {
+                var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, checkpoint.ImageUrl);
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(checkpoint.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(checkpoint.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "checkpoints");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                checkpoint.ImageUrl = $"images/checkpoints/{fileName}";
+            }
+
+            var result = _tourService.UpdateCheckpoint(id, checkpoint);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("deletingCheckpoint/{id:int}")]
+        public ActionResult DeleteCheckpoint(int id, [FromBody] CheckpointDto checkpoint)
+        {
+            var result = _tourService.DeleteCheckpoint(id,checkpoint);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("updatingLength/{id:int}")]
+        public ActionResult<TourDto> UpdateLength(int id, [FromBody] double length)
+        {
+            var result = _tourService.UpdateLength(id, length);
             return CreateResponse(result);
         }
 
@@ -70,18 +135,20 @@ namespace Explorer.API.Controllers.Authoring.Tour
             return CreateResponse(result);
         }
 
-        [HttpPut("archive/{id:int}")]
-        public ActionResult<TourDto> Archive(int id)
+        [HttpPut("changeStatus/{id:int}")]
+        public ActionResult<TourDto> ChangeStatus(int id, [FromBody] string status)
         {
-            var result = _tourService.Archive(id);
-            return CreateResponse(result);
-        }
+            FluentResults.Result<TourDto> result;
 
+            if (status.Equals("Archive"))
+            {
+                result = _tourService.Archive(id);
+            }
+            else
+            {
+                result = _tourService.Publish(id);
+            }
 
-        [HttpPut("publish/{id:int}")]
-        public ActionResult<TourDto> Publish(int id)
-        {
-            var result = _tourService.Publish(id);
             return CreateResponse(result);
         }
     }
