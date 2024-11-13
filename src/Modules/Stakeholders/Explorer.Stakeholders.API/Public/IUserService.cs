@@ -11,5 +11,6 @@ namespace Explorer.Stakeholders.API.Public
     public interface IUserService
     {
         Result<UserDto> GetById(int id);
+        public Result<List<UserDto>> GetAllUsers();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Explorer.Stakeholders.API.Public;
+﻿using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers
@@ -24,5 +25,17 @@ namespace Explorer.API.Controllers
             }
             return Ok(new { username = result.Value.Username }); 
         }
+
+        [HttpGet("all")]
+        public ActionResult<IEnumerable<UserDto>> GetAllUsers()
+        {
+            var result = _userService.GetAllUsers();
+            if (result.IsFailed)
+            {
+                return BadRequest("Failed to fetch users");
+            }
+            return Ok(result.Value);
+        }
+
     }
 }
