@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,16 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (Latitude < -90 || Latitude > 90) throw new ArgumentException("Invalid Latitude value.");
             if (Longitude < -180 || Longitude > 180) throw new ArgumentException("Invalid Longitude value.");
             if (string.IsNullOrWhiteSpace(Secret)) throw new ArgumentException("Invalid Secret.");
+        }
+
+        public void Update(Checkpoint updatedCheckpoint)
+        {
+            Name = updatedCheckpoint.Name;
+            Description = updatedCheckpoint.Description;
+            Latitude = updatedCheckpoint.Latitude;
+            Longitude = updatedCheckpoint.Longitude;
+            ImageUrl = updatedCheckpoint.ImageUrl;
+            Secret = updatedCheckpoint.Secret;
         }
     }
 

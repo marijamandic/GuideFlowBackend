@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -25,13 +26,13 @@ public class TourQueryTests : BaseToursIntegrationTest
 
         // Assert
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBe(3); // Adjust expected count based on the actual data
-        result.TotalCount.ShouldBe(3);
+        result.Results.Count.ShouldBe(5); // Adjust expected count based on the actual data
+        result.TotalCount.ShouldBe(5);
     }
 
     private static TourController CreateController(IServiceScope scope)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(),scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>())
         {
             ControllerContext = BuildContext("-1")
         };

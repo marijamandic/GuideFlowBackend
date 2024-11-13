@@ -10,3 +10,11 @@ INSERT INTO tours."Checkpoint"(
 	"Id", "Name", "Description", "Latitude", "Longitude", "ImageUrl", "Secret", "TourId")
 VALUES 
 	(-3, 'Sunset Point', 'A beautiful spot to watch the sunset over the ocean.', 44.56789, 18.56789, 'http://example.com/sunsetpoint.jpg','tajna', -3);
+INSERT INTO tours."Checkpoint"(
+    "Id", "Name", "Description", "Latitude", "Longitude", "ImageUrl", "Secret", "TourId")
+VALUES 
+    (-11, 'Mountain Peak', 'The highest point of the mountain offering stunning views.', 45.12345, 19.12345, 'http://example.com/mountainpeak.jpg', 'tajna2', -11);
+INSERT INTO tours."Checkpoint"(
+    "Id", "Name", "Description", "Latitude", "Longitude", "ImageUrl", "Secret", "TourId")
+VALUES 
+    (-12, 'Forest Trail', 'A scenic trail through the forest, perfect for hiking.', 44.67890, 18.67890, 'http://example.com/foresttrail.jpg', 'tajna3', -11);

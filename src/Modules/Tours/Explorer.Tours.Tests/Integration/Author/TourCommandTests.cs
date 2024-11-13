@@ -3,6 +3,7 @@ using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -136,19 +137,15 @@ public class TourCommandTests : BaseToursIntegrationTest
 
     [Theory]
     [MemberData(nameof(CheckpointAdding))]
-    public void AddingCheckpoint(int tourId,CheckpointDto checkpoint,double updatedLength,int expectedStatusCode)
+    public void AddingCheckpoint(int tourId,CheckpointDto checkpoint,int expectedStatusCode)
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
         var controller = CreateController(scope);
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
-        var checkpointAddition = new CheckpointAdditionDto
-        {
-            Checkpoint=checkpoint,
-            UpdatedLength=updatedLength
-        };
+
         // Act
-        var result = (ObjectResult)controller.AddCheckpoint(tourId,checkpointAddition).Result;
+        var result = (ObjectResult)controller.AddCheckpoint(tourId,checkpoint).Result;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -177,9 +174,9 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Latitude = 45.2671,
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
+                    ImageBase64 = "",
                     Secret = "tajna"
                 },
-                25.0,
                 200
             },
             new object[]
@@ -191,9 +188,9 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Description = "Starting checkpoint for the tour.",
                     Latitude = 45.2671,
                     Longitude = 20.8335,
-                    ImageUrl = "/images/start-point.jpg"
+                    ImageUrl = "/images/start-point.jpg",
+                    ImageBase64 = ""
                 },
-                22.0,
                 400
             },
             new object[]
@@ -206,12 +203,39 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Latitude = 45.2671,
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
+                    ImageBase64 = "",
                     Secret = "tajna"
                 },
-                23.0,
                 404
             }
         };
+    }
+
+    [Theory]
+    [InlineData(-1,25.0,200)]
+    [InlineData(-2,-20.0,400)]
+    [InlineData(-5,20.0,404)]
+    public void UpdatingLength(int tourId, double length, int expectedStatusCode)
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.UpdateLength(tourId,length).Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedStatusCode);
+
+        // Assert - Database
+        if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+        {
+            var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.LengthInKm.ShouldBe(length); ;
+        }
     }
 
     [Theory]
@@ -230,6 +254,7 @@ public class TourCommandTests : BaseToursIntegrationTest
         result.ShouldNotBeNull();
         result.StatusCode.ShouldBe(expectedStatusCode);
     }
+
 
     public static IEnumerable<object[]> TransportDurationsAdding()
     {
@@ -289,7 +314,7 @@ public class TourCommandTests : BaseToursIntegrationTest
     [Theory]
     [InlineData(-2,200,TourStatus.Archived)]
     [InlineData(-4,404,TourStatus.Published)]
-    public void Publishes(int tourId,int expectedStatusCode,TourStatus expectedStatus)
+    public void Archives(int tourId,int expectedStatusCode,TourStatus expectedStatus)
     {
         // Arrange
         using var scope = Factory.Services.CreateScope();
@@ -297,7 +322,34 @@ public class TourCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
 
         // Act
-        var result = (ObjectResult)controller.Archive(tourId).Result;
+        var result = (ObjectResult)controller.ChangeStatus(tourId, "Archive").Result;
+
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.StatusCode.ShouldBe(expectedStatusCode);
+
+        // Assert - Database
+        if (result.StatusCode == expectedStatusCode && expectedStatusCode == 200)
+        {
+            var storedEntity = dbContext.Tours.FirstOrDefault(t => t.Id == tourId);
+            storedEntity.ShouldNotBeNull();
+            storedEntity.Status.ShouldBe(expectedStatus);
+        }
+    }
+
+    [Theory]
+    [InlineData(-11, 200, TourStatus.Published)]
+    [InlineData(-12, 400, TourStatus.Draft)]
+    [InlineData(-13, 404, TourStatus.Published)]
+    public void TourPublishes(int tourId, int expectedStatusCode, TourStatus expectedStatus)
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
+
+        // Act
+        var result = (ObjectResult)controller.ChangeStatus(tourId,"Publish").Result;
 
         // Assert - Response
         result.ShouldNotBeNull();
@@ -314,7 +366,7 @@ public class TourCommandTests : BaseToursIntegrationTest
 
     private static TourController CreateController(IServiceScope scope)
     {
-        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>())
+        return new TourController(scope.ServiceProvider.GetRequiredService<ITourService>(), scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>())
         {
             ControllerContext = BuildContext("-1")
         };

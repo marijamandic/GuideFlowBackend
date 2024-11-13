@@ -26,7 +26,9 @@
   </ItemGroup>
 
   <ItemGroup>
+	<Folder Include="Controllers\AppRating\" />
 	<Folder Include="wwwroot\" />
+	<Folder Include="wwwroot\images\checkpoints\" />
 	<Folder Include="wwwroot\images\tourObjects\" />
     <Folder Include="wwwroot\images\blogs\" />
     <Folder Include="wwwroot\" />

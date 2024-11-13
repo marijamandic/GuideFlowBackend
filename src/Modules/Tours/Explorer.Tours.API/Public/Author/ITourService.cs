@@ -16,11 +16,14 @@ namespace Explorer.Tours.API.Public.Author
         Result<TourDto> Create(TourDto tour);
         Result<TourDto> Update(TourDto tour);
         Result Delete(int id);
-        Result<TourDto> AddCheckpoint(int tourId, CheckpointDto checkpoint, double updatedLength);
+        Result<TourDto> AddCheckpoint(int tourId, CheckpointDto checkpoint);
         Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations);
         Result<TourDto> Archive(int id);   
         Result<TourDto> Publish(int id);
         Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId);
 
+        Result<TourDto> UpdateLength(int id, double length);
+        Result<TourDto> UpdateCheckpoint(int id, CheckpointDto checkpoint);
+        Result DeleteCheckpoint(int id, CheckpointDto checkpoint);
     }
 }

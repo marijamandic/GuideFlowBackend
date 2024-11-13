@@ -55,12 +55,12 @@ namespace Explorer.Tours.Core.Domain.Tours
 
             if (!Enum.IsDefined(typeof(Level), Level))
                 throw new ArgumentException("Invalid level value.");
+
         }
 
-        public void AddCheckpoint(Checkpoint checkpoint, double updatedLength)
+        public void AddCheckpoint(Checkpoint checkpoint)
         {
             Checkpoints.Add(checkpoint);
-            LengthInKm = updatedLength;
         }
 
         public void AddTransportDuratios(List<TransportDuration> transportDurations)
@@ -78,10 +78,49 @@ namespace Explorer.Tours.Core.Domain.Tours
             StatusChangeDate = DateTime.UtcNow;
         }
 
+        public bool CheckPublishConditions()
+        {
+            if (AuthorId == 0) return false;
+            if (string.IsNullOrWhiteSpace(Name)) return false;
+            if (string.IsNullOrWhiteSpace(Description)) return false;
+            if (!Enum.IsDefined(typeof(Level), Level)) return false;
+            if (Taggs == null || !Taggs.Any()) return false;
+            if (Checkpoints == null || Checkpoints.Count < 2) return false;
+            if (TransportDurations == null || !TransportDurations.Any()) return false;
+            return true;
+        }
         public void ChangeStatusToPublish()
         {
             Status = TourStatus.Published;
             StatusChangeDate = DateTime.UtcNow;
+        }
+
+        public void UpdateLength(double length)
+        {
+            if (length < 0)
+                throw new ArgumentException("Length in kilometers cannot be less than 0.");
+            else
+                LengthInKm =length;
+        }
+
+        public void UpdateCheckpoint(Checkpoint updatedCheckpoint)
+        {
+            Checkpoint? oldCheckpoint = Checkpoints.Find(ch => ch.Id == updatedCheckpoint.Id);
+            if (oldCheckpoint == null)
+            {
+                throw new KeyNotFoundException($"Checkpoint with ID {updatedCheckpoint.Id} not found.");
+            }
+            oldCheckpoint.Update(updatedCheckpoint);
+        }
+
+        public void DeleteCheckpoint(Checkpoint deletedCheckpoint)
+        {
+            Checkpoint? checkpoint = Checkpoints.Find(ch => ch.Id == deletedCheckpoint.Id);
+            if (checkpoint == null)
+            {
+                throw new KeyNotFoundException($"Checkpoint with ID {deletedCheckpoint.Id} not found.");
+            }
+            Checkpoints.Remove(checkpoint);
         }
     }
 

@@ -91,12 +91,12 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<TourDto> AddCheckpoint(int Id, CheckpointDto checkpoint, double updatedLength)
+        public Result<TourDto> AddCheckpoint(int id, CheckpointDto checkpoint)
         {
             try
             {
-                Tour tour = tourRepository.Get(Id);
-                tour.AddCheckpoint(mapper.Map<Checkpoint>(checkpoint), updatedLength);
+                Tour tour = tourRepository.Get(id);
+                tour.AddCheckpoint(mapper.Map<Checkpoint>(checkpoint));
                 var result = tourRepository.Update(tour);
                 return MapToDto(result);
             }
@@ -108,6 +108,41 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             {
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
+        }
+
+        public Result<TourDto> UpdateCheckpoint(int id, CheckpointDto checkpoint)
+        {
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.UpdateCheckpoint(mapper.Map<Checkpoint>(checkpoint));
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result DeleteCheckpoint(int id, CheckpointDto checkpoint)
+        {
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.DeleteCheckpoint(mapper.Map<Checkpoint>(checkpoint));
+                var result = tourRepository.Update(tour);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+
         }
 
         public Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations)
@@ -151,9 +186,34 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             try
             {
                 var tour = tourRepository.Get(id);
-                tour.ChangeStatusToPublish();
-                var updatedTour = tourRepository.Update(tour);
-                return MapToDto( updatedTour);
+
+                if (tour.CheckPublishConditions())
+                {
+                    tour.ChangeStatusToPublish();
+                    var updatedTour = tourRepository.Update(tour);
+                    return MapToDto(updatedTour);
+                }
+
+                return Result.Fail(FailureCode.InvalidArgument);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result<TourDto> UpdateLength(int id, double length)
+        {
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.UpdateLength(length);
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
             }
             catch (KeyNotFoundException e)
             {
@@ -179,5 +239,6 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 
             return purchased;
         }
+
     }
 }
