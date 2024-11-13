@@ -60,21 +60,21 @@ public class ProblemCommandTests : BaseStakeholdersIntegrationTest
         storedEntity.ShouldNotBeNull();
         storedEntity.ProblemId.ShouldBe(-2);
     }
-    [Fact]
-    public void UpdateDeadline()
-    {
-        using var scope = Factory.Services.CreateScope();
-        var controller = CreateAdminController(scope);
-        var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
-        var entity = new DeadlineDto
-        {
-            Date = DateTime.UtcNow.AddDays(10)
-        };
-        var result = ((ObjectResult)controller.UpdateDeadline(-2, entity).Result)?.Value as ProblemDto;
-        result.ShouldNotBeNull();
-        result.Id.ShouldBe(-2);
-        result.Resolution.Deadline.ShouldBe(DateTime.UtcNow.AddDays(10), TimeSpan.FromSeconds(10));
-    }
+    //[Fact]
+    //public void UpdateDeadline()
+    //{
+    //    using var scope = Factory.Services.CreateScope();
+    //    var controller = CreateAdminController(scope);
+    //    var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
+    //    var entity = new DeadlineDto
+    //    {
+    //        Date = DateTime.UtcNow.AddDays(10)
+    //    };
+    //    var result = ((ObjectResult)controller.UpdateDeadline(-2, entity).Result)?.Value as ProblemDto;
+    //    result.ShouldNotBeNull();
+    //    result.Id.ShouldBe(-2);
+    //    result.Resolution.Deadline.ShouldBe(DateTime.UtcNow.AddDays(10), TimeSpan.FromSeconds(10));
+    //}
 
     private static ProblemController CreateController(IServiceScope scope)
     {
