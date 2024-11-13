@@ -7,7 +7,7 @@ VALUES (
     'admin', 
     0, 
     true, 
-    '{"Latitude": 40.7128, "Longitude": -74.0060}'::jsonb
+    '{{"Latitude": 40.7128, "Longitude": -74.0060}}'
 );
 
 INSERT INTO stakeholders."Users"(
@@ -19,7 +19,7 @@ VALUES (
     'autor1', 
     1, 
     true, 
-    '{"Latitude": 34.0522, "Longitude": -118.2437}'::jsonb
+    '{{"Latitude": 34.0522, "Longitude": -118.2437}}'
 );
 
 INSERT INTO stakeholders."Users"(
@@ -31,7 +31,7 @@ VALUES (
     'autor2', 
     1, 
     true, 
-    '{"Latitude": 51.5074, "Longitude": -0.1278}'::jsonb
+    '{{"Latitude": 51.5074, "Longitude": -0.1278}}'
 );
 
 INSERT INTO stakeholders."Users"(
@@ -43,7 +43,7 @@ VALUES (
     'autor3', 
     1, 
     false, 
-    '{"Latitude": 48.8566, "Longitude": 2.3522}'::jsonb
+    '{{"Latitude": 48.8566, "Longitude": 2.3522}}'
 );
 
 INSERT INTO stakeholders."Users"(
@@ -55,7 +55,7 @@ VALUES (
     'turista1', 
     2, 
     true, 
-    '{"Latitude": 35.6895, "Longitude": 139.6917}'::jsonb
+    '{{"Latitude": 35.6895, "Longitude": 139.6917}}'
 );
 
 INSERT INTO stakeholders."Users"(
@@ -67,7 +67,7 @@ VALUES (
     'turista2', 
     2, 
     true, 
-    '{"Latitude": -33.8688, "Longitude": 151.2093}'::jsonb
+    '{{"Latitude": -33.8688, "Longitude": 151.2093}}'
 );
 
 INSERT INTO stakeholders."Users"(
@@ -79,5 +79,5 @@ VALUES (
     'turista3', 
     2, 
     true, 
-    '{"Latitude": 55.7558, "Longitude": 37.6173}'::jsonb
+    '{{"Latitude": 55.7558, "Longitude": 37.6173}}'
 );

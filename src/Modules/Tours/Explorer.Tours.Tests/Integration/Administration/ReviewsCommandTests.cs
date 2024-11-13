@@ -31,7 +31,7 @@ public class TourReviewCommandTests : BaseToursIntegrationTest
             CreationDate = DateTime.UtcNow,  // Use UtcNow
             PercentageCompleted = 100,
             TouristId = 1,
-            TourId = 1
+            TourId = -1
         };
 
         // Act
@@ -92,7 +92,7 @@ public class TourReviewCommandTests : BaseToursIntegrationTest
             CreationDate = DateTime.UtcNow.AddDays(-1),
             PercentageCompleted = 80,
             TouristId = 1,
-            TourId = 1
+            TourId = -1
         };
 
         // Act
