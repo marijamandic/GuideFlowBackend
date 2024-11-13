@@ -29,7 +29,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
 
 
             result.ShouldNotBeNull();
-            result.Count.ShouldBe(6);
+            result.Count.ShouldBe(8);
         }
 
         [Fact]
