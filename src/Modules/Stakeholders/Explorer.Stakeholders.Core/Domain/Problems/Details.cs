@@ -1,24 +1,20 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using System.Text.Json.Serialization;
 
-namespace Explorer.Stakeholders.Core.Domain;
+namespace Explorer.Stakeholders.Core.Domain.Problems;
 
-public class Problem : Entity
+public class Details : ValueObject<Details>
 {
-    public long UserId { get; init; }
-    public long TourId { get; init; }
-    public ProblemCategory Category { get; private set; }
-    public ProblemPriority Priority { get; private set; }
-    public string Description { get; private set; }
-    public DateOnly ReportedAt { get; private set; }
+    public ProblemCategory Category { get; }
+    public ProblemPriority Priority { get; }
+    public string Description { get; }
 
-    public Problem(long userId, long tourId, ProblemCategory category, ProblemPriority priority, string description, DateOnly reportedAt)
+    [JsonConstructor]
+    public Details(ProblemCategory category, ProblemPriority priority, string description)
     {
-        UserId = userId;
-        TourId = tourId;
         Category = category;
         Priority = priority;
         Description = description;
-        ReportedAt = reportedAt;
         Validate();
     }
 
@@ -31,6 +27,24 @@ public class Problem : Entity
             Category != ProblemCategory.Safety) throw new ArgumentException("Invalid category");
         if (Priority != ProblemPriority.High && Priority != ProblemPriority.Medium && Priority != ProblemPriority.Low) throw new ArgumentException("Invalid priority");
         if (string.IsNullOrWhiteSpace(Description)) throw new ArgumentException("Invalid description");
+    }
+
+    protected override bool EqualsCore(Details other)
+    {
+        return Category == other.Category &&
+            Priority == other.Priority &&
+            Description == other.Description;
+    }
+
+    protected override int GetHashCodeCore()
+    {
+        unchecked
+        {
+            int hashCode = Category.GetHashCode();
+            hashCode = (hashCode * 397) ^ Priority.GetHashCode();
+            hashCode = (hashCode * 397) ^ Description.GetHashCode();
+            return hashCode;
+        }
     }
 }
 

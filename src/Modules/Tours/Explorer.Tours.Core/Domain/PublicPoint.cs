@@ -12,8 +12,9 @@ namespace Explorer.Tours.Core.Domain
         public string ImageUrl { get; private set; }
         public ApprovalStatus ApprovalStatus { get; private set; }
         public PointType PointType { get; private set; } 
+        public int AuthorId { get; private set; }
 
-        public PublicPoint(string name, string description, double longitude, double latitude, string imageUrl, ApprovalStatus approvalStatus, PointType pointType)
+        public PublicPoint(string name, string description, double longitude, double latitude, string imageUrl, ApprovalStatus approvalStatus, PointType pointType, int authorId)
         {
             Name = name;
             Description = description;
@@ -24,6 +25,7 @@ namespace Explorer.Tours.Core.Domain
             PointType = pointType;
 
             Validate(); 
+            AuthorId = authorId;
         }
         public PublicPoint()
         {

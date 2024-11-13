@@ -1,12 +1,17 @@
-﻿INSERT INTO tours."TourReviews"(
-	"Id", "Rating", "Comment", "TourDate", "CreationDate", "TourId")
-VALUES 
-	(-1, 5, 'Amazing experience with breathtaking views!', '2024-08-15T14:30:00Z', '2024-08-16T08:45:00Z', -1);
+﻿-- Insert a new tour review
 INSERT INTO tours."TourReviews"(
-	"Id", "Rating", "Comment", "TourDate", "CreationDate", "TourId")
+    "Id", "Rating", "Comment", "TourDate", "CreationDate", "PercentageCompleted", "TouristId", "TourId")
 VALUES 
-	(-2, 4, 'Great way to see the city and learn about its history.', '2024-09-10T10:15:00Z', '2024-09-11T09:00:00Z', -2);
+    (-1, 5, 'Great tour!', '2024-10-20', '2024-10-20', 100, 1, -1);
+
+-- Insert another tour review
 INSERT INTO tours."TourReviews"(
-	"Id", "Rating", "Comment", "TourDate", "CreationDate", "TourId")
+    "Id", "Rating", "Comment", "TourDate", "CreationDate", "PercentageCompleted", "TouristId", "TourId")
 VALUES 
-	(-3, 3, 'Relaxing, but could use more activities.', '2024-07-20T17:00:00Z', '2024-07-21T12:30:00Z', -3);
+    (-2, 4, 'Amazing experience, but could improve the itinerary.', '2024-10-21', '2024-10-21', 90, -21, -1);
+
+-- Insert a third tour review
+INSERT INTO tours."TourReviews"(
+    "Id", "Rating", "Comment", "TourDate", "CreationDate", "PercentageCompleted", "TouristId", "TourId")
+VALUES 
+    (-3, 3, 'The tour was okay, but some of the stops were too short.', '2024-10-22', '2024-10-22', 75, -23, -2);

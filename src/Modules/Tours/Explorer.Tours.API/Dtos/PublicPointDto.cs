@@ -16,6 +16,7 @@ namespace Explorer.Tours.API.Dtos
         public string ImageUrl { get; set; }
         public ApprovalStatus ApprovalStatus { get; set; }
         public PointType PointType { get; set; }
+        public int AuthorId { get; set; }
     }
 
     public enum ApprovalStatus

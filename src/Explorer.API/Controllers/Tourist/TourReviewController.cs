@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    //[Authorize(Policy = "touristPolicy")]
+    [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/tourReview")]
     public class TourReviewController : BaseApiController
     {
@@ -32,6 +32,25 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tourReviewService.Create(tourReview);
             return CreateResponse(result);
         }
+        [HttpPut("{id}")]
+        public ActionResult<TourReviewDto> Update(int id, [FromBody] TourReviewDto tourReview)
+        {
+            if (id != tourReview.Id)
+            {
+                return BadRequest("ID mismatch");
+            }
+
+            var result = _tourReviewService.Update(tourReview);
+            return CreateResponse(result);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(int id)
+        {
+            var result = _tourReviewService.Delete(id);
+            return CreateResponse(result);
+        }
+
     }
 }
 
