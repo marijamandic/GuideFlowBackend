@@ -44,6 +44,7 @@ public class ToursContext : DbContext
             .HasOne(cs => cs.Checkpoint)
             .WithMany()
             .HasForeignKey(cs => cs.CheckpointId);
+        modelBuilder.Entity<Tour>().HasMany(tr => tr.Reviews).WithOne().HasForeignKey(r=>r.TourId);
     }
 }
 

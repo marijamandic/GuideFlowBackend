@@ -16,8 +16,8 @@ namespace Explorer.Tours.Core.Domain.Tours
         public DateTime CreationDate { get; private set; }
         public int PercentageCompleted { get; private set; }
         public int TouristId { get; private set; }
-        public int TourId { get; private set; }
-        public TourReview(int rating, string comment, DateTime tourDate, DateTime creationDate, int percentageCompleted, int touristId, int tourId)
+        public long TourId { get; private set; }
+        public TourReview(int rating, string comment, DateTime tourDate, DateTime creationDate, int percentageCompleted, int touristId, long tourId)
         {
             Rating = rating;
             Comment = comment;
