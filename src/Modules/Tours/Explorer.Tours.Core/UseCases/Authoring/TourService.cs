@@ -107,6 +107,41 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
+        public Result<TourDto> UpdateCheckpoint(int id, CheckpointDto checkpoint)
+        {
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.UpdateCheckpoint(mapper.Map<Checkpoint>(checkpoint));
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        public Result DeleteCheckpoint(int id, CheckpointDto checkpoint)
+        {
+            try
+            {
+                Tour tour = tourRepository.Get(id);
+                tour.DeleteCheckpoint(mapper.Map<Checkpoint>(checkpoint));
+                var result = tourRepository.Update(tour);
+                return Result.Ok();
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+
+        }
+
         public Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations)
         {
             try
@@ -186,5 +221,6 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
         }
+
     }
 }

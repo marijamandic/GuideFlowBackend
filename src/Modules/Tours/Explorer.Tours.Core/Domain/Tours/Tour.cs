@@ -102,6 +102,26 @@ namespace Explorer.Tours.Core.Domain.Tours
             else
                 LengthInKm =length;
         }
+
+        public void UpdateCheckpoint(Checkpoint updatedCheckpoint)
+        {
+            Checkpoint? oldCheckpoint = Checkpoints.Find(ch => ch.Id == updatedCheckpoint.Id);
+            if (oldCheckpoint == null)
+            {
+                throw new KeyNotFoundException($"Checkpoint with ID {updatedCheckpoint.Id} not found.");
+            }
+            oldCheckpoint.Update(updatedCheckpoint);
+        }
+
+        public void DeleteCheckpoint(Checkpoint deletedCheckpoint)
+        {
+            Checkpoint? checkpoint = Checkpoints.Find(ch => ch.Id == deletedCheckpoint.Id);
+            if (checkpoint == null)
+            {
+                throw new KeyNotFoundException($"Checkpoint with ID {deletedCheckpoint.Id} not found.");
+            }
+            Checkpoints.Remove(checkpoint);
+        }
     }
 
     public enum TourStatus
