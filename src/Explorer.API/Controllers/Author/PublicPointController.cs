@@ -1,8 +1,10 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.UseCases.Administration;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Author
@@ -12,15 +14,32 @@ namespace Explorer.API.Controllers.Author
     public class PublicPointController : BaseApiController
     {
         private readonly IPublicPointService _publicPointService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public PublicPointController(IPublicPointService publicPointService)
+        public PublicPointController(IPublicPointService publicPointService, IWebHostEnvironment webHostEnvironment)
         {
             _publicPointService = publicPointService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpPost]
         public ActionResult<PublicPointDto> Create([FromBody] PublicPointDto publicPoint)
         {
+            if (!string.IsNullOrEmpty(publicPoint.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(publicPoint.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "publicPoints");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                publicPoint.ImageUrl = $"images/publicPoints/{fileName}";
+            }
             var result = _publicPointService.Create(publicPoint);
             return CreateResponse(result);
         }

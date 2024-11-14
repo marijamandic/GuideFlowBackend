@@ -28,8 +28,15 @@
   <ItemGroup>
 	<Folder Include="wwwroot\" />
 	<Folder Include="wwwroot\images\checkpoints\" />
+	<Folder Include="wwwroot\images\clubs\" />
 	<Folder Include="wwwroot\images\tourObjects\" />
     <Folder Include="wwwroot\images\blogs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\images\blogs\42e3228f-a504-42a1-9275-584b948975f2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -21,10 +21,10 @@ namespace Explorer.Tours.API.Public.Author
         Result<TourDto> Archive(int id);   
         Result<TourDto> Publish(int id);
         Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId);
-
         Result<TourDto> UpdateLength(int id, double length);
         Result<TourDto> UpdateCheckpoint(int id, CheckpointDto checkpoint);
         Result DeleteCheckpoint(int id, CheckpointDto checkpoint);
         Result<List<long>> GetTourIdsByAuthorId(int authorId);
+        Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize);
     }
 }

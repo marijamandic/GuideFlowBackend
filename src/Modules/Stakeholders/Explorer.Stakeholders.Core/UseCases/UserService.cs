@@ -27,5 +27,13 @@ namespace Explorer.Stakeholders.Core.UseCases
             User user = userRepository.GetById(id);
             return MapToDto(user);
         }
+
+        public Result<List<UserDto>> GetAllUsers()
+        {
+            var users = userRepository.GetAll();
+            var userDtos = users.Select(MapToDto).ToList();
+            return Result.Ok(userDtos);
+        }
+
     }
 }
