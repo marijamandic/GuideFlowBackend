@@ -93,7 +93,7 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
             Sender = jwtUser.Username,
             Message = messageInput.Content,
             ProblemId = messageInput.ProblemId,
-            IsNewDeadline = false
+            Pnt = ProblemNotificationType.NewMessage
         };
 
         _notificationService.Create(notificationInput);
@@ -142,7 +142,7 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
             Sender = jwtUser.Username,
             Message = $"New problem resoltion deadline set to {deadline.ToShortDateString()}",
             ProblemId = id,
-            IsNewDeadline = true
+            Pnt = ProblemNotificationType.NewDeadline
         };
 
         _notificationService.Create(notification);
