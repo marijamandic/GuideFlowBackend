@@ -4,10 +4,10 @@ using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Explorer.API.Controllers.Author;
+namespace Explorer.API.Controllers.Administrator.Administration;
 
-[Authorize(Policy = "authorPolicy")]
-[Route("api/notifications/author/problem")]
+[Authorize(Policy = "administratorPolicy")]
+[Route("api/notifications/administrator/problem")]
 public class NotificationController : BaseApiController
 {
     private readonly INotificationService _notificationService;
@@ -26,13 +26,5 @@ public class NotificationController : BaseApiController
             return CreateResponse(result);
         }
         else return BadRequest("Invalid user");
-    }
-
-    [HttpPatch]
-    public ActionResult<ProblemNotificationDto> PatchIsOpened([FromQuery] int id, [FromQuery] bool isOpened)
-    {
-        int userId = int.Parse(User.FindFirst("id")!.Value);
-        var result = _notificationService.PatchIsOpened(id, userId, isOpened);
-        return CreateResponse(result);
     }
 }

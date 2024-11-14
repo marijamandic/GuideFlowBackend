@@ -26,7 +26,7 @@ public class NotificationService : BaseService<ProblemNotificationDto, ProblemNo
             Message = notificationInput.Message,
             IsOpened = false,
             ProblemId = notificationInput.ProblemId,
-            IsNewDeadline = notificationInput.IsNewDeadline
+            Pnt = notificationInput.Pnt
         };
 
         _notificationRepository.Create(MapToDomain(notification));
@@ -36,6 +36,16 @@ public class NotificationService : BaseService<ProblemNotificationDto, ProblemNo
     public Result<PagedResult<ProblemNotificationDto>> GetByUserId(int userId)
     {
         var result = _notificationRepository.GetByUserId(userId);
+        return MapToDto(result);
+    }
+
+    public Result<ProblemNotificationDto> PatchIsOpened(int id, int userId, bool isOpened)
+    {
+        var result = _notificationRepository.GetById(id);
+        if (result.UserId != userId) throw new Exception("Notification doesn't belong to this user.");
+
+        result.UpdateIsOpened(isOpened);
+        result = _notificationRepository.Save(result);
         return MapToDto(result);
     }
 }

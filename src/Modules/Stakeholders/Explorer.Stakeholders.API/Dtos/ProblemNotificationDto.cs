@@ -10,10 +10,17 @@ public class ProblemNotificationDto
     public bool IsOpened { get; set; }
     public NotificationType Type { get; set; } = 0;
     public int ProblemId { get; set; }
-    public bool IsNewDeadline { get; set; }
+    public ProblemNotificationType Pnt { get; set; }
 }
 
 public enum NotificationType
 {
     ProblemNotification
+}
+
+public enum ProblemNotificationType
+{
+    NewMessage,
+    NewDeadline,
+    DeadlinePassed
 }
