@@ -28,6 +28,11 @@ public class Notification : Entity
         else if (string.IsNullOrWhiteSpace(Message)) throw new ArgumentException("Invalid Message");
         else if (Type != NotificationType.ProblemNotification) throw new ArgumentException("Invalid Notification Type");
     }
+
+    public void UpdateIsOpened(bool isOpened)
+    {
+        IsOpened = isOpened;
+    }
 }
 
 public enum NotificationType

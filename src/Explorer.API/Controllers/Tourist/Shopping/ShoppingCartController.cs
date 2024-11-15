@@ -24,22 +24,18 @@ namespace Explorer.API.Controllers.Tourist.Shopping
             return CreateResponse(result);
         }
 
+        /*
         [HttpGet("{id:int}")]
         public ActionResult<ShoppingCartDto> GetShoppingCart(int id)
         {
             var result = _shoppingCartService.Get(id);
             return CreateResponse(result);
         }
+        */
+        
 
-        [HttpPost]
-        public ActionResult<ShoppingCartDto> Create([FromBody] ShoppingCartDto shoppingCart)
-        {
-            var result = _shoppingCartService.Create(shoppingCart);
-            return CreateResponse(result);
 
-        }
-
-        [HttpPut("{id:int}")]
+        [HttpPut]
         public ActionResult<ShoppingCartDto> Update([FromBody] ShoppingCartDto shoppingCart)
         {
             var result = _shoppingCartService.Update(shoppingCart);
@@ -53,19 +49,20 @@ namespace Explorer.API.Controllers.Tourist.Shopping
             return CreateResponse(result);
         }
 
+        /*
         [HttpPut("addItem/{touristId:long}")]
         public ActionResult<ShoppingCartDto> AddItemToCart(long touristId, [FromBody] OrderItemDto orderItem)
         {
             var result = _shoppingCartService.AddToCart(orderItem, touristId);
             return CreateResponse(result);
         }
+        */
 
-
-        /*
-        [HttpGet("{userId}")]
-        public ActionResult<ShoppingCartDto> GetCartByUserId(string userId)
+        
+        [HttpGet("{userId:int}")]
+        public ActionResult<ShoppingCartDto> GetCartByUserId(long userId)
         {
-            var result = _shoppingCartService.GetCartByUserId(userId);
+            var result = _shoppingCartService.GetByUserId(userId);
             if (result.IsSuccess)
             {
                 return Ok(result.Value); // Vraća 200 OK sa ShoppingCartDto
@@ -73,31 +70,31 @@ namespace Explorer.API.Controllers.Tourist.Shopping
 
             return NotFound(result.Errors.First().Message); // Vraća 404 ako korpa nije pronađena
         }
-
+        
         [HttpPost("{userId}/items")]
-        public ActionResult AddItemToCart(string userId, [FromBody] OrderItemDto itemDto)
+        public ActionResult AddItemToCart(long userId, [FromBody] OrderItemDto itemDto)
         {
             var result = _shoppingCartService.AddItemToCart(userId, itemDto);
             if (result.IsSuccess)
             {
-                return Ok(); // Vraća 200 OK
+                return Ok(result.Value); // Vraća 200 OK
             }
 
             return BadRequest(result.Errors.First().Message); // Vraća 400 Bad Request sa greškom
         }
 
-        [HttpDelete("{userId}/items/{tourID}")]
-        public ActionResult RemoveItemFromCart(string userId, int tourID)
+        [HttpDelete("{userId}/items/{tourId}")]
+        public ActionResult RemoveItemFromCart(long userId, int tourId )
         {
-            var result = _shoppingCartService.RemoveItemFromCart(userId, tourID);
+            var result = _shoppingCartService.RemoveItemFromCart(userId, tourId);
             if (result.IsSuccess)
             {
-                return Ok(); // Vraća 200 OK
+                return Ok(result.Value); // Vraća 200 OK
             }
 
             return NotFound(result.Errors.First().Message); // Vraća 404 ako stavka nije pronađena
         }
-
+        /*
         [HttpPut("{userId}/items/{tourID}/quantity")]
         public ActionResult UpdateItemQuantity(string userId, int tourID, [FromBody] int quantity)
         {
@@ -109,18 +106,18 @@ namespace Explorer.API.Controllers.Tourist.Shopping
 
             return NotFound(result.Errors.First().Message); // Vraća 404 ako stavka nije pronađena
         }
-
+        */
         [HttpDelete("{userId}/clear")]
-        public ActionResult ClearCart(string userId)
+        public ActionResult ClearCart(long userId)
         {
             var result = _shoppingCartService.ClearCart(userId);
             if (result.IsSuccess)
             {
-                return Ok(); // Vraća 200 OK
+                return Ok(result.Value); // Vraća 200 OK
             }
 
             return NotFound("Cart not found."); // Vraća 404 ako korpa nije pronađena
         }
-        */
+        
     }
 }

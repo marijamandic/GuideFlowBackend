@@ -8,4 +8,5 @@ public interface INotificationService
 {
     Result Create(CreateProblemNotificationInputDto notificationInput);
     Result<PagedResult<ProblemNotificationDto>> GetByUserId(int userId);
+    Result<ProblemNotificationDto> PatchIsOpened(int id, int userId, bool isOpened);
 }
