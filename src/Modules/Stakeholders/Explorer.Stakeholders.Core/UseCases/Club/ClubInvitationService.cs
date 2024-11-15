@@ -41,6 +41,21 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             return Result.Ok(MapToDto(clubInvitation));
         }
 
+        public Result<List<ClubInvitationDto>> GetInvitationsByClub(int clubId)
+        {
+            var clubInvitations = _clubInvitationRepository.GetByClubId(clubId);
+            if (clubInvitations == null || !clubInvitations.Any())
+            {
+                return Result.Fail<List<ClubInvitationDto>>("No invitations found for this club.");
+            }
+
+            var clubInvitationDtos = clubInvitations
+                .Select(ci => MapToDto(ci))
+                .ToList();
+
+            return Result.Ok(clubInvitationDtos);
+        }
+
 
         public Result<ClubInvitationDto> CancelInvitation(long invitationId)
         {

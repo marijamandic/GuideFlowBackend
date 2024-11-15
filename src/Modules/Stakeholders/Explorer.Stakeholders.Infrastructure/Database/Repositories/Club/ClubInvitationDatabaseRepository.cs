@@ -24,6 +24,14 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
             return clubInvitation;
         }
 
+        public IEnumerable<ClubInvitation> GetByClubId(int clubId)
+        {
+            return _dbContext.ClubInvitations
+                .Where(invitation => invitation.ClubId == clubId)
+                .ToList();
+        }
+
+
         public List<ClubInvitation> GetByStatus(ClubInvitationStatus status)
         {
             return _dbContext.ClubInvitations
