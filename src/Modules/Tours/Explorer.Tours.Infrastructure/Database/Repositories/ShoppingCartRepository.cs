@@ -17,6 +17,10 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
         public new ShoppingCart Update(ShoppingCart shoppingCart)
         {
             DbContext.Entry(shoppingCart).State = EntityState.Modified;
+            foreach (var item in shoppingCart.Items)
+            {
+                DbContext.Entry(item).State = EntityState.Modified;
+            }
             DbContext.SaveChanges();
             return shoppingCart;
         }
