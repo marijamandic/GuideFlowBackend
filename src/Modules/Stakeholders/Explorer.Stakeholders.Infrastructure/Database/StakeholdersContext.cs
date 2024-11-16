@@ -17,7 +17,6 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubRequest> ClubRequests { get; set; }
     public DbSet<ProfileInfo> Profiles { get; set; }
     public DbSet<ClubPost> ClubPosts { get; set; }
-
     public DbSet<AppRating> Ratings { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
@@ -34,12 +33,7 @@ public class StakeholdersContext : DbContext
        );
 
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
-
-        
         ConfigureStakeholder(modelBuilder);
-        ConfigureClubInvitation(modelBuilder);
-        
-
     }
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
@@ -54,24 +48,4 @@ public class StakeholdersContext : DbContext
             .WithOne()
             .HasForeignKey<ProfileInfo>(s => s.UserId);
     }
-
-    private static void ConfigureClubInvitation(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<ClubInvitation>()
-            .HasKey(ci => ci.Id);
-
-        modelBuilder.Entity<ClubInvitation>()
-            .Property(ci => ci.Status)
-            .HasConversion<string>()
-            .IsRequired();
-
-        modelBuilder.Entity<ClubInvitation>()
-            .Property(ci => ci.TouristID)
-            .IsRequired();
-
-        modelBuilder.Entity<ClubInvitation>()
-            .Property(ci => ci.ClubId)
-            .IsRequired();
-    }
-    
 }

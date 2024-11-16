@@ -41,7 +41,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             return Result.Ok(MapToDto(clubInvitation));
         }
 
-        public Result<List<ClubInvitationDto>> GetInvitationsByClub(int clubId)
+        public Result<List<ClubInvitationDto>> GetInvitationsByClub(long clubId)
         {
             var clubInvitations = _clubInvitationRepository.GetByClubId(clubId);
             if (clubInvitations == null || !clubInvitations.Any())

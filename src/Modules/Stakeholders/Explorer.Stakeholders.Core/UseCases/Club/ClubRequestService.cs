@@ -125,5 +125,16 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             return Result.Ok(dtos);
         }
 
+        public Result<List<ClubRequestDto>> GetRequestByClubId(long clubId)
+        {
+            var requests = _clubRequestRepository.GetRequestsByClubId(clubId);
+            if (requests == null || !requests.Any())
+            {
+                return Result.Fail<List<ClubRequestDto>>("No club requests found for the given club ID.");
+            }
+
+            var mappedRequests = MapToDto(requests);
+            return mappedRequests;
+        }
     }
 }

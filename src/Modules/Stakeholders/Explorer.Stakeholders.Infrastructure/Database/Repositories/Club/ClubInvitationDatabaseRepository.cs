@@ -24,10 +24,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
             return clubInvitation;
         }
 
-        public IEnumerable<ClubInvitation> GetByClubId(int clubId)
+        public List<ClubInvitation> GetByClubId(long clubId)
         {
             return _dbContext.ClubInvitations
-                .Where(invitation => invitation.ClubId == clubId)
+                .Where(invitation => invitation.ClubId == clubId) // Direct comparison
                 .ToList();
         }
 

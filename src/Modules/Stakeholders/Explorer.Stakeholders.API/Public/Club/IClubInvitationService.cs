@@ -17,7 +17,7 @@ namespace Explorer.Stakeholders.API.Public.Club
         Result<ClubInvitationDto> GetInvitationStatus(long invitationId);
         Result<List<ClubInvitationDto>> GetAll();
         Result<ClubInvitationDto> UpdateInvitation(int invitationId, ClubInvitationDto invitationDto);
-        Result<List<ClubInvitationDto>> GetInvitationsByClub(int clubId);
+        Result<List<ClubInvitationDto>> GetInvitationsByClub(long clubId);
     }
 
 }
