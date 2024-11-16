@@ -46,7 +46,7 @@ public class AuthenticationService : IAuthenticationService
 
         try
         {
-            var user = _userRepository.Create(new User(account.Username, account.Password, Domain.UserRole.Tourist, true, new Location(0,0)));
+            var user = _userRepository.Create(new User(account.Username, account.Password, Domain.UserRole.Tourist, true, new Location(45.2671, 19.8335)));
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
 
             _shoppingCartService.Create(user.Id);

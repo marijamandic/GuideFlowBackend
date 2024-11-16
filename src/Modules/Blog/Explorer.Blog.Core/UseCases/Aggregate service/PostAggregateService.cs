@@ -177,12 +177,14 @@ namespace Explorer.Blog.Core.UseCases.Aggregate_service
 
             var post = result.Value;
             blogRatingDto.RatingDate = DateTime.Now;
+            
             var addRatingResult = post.AddRating(
                 blogRatingDto.UserId,
                 postId,
                 blogRatingDto.RatingDate,
                 (Domain.Posts.RatingStatus)blogRatingDto.RatingStatus
             );
+            
 
             if (addRatingResult.IsFailed) return Result.Fail("Failed to add rating.");
 
