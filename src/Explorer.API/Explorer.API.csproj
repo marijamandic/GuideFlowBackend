@@ -29,6 +29,7 @@
 	<Folder Include="wwwroot\" />
 	<Folder Include="wwwroot\images\checkpoints\" />
 	<Folder Include="wwwroot\images\clubs\" />
+	<Folder Include="wwwroot\images\publicPoints\" />
 	<Folder Include="wwwroot\images\tourObjects\" />
     <Folder Include="wwwroot\images\blogs\" />
   </ItemGroup>
