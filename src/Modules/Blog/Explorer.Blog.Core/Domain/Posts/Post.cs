@@ -103,9 +103,9 @@ namespace Explorer.Blog.Core.Domain.Posts
             return Result.Ok();
         }
 
-        public Result<BlogRating> AddRating(BlogRatingDto blogRatingDto)
+        public Result<BlogRating> AddRating(long userId, long postId, DateTime ratingDate, RatingStatus blogRating)
         {
-            var result = BlogRating.Create(blogRatingDto.UserId, blogRatingDto.PostId, blogRatingDto.RatingDate, (RatingStatus)blogRatingDto.RatingStatus);
+            var result = BlogRating.Create(userId, postId, ratingDate, blogRating);
             if (result.IsFailed)
             {
                 return Result.Fail("Greska pri dodavanju ocene bloga!");
