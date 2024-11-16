@@ -71,12 +71,10 @@ namespace Explorer.API.Controllers.Tourist
         */
 
         [HttpGet("for-tourist/{touristId:long}")]
-        public ActionResult<ClubRequestDto> GetRequestByTouristId(long touristId)
+        public ActionResult<IEnumerable<ClubRequestDto>> GetRequestByTouristId(long touristId)
         {
             var result = _clubRequestService.GetRequestByTouristId(touristId);
             return CreateResponse(result);
         }
-
-
     }
 }

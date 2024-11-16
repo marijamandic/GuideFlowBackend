@@ -111,16 +111,19 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
                 return Result.Fail<List<ClubRequestDto>>("Request not found.");
             }
             List<ClubRequestDto> dtos = new();
-            foreach(var club in clubRequests)
+            foreach (var club in clubRequests)
             {
-                ClubRequestDto dto = new();
-                dto.ClubId = club.ClubId;
-                dto.TouristId = club.TouristId;
-                dto.Id = club.Id;
-                dto.Status = (API.Dtos.Club.ClubRequestStatus)Enum.Parse(typeof(API.Dtos.Club.ClubRequestStatus), club.Status.ToString());
+                ClubRequestDto dto = new()
+                {
+                    ClubId = club.ClubId,
+                    TouristId = club.TouristId,
+                    Id = club.Id,
+                    Status = (API.Dtos.Club.ClubRequestStatus)Enum.Parse(typeof(API.Dtos.Club.ClubRequestStatus), club.Status.ToString())
+                };
                 dtos.Add(dto);
             }
             return Result.Ok(dtos);
         }
+
     }
 }
