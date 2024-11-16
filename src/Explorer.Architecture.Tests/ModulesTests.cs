@@ -85,10 +85,10 @@ public class ModulesTests : BaseArchitecturalTests
 
     public static IEnumerable<object[]> GetModules() => new List<object[]>
     {
-        //new object[]
-        //{
-        //    "Blog"
-        //},
+        new object[]
+        {
+            "Blog"
+        },
         new object[]
         {
             "Payments"
