@@ -38,5 +38,22 @@ namespace Explorer.Tours.Core.Domain.Shopping
             TotalPrice += orderItem.Price;
             Items.Add(orderItem);
         }
+
+        public void RemoveItemFromCart(long tourId)
+        {
+            if (Items.Count == 0) throw new Exception("Cannot remove from empty shopping cart");
+
+            Items.RemoveAll(items => items.TourID == tourId);
+        }
+
+        public void ClearCart()
+        {
+            foreach(var item in Items)
+            {
+
+            }
+            Items.Clear();
+        }
     }
+
 }
