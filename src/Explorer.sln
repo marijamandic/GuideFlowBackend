@@ -49,13 +49,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Explorer.Blog.Tests", "Modu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Encounters", "Encounters", "{A2D4FB33-BC98-443B-B2F3-3BF931FBE9EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.API", "Explorer.Encounters.API\Explorer.Encounters.API.csproj", "{D5C3A269-44DB-494B-BAF3-672F3016F582}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.API", "Modules\Encounters\Explorer.Encounters.API\Explorer.Encounters.API.csproj", "{D5C3A269-44DB-494B-BAF3-672F3016F582}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Core", "Explorer.Encounters.Core\Explorer.Encounters.Core.csproj", "{4EE9E18E-A014-4C17-89AE-5C8A68E0E275}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Core", "Modules\Encounters\Explorer.Encounters.Core\Explorer.Encounters.Core.csproj", "{4EE9E18E-A014-4C17-89AE-5C8A68E0E275}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Infrastructure", "Explorer.Encounters.Infrastructure\Explorer.Encounters.Infrastructure.csproj", "{785763A2-9666-4952-81DB-628468EACEE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Infrastructure", "Modules\Encounters\Explorer.Encounters.Infrastructure\Explorer.Encounters.Infrastructure.csproj", "{785763A2-9666-4952-81DB-628468EACEE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Test", "Explorer.Encounters.Test\Explorer.Encounters.Test.csproj", "{D7B26C0F-E5F5-4411-80AD-D51FBA82C792}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer.Encounters.Test", "Modules\Encounters\Explorer.Encounters.Test\Explorer.Encounters.Test.csproj", "{D7B26C0F-E5F5-4411-80AD-D51FBA82C792}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Payments", "Payments", "{77BF9256-593C-46CF-9F9B-F046ADF88D98}"
 EndProject
