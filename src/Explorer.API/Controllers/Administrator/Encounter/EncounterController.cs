@@ -34,7 +34,7 @@ namespace Explorer.API.Controllers.Administrator.Encounter
             return CreateResponse(result);
         }
         [HttpPut]
-        public ActionResult<TourExecutionDto> Update([FromBody] EncounterDto encounterDto)
+        public ActionResult<EncounterDto> Update([FromBody] EncounterDto encounterDto)
         {
             var result = _encounterService.Update(encounterDto);
             return CreateResponse(result);
