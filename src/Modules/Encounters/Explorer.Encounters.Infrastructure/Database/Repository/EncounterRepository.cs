@@ -15,6 +15,32 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
         public EncounterRepository(EncountersContext context) : base(context) { 
             _context = context;
         }
-
+        public SocialEncounter GetSocial(long id)
+        {
+            var encounter = _context.Encounters.Find(id);
+            if (encounter is SocialEncounter socialEncounter)
+            {
+                return socialEncounter;
+            }
+            return null;
+        }
+        public MiscEncounter GetMisc(long id)
+        {
+            var encounter = _context.Encounters.Find(id);
+            if (encounter is MiscEncounter miscEncounter)
+            {
+                return miscEncounter;
+            }
+            return null;
+        }
+        public LocationEncounter GetLocation(long id)
+        {
+            var encounter = _context.Encounters.Find(id);
+            if (encounter is LocationEncounter locationEncounter)
+            {
+                return locationEncounter;
+            }
+            return null;
+        }
     }
 }

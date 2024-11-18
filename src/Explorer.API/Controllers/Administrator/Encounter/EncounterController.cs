@@ -22,9 +22,9 @@ namespace Explorer.API.Controllers.Administrator.Encounter
             var result = _encounterService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
-        [HttpGet("{id:int}")]
-        public ActionResult<EncounterDto> GetById([FromRoute] int id) {
-            var result = _encounterService.Get(id);
+        [HttpGet("{type}/{id:long}")]
+        public ActionResult<EncounterDto> GetById([FromRoute] string type,[FromRoute] long id) {
+            var result = _encounterService.Get(type,id);
             return CreateResponse(result);
         }
         [HttpPost]
@@ -34,7 +34,7 @@ namespace Explorer.API.Controllers.Administrator.Encounter
             return CreateResponse(result);
         }
         [HttpPut]
-        public ActionResult<TourExecutionDto> Update([FromBody] EncounterDto encounterDto)
+        public ActionResult<EncounterDto> Update([FromBody] EncounterDto encounterDto)
         {
             var result = _encounterService.Update(encounterDto);
             return CreateResponse(result);

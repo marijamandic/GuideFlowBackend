@@ -9,5 +9,8 @@ namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
 {
     public interface IEncountersRepository : ICrudRepository<Encounter>
     {
+        public SocialEncounter GetSocial(long id);
+        public LocationEncounter GetLocation(long id);
+        public MiscEncounter GetMisc(long id);
     }
 }
