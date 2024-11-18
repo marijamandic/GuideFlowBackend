@@ -18,4 +18,16 @@ public class ShoppingCart : Entity
     {
         _singleItems.Add(item);
     }
+
+    public void RemoveFromCart(SingleItem item)
+    {
+        _singleItems.Remove(item);
+    }
+
+    public SingleItem GetById(long itemId)
+    {
+        var item = _singleItems.FirstOrDefault(i => i.Id == itemId);
+        if (item is null) throw new ArgumentException("Item does not exits");
+        return item;
+    }
 }
