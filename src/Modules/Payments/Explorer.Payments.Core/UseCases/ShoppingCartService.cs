@@ -26,12 +26,33 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             ShoppingCartId = (int)shoppingCart.Id,
             TourId = itemInput.TourId,
             TourName = itemInput.TourName,
-            Price = itemInput.Price
+            AdventureCoin = itemInput.AdventureCoin
         };
-        shoppingCart.AddToCart(_mapper.Map<SingleItem>(item));
-        _shoppingCartRepository.Save(shoppingCart);
 
-        var items = shoppingCart.SingleItems.Select(i => _mapper.Map<SingleItemDto>(i)).ToList();
-        return new PagedResult<SingleItemDto>(items, items.Count);
+        try
+        {
+            shoppingCart.AddToCart(_mapper.Map<SingleItem>(item));
+            _shoppingCartRepository.Save(shoppingCart);
+
+            var items = shoppingCart.SingleItems.Select(i => _mapper.Map<SingleItemDto>(i)).ToList();
+            return new PagedResult<SingleItemDto>(items, items.Count);
+        }
+        catch (Exception)
+        {
+            return Result.Fail("Item already in cart");
+        }
+    }
+
+    public Result RemoveFromCart(int touristId, int itemId)
+    {
+        var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+        shoppingCart.RemoveFromCart(shoppingCart.GetById(itemId));
+        _shoppingCartRepository.Save(shoppingCart);
+        return Result.Ok();
+    }
+
+    public Result<ShoppingCartDto> GetByTouristId(int touristId)
+    {
+        return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
     }
 }

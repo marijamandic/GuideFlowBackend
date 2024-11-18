@@ -17,11 +17,27 @@ public class ShoppingCartController : BaseApiController
         _shoppingCartService = shoppingCartService;
     }
 
-    [HttpPost("items")]
+    [HttpPost("single-items")]
     public ActionResult<PagedResult<SingleItemDto>> AddToCart([FromBody] SingleItemInputDto item)
     {
         int touristId = int.Parse(User.FindFirst("id")!.Value);
         var result = _shoppingCartService.AddToCart(touristId, item);
+        return CreateResponse(result);
+    }
+
+    [HttpDelete("single-items/{itemId:int}")]
+    public ActionResult RemoveFromCart([FromRoute] int itemId)
+    {
+        int touristId = int.Parse(User.FindFirst("id")!.Value);
+        var result = _shoppingCartService.RemoveFromCart(touristId, itemId);
+        return CreateResponse(result);
+    }
+
+    [HttpGet]
+    public ActionResult<ShoppingCartDto> GetByTouristId()
+    {
+        int touristId = int.Parse(User.FindFirst("id")!.Value);
+        var result = _shoppingCartService.GetByTouristId(touristId);
         return CreateResponse(result);
     }
 }
