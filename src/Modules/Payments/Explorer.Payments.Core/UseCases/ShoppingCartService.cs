@@ -26,7 +26,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             ShoppingCartId = (int)shoppingCart.Id,
             TourId = itemInput.TourId,
             TourName = itemInput.TourName,
-            Price = itemInput.Price
+            AdventureCoin = itemInput.AdventureCoin
         };
         shoppingCart.AddToCart(_mapper.Map<SingleItem>(item));
         _shoppingCartRepository.Save(shoppingCart);
