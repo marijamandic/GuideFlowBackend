@@ -19,7 +19,7 @@ public class Problem : Entity
         TourId = tourId;
     }
 
-    public void AddMessage (Message message)
+    public void AddMessage(Message message)
     {
         if (message.ProblemId != Id) throw new Exception("Problem ID mismatch");
         message.Validate();
