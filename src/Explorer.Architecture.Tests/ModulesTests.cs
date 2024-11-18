@@ -87,10 +87,6 @@ public class ModulesTests : BaseArchitecturalTests
     {
         new object[]
         {
-            "Blog"
-        },
-        new object[]
-        {
             "Payments"
         },
         new object[]
@@ -99,7 +95,15 @@ public class ModulesTests : BaseArchitecturalTests
         },
         new object[]
         {
+            "Blog"
+        },
+        new object[]
+        {
             "Tours"
+        },
+        new object[]
+        { 
+            "Encounters"
         }
     };
 }
