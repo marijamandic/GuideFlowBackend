@@ -12,4 +12,9 @@ public class ShoppingCart : Entity
     {
         TouristId = touristId;
     }
+
+    public void AddToCart(SingleItem item)
+    {
+        _singleItems.Add(item);
+    }
 }

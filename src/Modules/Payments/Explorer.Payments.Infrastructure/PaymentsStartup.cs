@@ -22,11 +22,13 @@ public static class PaymentsStartup
 
     private static void SetupCore(IServiceCollection services)
     {
+        services.AddScoped<IShoppingCartService, ShoppingCartService>();
         services.AddScoped<ITourPurchaseTokenService, TourPurchaseTokenService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
+        services.AddScoped<IShoppingCartRepository, ShoppingCartDatabaseRepository>();
         services.AddScoped<ITourPurchaseTokenRepository,TourPurchaseTokenDatabaseRepository>();
 
         services.AddDbContext<PaymentsContext>(opt =>

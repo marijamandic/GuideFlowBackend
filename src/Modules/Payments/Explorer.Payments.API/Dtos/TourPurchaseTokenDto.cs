@@ -12,6 +12,6 @@ namespace Explorer.Payments.API.Dtos
         public int TouristId { get; set; }
         public int TourId { get; set; }
         public DateTime PurchaseDate { get; set; }
-        public int Price { get; private set; }
+        public int Price { get; set; }
     }
 }
