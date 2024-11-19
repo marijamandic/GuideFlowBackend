@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Mappers;
@@ -24,6 +25,7 @@ public static class PaymentsStartup
     {
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
         services.AddScoped<ITourPurchaseTokenService, TourPurchaseTokenService>();
+        services.AddScoped<IInternalTourPurchaseTokenService, TourPurchaseTokenService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

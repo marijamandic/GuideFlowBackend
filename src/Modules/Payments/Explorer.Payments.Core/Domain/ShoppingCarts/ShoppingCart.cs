@@ -24,6 +24,11 @@ public class ShoppingCart : Entity
         _singleItems.Remove(item);
     }
 
+    public void ClearCart()
+    {
+        _singleItems.Clear();
+    }
+
     public SingleItem GetById(long itemId)
     {
         var item = _singleItems.FirstOrDefault(i => i.Id == itemId);

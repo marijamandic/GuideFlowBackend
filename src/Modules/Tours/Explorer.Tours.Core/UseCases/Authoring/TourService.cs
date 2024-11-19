@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Internal;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Shopping;
@@ -20,12 +22,12 @@ namespace Explorer.Tours.Core.UseCases.Authoring
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
-        private readonly IPurchaseTokensService _purchaseTokenService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IPurchaseTokensService purchaseTokenService) : base(mapper) 
+        private readonly IInternalTourPurchaseTokenService _tourPurchaseTokenService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalTourPurchaseTokenService tourPurchaseTokenService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
-            _purchaseTokenService=purchaseTokenService;
+            _tourPurchaseTokenService = tourPurchaseTokenService;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -227,7 +229,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 
         public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
         {
-            var tokens = _purchaseTokenService.GetTokensByUserId(userId).Value.Results.Where(t => t.UserId == userId);
+            var tokens = _tourPurchaseTokenService.GetAllByTouristId(userId).Value.Results;
             var purchased = new List<TourDto>();
 
             foreach (var token in tokens)

@@ -30,34 +30,5 @@ namespace Explorer.API.Controllers.Tourist.Shopping
                 return BadRequest("Invalid input");
             }
         }
-
-        [HttpGet()]
-        public ActionResult<PagedResult<TourPurchaseTokenDto>> GetAllByTourist()
-        {
-            if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
-            {
-                var result = _tourPurchaseTokenService.GetAllByTouristId(touristId);
-                return CreateResponse(result);
-            }
-            else
-            {
-                return BadRequest("Invalid input");
-            }
-        }
-
-        [HttpGet("{tourId:int}")]
-        public ActionResult<TourPurchaseTokenDto> GetByTouristAndTour(int tourId)
-        {
-            if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
-            {
-                var result = _tourPurchaseTokenService.GetByTouristAndTourId(touristId,tourId);
-                return CreateResponse(result);
-            }
-            else
-            {
-                return BadRequest("Invalid input");
-            }
-        }
-
     }
 }

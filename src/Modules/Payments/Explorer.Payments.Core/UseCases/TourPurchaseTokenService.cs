@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.PurchaseTokens;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payments.Core.UseCases
 {
-    public class TourPurchaseTokenService :BaseService<TourPurchaseTokenDto,TourPurchaseToken>, ITourPurchaseTokenService
+    public class TourPurchaseTokenService :BaseService<TourPurchaseTokenDto,TourPurchaseToken>, ITourPurchaseTokenService, IInternalTourPurchaseTokenService
     {
         private readonly ITourPurchaseTokenRepository _tourPurchaseTokenRepository;
         private readonly IShoppingCartService _shoppingCartService;
@@ -38,11 +39,13 @@ namespace Explorer.Payments.Core.UseCases
                     {
                         TouristId = shoppingCartResult.Value.TouristId,
                         TourId = singleItem.TourId,
-                        PurchaseDate = DateTime.Now,
+                        PurchaseDate = DateTime.UtcNow,
                         AdventureCoin = singleItem.AdventureCoin
                     }))
                     .Select(_tourPurchaseTokenRepository.Create)
                     .ToList();
+
+                _shoppingCartService.ClearCart(touristId);
 
                 return MapToDto(new PagedResult<TourPurchaseToken>(tourPurchaseTokens, tourPurchaseTokens.Count));
             }
@@ -51,8 +54,6 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
         }
-
-
         public Result<PagedResult<TourPurchaseTokenDto>> GetAllByTouristId(int touristId)
         {
             try
