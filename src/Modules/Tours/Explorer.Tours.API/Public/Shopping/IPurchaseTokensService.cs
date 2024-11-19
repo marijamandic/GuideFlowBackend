@@ -15,6 +15,7 @@ namespace Explorer.Tours.API.Public.Shopping
         Result<PurchaseTokenDto> Get(int id);
         Result<PurchaseTokenDto> Create(PurchaseTokenDto purchaseToken);
         Result<PurchaseTokenDto> Update(PurchaseTokenDto purchaseToken);
-        Result Delete(int id); Result<PagedResult<PurchaseTokenDto>> GetTokensByUserId(int userId);
+        Result Delete(int id); 
+        Result<PagedResult<PurchaseTokenDto>> GetTokensByUserId(int userId);
     }
 }

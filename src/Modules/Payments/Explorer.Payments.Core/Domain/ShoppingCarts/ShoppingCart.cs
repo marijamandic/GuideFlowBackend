@@ -5,7 +5,6 @@ namespace Explorer.Payments.Core.Domain.ShoppingCarts;
 public class ShoppingCart : Entity
 {
     private List<SingleItem> _singleItems = new();
-
     public long TouristId { get; private set; }
     public IReadOnlyList<SingleItem> SingleItems => new List<SingleItem>(_singleItems);
 
@@ -23,6 +22,11 @@ public class ShoppingCart : Entity
     public void RemoveFromCart(SingleItem item)
     {
         _singleItems.Remove(item);
+    }
+
+    public void ClearCart()
+    {
+        _singleItems.Clear();
     }
 
     public SingleItem GetById(long itemId)

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Payments.API.Dtos;
+using Explorer.Payments.Core.Domain.PurchaseTokens;
 
 namespace Explorer.Payments.Core.Mappers;
 
@@ -16,5 +18,6 @@ public class PaymentsProfile : Profile
                 new SingleItemDto { Id = (int)i.Id, ShoppingCartId = (int)i.ShoppingCartId, TourId = (int)i.TourId, TourName = i.TourName, AdventureCoin = i.AdventureCoin })));
 
         CreateMap<SingleItemDto, SingleItem>().ReverseMap();
+        CreateMap<TourPurchaseTokenDto, TourPurchaseToken>().ReverseMap();
     }
 }

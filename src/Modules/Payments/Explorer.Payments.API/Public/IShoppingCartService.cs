@@ -8,5 +8,6 @@ public interface IShoppingCartService
 {
     Result<PagedResult<SingleItemDto>> AddToCart(int touristId, SingleItemInputDto item);
     Result RemoveFromCart(int touristId, int itemId);
+    Result ClearCart(int touristId);
     Result<ShoppingCartDto> GetByTouristId(int touristId);
 }

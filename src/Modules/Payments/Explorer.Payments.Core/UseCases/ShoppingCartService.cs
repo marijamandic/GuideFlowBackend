@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
@@ -47,6 +48,14 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
     {
         var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
         shoppingCart.RemoveFromCart(shoppingCart.GetById(itemId));
+        _shoppingCartRepository.Save(shoppingCart);
+        return Result.Ok();
+    }
+
+    public Result ClearCart(int touristId)
+    {
+        var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+        shoppingCart.ClearCart();
         _shoppingCartRepository.Save(shoppingCart);
         return Result.Ok();
     }
