@@ -39,7 +39,7 @@ namespace Explorer.Payments.Core.UseCases
                         TouristId = shoppingCartResult.Value.TouristId,
                         TourId = singleItem.TourId,
                         PurchaseDate = DateTime.Now,
-                        Price = singleItem.Price
+                        AdventureCoin = singleItem.AdventureCoin
                     }))
                     .Select(_tourPurchaseTokenRepository.Create)
                     .ToList();

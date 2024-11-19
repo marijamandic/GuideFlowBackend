@@ -15,15 +15,15 @@ namespace Explorer.Payments.Core.Domain.PurchaseTokens
         public long TouristId { get; private set; }
         public long TourId {  get; private set; }
         public DateTime PurchaseDate { get; private set; }
-        public int Price { get; private set; }
+        public int AdventureCoin { get; private set; }
 
-        public TourPurchaseToken(long Id,long TouristId,long TourId,DateTime PurchaseDate,int Price)
+        public TourPurchaseToken(long Id,long TouristId,long TourId,DateTime PurchaseDate,int AdventureCoin)
         {
             this.Id = Id;
             this.TouristId = TouristId;
             this.TourId = TourId;
             this.PurchaseDate = PurchaseDate;
-            this.Price = Price;
+            this.AdventureCoin = AdventureCoin;
             Validate();
         }
 
@@ -31,7 +31,7 @@ namespace Explorer.Payments.Core.Domain.PurchaseTokens
         {
             if (TouristId == 0) throw new ArgumentException("Invalid tourist id!");
             if (TourId == 0) throw new ArgumentException("Invalid tour id!");
-            if (Price < 0) throw new ArgumentException("Price can't be less than 0!");
+            if (AdventureCoin < 0) throw new ArgumentException("Price can't be less than 0!");
         }
     }
 }

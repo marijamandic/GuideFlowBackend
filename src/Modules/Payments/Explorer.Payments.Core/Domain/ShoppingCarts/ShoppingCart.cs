@@ -15,6 +15,19 @@ public class ShoppingCart : Entity
 
     public void AddToCart(SingleItem item)
     {
+        if (_singleItems.Select(i => i.TourId).Contains(item.TourId)) throw new ArgumentException("Tour already in cart");
         _singleItems.Add(item);
+    }
+
+    public void RemoveFromCart(SingleItem item)
+    {
+        _singleItems.Remove(item);
+    }
+
+    public SingleItem GetById(long itemId)
+    {
+        var item = _singleItems.FirstOrDefault(i => i.Id == itemId);
+        if (item is null) throw new ArgumentException("Item does not exits");
+        return item;
     }
 }
