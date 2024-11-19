@@ -7,9 +7,11 @@ using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EncounterType = Explorer.Encounters.API.Dtos.EncounterType;
 
 namespace Explorer.Encounters.Core.UseCases
 {
@@ -23,64 +25,62 @@ namespace Explorer.Encounters.Core.UseCases
             _mapper = mapper;
         }
 
-        public Result<EncounterDto> Get(string type, long id) {
-            if (type.Equals("misc"))
+        public Result<EncounterDto> Get(EncounterType type, long id) {
+            if (type == EncounterType.Misc)
             {
                 var encounter = _encountersRepository.GetMisc(id);
+                if (encounter is null)
+                    return Result.Fail(FailureCode.NotFound);
                 return _mapper.Map<MiscEncounterDto>(encounter);
             }
-            else if (type.Equals("social"))
+            else if (type == EncounterType.Social)
             {
-                var counter = _encountersRepository.GetSocial(id);
-                return _mapper.Map<SocialEncounterDto>(counter);
+                var encounter = _encountersRepository.GetSocial(id);
+                if (encounter is null)
+                    return Result.Fail(FailureCode.NotFound);
+                return _mapper.Map<SocialEncounterDto>(encounter);
             }
-            else if (type.Equals("location")) { 
-                var counter = _encountersRepository.GetLocation(id);
-                return _mapper.Map<LocationEncounterDto>(counter);
+            else if (type == EncounterType.Location) { 
+                var encounter = _encountersRepository.GetLocation(id);
+                if (encounter is null)
+                    return Result.Fail(FailureCode.NotFound);
+                return _mapper.Map<HiddenLocationEncounterDto>(encounter);
             }
             return Result.Fail(FailureCode.InvalidArgument);
         }
         public new Result<EncounterDto> Create(EncounterDto encounterDto) {
-            Encounter encounter;
-            if (encounterDto is SocialEncounterDto socialEncounterDto)
-            {
-                encounter = _mapper.Map<SocialEncounter>(socialEncounterDto);
-            }
-            else if (encounterDto is LocationEncounterDto locationEncounterDto)
-            {
-                encounter = _mapper.Map<LocationEncounter>(locationEncounterDto);
-            }
-            else if (encounterDto is MiscEncounterDto miscEncounterDto)
-            {
-                encounter = _mapper.Map<MiscEncounter>(miscEncounterDto);
-            }
-            else {
+            var encounter = MapToEncounterType(encounterDto);
+            if (encounter is null)
                 return Result.Fail(FailureCode.InvalidArgument);
-            }
             _encountersRepository.Create(encounter);
 
             return MapToDto(encounter);
         }
         public new Result<EncounterDto> Update(EncounterDto encounterDto) {
-            Encounter encounter;
-            if (encounterDto is SocialEncounterDto socialEncounterDto)
-            {
-                encounter = _mapper.Map<SocialEncounter>(socialEncounterDto);
-            }
-            else if (encounterDto is LocationEncounterDto locationEncounterDto)
-            {
-                encounter = _mapper.Map<LocationEncounter>(locationEncounterDto);
-            }
-            else if (encounterDto is MiscEncounterDto miscEncounterDto)
-            {
-                encounter = _mapper.Map<MiscEncounter>(miscEncounterDto);
-            }
-            else
-            {
+            var encounter = MapToEncounterType(encounterDto);
+            if (encounter is null)
                 return Result.Fail(FailureCode.InvalidArgument);
-            }
             _encountersRepository.Update(encounter); 
             return MapToDto(encounter);
         }
+
+        #region HelpperMethods
+        private Encounter MapToEncounterType(EncounterDto encounterDto)
+        {
+            if (encounterDto is SocialEncounterDto socialEncounterDto)
+            {
+                return _mapper.Map<SocialEncounter>(socialEncounterDto);
+            }
+            else if (encounterDto is HiddenLocationEncounterDto locationEncounterDto)
+            {
+                return _mapper.Map<HiddenLocationEncounter>(locationEncounterDto);
+            }
+            else if (encounterDto is MiscEncounterDto miscEncounterDto)
+            {
+                return _mapper.Map<MiscEncounter>(miscEncounterDto);
+            }
+            return null;
+        }
+        #endregion
     }
 }

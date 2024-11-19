@@ -10,7 +10,7 @@ namespace Explorer.Encounters.API.Dtos
     [JsonDerivedType(typeof(EncounterDto), typeDiscriminator: "base")]
     [JsonDerivedType(typeof(MiscEncounterDto), typeDiscriminator: "miscEncounter")]
     [JsonDerivedType(typeof(SocialEncounterDto), typeDiscriminator: "socialEncounter")]
-    [JsonDerivedType(typeof(LocationEncounterDto), typeDiscriminator: "locationEncounter")]
+    [JsonDerivedType(typeof(HiddenLocationEncounterDto), typeDiscriminator: "locationEncounter")]
     public class EncounterDto
     {
         public long Id {  get; set; }
@@ -19,11 +19,18 @@ namespace Explorer.Encounters.API.Dtos
         public EncounterLocationDto EncounterLocation { get; set; }
         public EncounterStatus EncounterStatus { get; set; }
         public int ExperiencePoints { get; set; }
+        public EncounterType EncounterType { get; set; }
     }
     public enum EncounterStatus
     {
-        Active,
-        Draft,
-        Archieved
+        Active = 0,
+        Draft = 1,
+        Archieved = 2
+    }
+    public enum EncounterType
+    {
+        Social = 0,
+        Location = 1,
+        Misc = 2
     }
 }

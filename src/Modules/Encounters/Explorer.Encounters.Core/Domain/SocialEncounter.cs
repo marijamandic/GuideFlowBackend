@@ -12,7 +12,7 @@ namespace Explorer.Encounters.Core.Domain
         public double EncounterRange { get; private set; }
 
         public SocialEncounter() { }
-        public SocialEncounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints, int touristNumber, double encounterRange) : base(name, description, location, status, experiencePoints) { 
+        public SocialEncounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints, EncounterType encounterType ,int touristNumber, double encounterRange) : base(name, description, location, status, experiencePoints, encounterType) { 
             TouristNumber = touristNumber;
             EncounterRange = encounterRange;
             Validate();

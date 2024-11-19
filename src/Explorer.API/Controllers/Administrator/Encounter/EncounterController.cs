@@ -23,7 +23,7 @@ namespace Explorer.API.Controllers.Administrator.Encounter
             return CreateResponse(result);
         }
         [HttpGet("{type}/{id:long}")]
-        public ActionResult<EncounterDto> GetById([FromRoute] string type,[FromRoute] long id) {
+        public ActionResult<EncounterDto> GetById([FromRoute] EncounterType type,[FromRoute] long id) {
             var result = _encounterService.Get(type,id);
             return CreateResponse(result);
         }

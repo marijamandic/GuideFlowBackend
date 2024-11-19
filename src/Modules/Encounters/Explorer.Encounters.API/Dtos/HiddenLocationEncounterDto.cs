@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Encounters.API.Dtos
 {
-    public class LocationEncounterDto : EncounterDto
+    public class HiddenLocationEncounterDto : EncounterDto
     {
         public string ImageUrl { get; set; }
         public double ActivationRange { get; set; }

@@ -33,10 +33,10 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             }
             return null;
         }
-        public LocationEncounter GetLocation(long id)
+        public HiddenLocationEncounter GetLocation(long id)
         {
             var encounter = _context.Encounters.Find(id);
-            if (encounter is LocationEncounter locationEncounter)
+            if (encounter is HiddenLocationEncounter locationEncounter)
             {
                 return locationEncounter;
             }
