@@ -6,23 +6,12 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.API.Dtos
 {
-        public enum TransportationMode { WALK, BIKE, CAR, BOAT }
-
     public class TourSpecificationDto
     {
-        public int? Id { get; set; }
+        public long Id { get; set; }
         public long UserId { get; set; }
-        public int TourDifficulty { get; set; }
-        public int WalkRating { get; set; }
-        public int BikeRating { get; set; }
-        public int CarRating { get; set; }
-        public int BoatRating { get; set; }
-        public List<string> Tags { get; set; }
-
-        public TourSpecificationDto()
-        {
-            Tags = new List<string>();
-        }
+        public Level Level { get; set; }
+        public List<string> Taggs { get; set; }
+        public List<TransportRatingDto> TransportRatings { get; set; } = new List<TransportRatingDto>();
     }
-
 }
