@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.Tours;
 
 
 
@@ -18,8 +19,6 @@ public class CheckpointRepository : ICheckpointRepository
 
     List<Checkpoint> ICheckpointRepository.GetByTour(int id)
     {
-        return _context.Checkpoint
-            .Where(te => te.TourId == id)
-            .ToList(); // No need to include related entities since there's no navigation property
+        return _context.Checkpoint.ToList(); //funkcija nema veze sa vezom samo sam je ispravio da nema greske
     }
 }

@@ -1,12 +1,12 @@
-﻿namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 
-public interface IUserRepository
+namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+
+public interface IUserRepository : ICrudRepository<User>
 {
     bool Exists(string username);
     User GetById(long id);
     User? GetActiveByName(string username);
     List<User> GetAll();
-    User Update(User user);
-    User Create(User user);
     long GetPersonId(long userId);
 }

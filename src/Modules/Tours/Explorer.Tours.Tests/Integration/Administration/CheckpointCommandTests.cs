@@ -2,6 +2,7 @@
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Infrastructure.Database;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Shouldly;
@@ -12,7 +13,7 @@ namespace Explorer.Tours.Tests.Integration.Administration;
 public class CheckpointCommandTests : BaseToursIntegrationTest
 {
     public CheckpointCommandTests(ToursTestFactory factory) : base(factory) { }
-
+    
     [Fact]
     public void Creates()
     {
@@ -27,7 +28,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 45.2671,
             Longitude = 19.8335,
             ImageUrl = "/images/start-point.jpg",
-            TourId = 1
+            Secret = "tajna"
         };
 
         // Act
@@ -74,13 +75,13 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
         var dbContext = scope.ServiceProvider.GetRequiredService<ToursContext>();
         var updatedEntity = new CheckpointDto
         {
-            Id = -2,
+            Id = -3,
             Name = "Updated Checkpoint",
             Description = "Updated description.",
             Latitude = 5.2700,
             Longitude = 19.8400,
             ImageUrl = "/images/updated-checkpoint.jpg",
-            TourId = 1
+            Secret = "pretajna"
         };
 
         // Act
@@ -88,11 +89,11 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
 
         // Assert - Response
         result.ShouldNotBeNull();
-        result.Id.ShouldBe(-2);
+        result.Id.ShouldBe(-3);
         result.Name.ShouldBe(updatedEntity.Name);
 
         // Assert - Database
-        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == -2);
+        var storedEntity = dbContext.Checkpoint.FirstOrDefault(i => i.Id == -3);
         storedEntity.ShouldNotBeNull();
         storedEntity.Description.ShouldBe(updatedEntity.Description);
     }
@@ -111,7 +112,7 @@ public class CheckpointCommandTests : BaseToursIntegrationTest
             Latitude = 5.2700,
             Longitude = 19.8400,
             ImageUrl = "/images/updated-checkpoint.jpg",
-            TourId = 1
+            Secret="tajnaa"
         };
 
         // Act

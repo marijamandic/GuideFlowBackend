@@ -13,16 +13,18 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class UserService:BaseService<UserDto,User>,IUserService
+    public class UserService : CrudService<UserDto, User>, IUserService
     {
         private readonly IUserRepository userRepository;
-        public UserService(IMapper mapper,IUserRepository userRepository):base(mapper) 
-        { 
+
+        public UserService(IUserRepository userRepository, IMapper mapper) : base(userRepository, mapper)
+        {
             this.userRepository = userRepository;
         }
+
         public Result<UserDto> GetById(int id)
         {
-            User user=userRepository.GetById(id);
+            User user = userRepository.GetById(id);
             return MapToDto(user);
         }
 

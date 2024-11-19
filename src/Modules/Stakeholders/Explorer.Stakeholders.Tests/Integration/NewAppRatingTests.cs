@@ -1,4 +1,4 @@
-﻿using Explorer.API.Controllers.AppRating;
+﻿using Explorer.API.Controllers.Tourist;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;

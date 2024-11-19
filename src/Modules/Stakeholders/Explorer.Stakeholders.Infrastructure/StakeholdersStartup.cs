@@ -4,6 +4,7 @@ using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Club;
+using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club;
 using Explorer.Stakeholders.Core.Mappers;
@@ -41,6 +42,7 @@ public static class StakeholdersStartup
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
         services.AddScoped<IAccountService, AccountService>();
+        services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IClubPostService, ClubPostService>();
     }
 
@@ -56,11 +58,15 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<Problem>), typeof(CrudDatabaseRepository<Problem, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<ClubPost>), typeof(CrudDatabaseRepository<ClubPost, StakeholdersContext>));
         services.AddScoped(typeof(ICrudRepository<AppRating>), typeof(CrudDatabaseRepository<AppRating, StakeholdersContext>));
+        services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();
+        services.AddScoped<INotificationRepository, NotificationDatabaseRepository>();
         //services.AddScoped<IAppRatingRepository, AppRatingDatabaseRepository>();
-
 
         services.AddDbContext<StakeholdersContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("stakeholders"),
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
+
+        services.AddScoped<IUserRepository, UserDatabaseRepository>();
+
     }
 }
