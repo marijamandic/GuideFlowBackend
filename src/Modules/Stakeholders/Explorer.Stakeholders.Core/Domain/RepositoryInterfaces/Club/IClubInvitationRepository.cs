@@ -15,5 +15,7 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club
         void Update(ClubInvitation clubInvitation);
         void Delete(long id);
         List<ClubInvitation> GetAll();
+        List<ClubInvitation> GetByClubId(long clubId);
+
     }
 }
