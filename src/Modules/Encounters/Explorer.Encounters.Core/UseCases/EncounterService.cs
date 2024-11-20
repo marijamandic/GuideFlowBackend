@@ -11,76 +11,38 @@ using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EncounterType = Explorer.Encounters.API.Dtos.EncounterType;
-
 namespace Explorer.Encounters.Core.UseCases
 {
-    public class EncounterService : CrudService<EncounterDto,Encounter> , IEncounterService
+    public class EncounterService : BaseService<EncounterDto,Encounter> , IEncounterService
     {
         private readonly IEncountersRepository _encountersRepository;
-        private readonly IMapper _mapper;
-        public EncounterService(ICrudRepository<Encounter> repository ,IEncountersRepository encountersRepository , IMapper mapper) : base(repository , mapper)
+        public EncounterService(IEncountersRepository encountersRepository , IMapper mapper) : base(mapper)
         {
             _encountersRepository = encountersRepository;
-            _mapper = mapper;
         }
-
-        public Result<EncounterDto> Get(EncounterType type, long id) {
-            if (type == EncounterType.Misc)
-            {
-                var encounter = _encountersRepository.GetMisc(id);
-                if (encounter is null)
-                    return Result.Fail(FailureCode.NotFound);
-                return _mapper.Map<MiscEncounterDto>(encounter);
-            }
-            else if (type == EncounterType.Social)
-            {
-                var encounter = _encountersRepository.GetSocial(id);
-                if (encounter is null)
-                    return Result.Fail(FailureCode.NotFound);
-                return _mapper.Map<SocialEncounterDto>(encounter);
-            }
-            else if (type == EncounterType.Location) { 
-                var encounter = _encountersRepository.GetLocation(id);
-                if (encounter is null)
-                    return Result.Fail(FailureCode.NotFound);
-                return _mapper.Map<HiddenLocationEncounterDto>(encounter);
-            }
-            return Result.Fail(FailureCode.InvalidArgument);
-        }
-        public new Result<EncounterDto> Create(EncounterDto encounterDto) {
-            var encounter = MapToEncounterType(encounterDto);
+        public Result<EncounterDto> Get(long id) {
+            var encounter = _encountersRepository.Get(id);
             if (encounter is null)
-                return Result.Fail(FailureCode.InvalidArgument);
-            _encountersRepository.Create(encounter);
-
+                return Result.Fail(FailureCode.NotFound);
             return MapToDto(encounter);
         }
-        public new Result<EncounterDto> Update(EncounterDto encounterDto) {
-            var encounter = MapToEncounterType(encounterDto);
-            if (encounter is null)
-                return Result.Fail(FailureCode.InvalidArgument);
-            _encountersRepository.Update(encounter); 
+        public Result<EncounterDto> Create(EncounterDto encounterDto) {
+        
+            var encounter = _encountersRepository.Create(MapToDomain(encounterDto));
             return MapToDto(encounter);
         }
-
-        #region HelpperMethods
-        private Encounter MapToEncounterType(EncounterDto encounterDto)
+        public Result<EncounterDto> Update(EncounterDto encounterDto) {
+            var encounter = _encountersRepository.Update(MapToDomain(encounterDto)); 
+            return MapToDto(encounter);
+        }
+        public Result<PagedResult<EncounterDto>> GetPaged(int page, int pageSize)
         {
-            if (encounterDto is SocialEncounterDto socialEncounterDto)
-            {
-                return _mapper.Map<SocialEncounter>(socialEncounterDto);
-            }
-            else if (encounterDto is HiddenLocationEncounterDto locationEncounterDto)
-            {
-                return _mapper.Map<HiddenLocationEncounter>(locationEncounterDto);
-            }
-            else if (encounterDto is MiscEncounterDto miscEncounterDto)
-            {
-                return _mapper.Map<MiscEncounter>(miscEncounterDto);
-            }
-            return null;
+            var encounters = _encountersRepository.GetPaged(page, pageSize);
+            return MapToDto(encounters);
         }
-        #endregion
+        public Result Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

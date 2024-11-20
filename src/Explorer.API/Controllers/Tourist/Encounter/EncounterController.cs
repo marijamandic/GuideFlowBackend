@@ -21,10 +21,10 @@ namespace Explorer.API.Controllers.Tourist.Encounter
             var result = _encounterService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
-        [HttpGet("{type}/{id:long}")]
-        public ActionResult<EncounterDto> GetById([FromRoute] EncounterType type, [FromRoute] long id)
+        [HttpGet("{id:long}")]
+        public ActionResult<EncounterDto> GetById([FromRoute] long id)
         {
-            var result = _encounterService.Get(type,id);
+            var result = _encounterService.Get(id);
             return CreateResponse(result);
         }
     }

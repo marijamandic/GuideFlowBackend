@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Administrator.Encounter
 {
-    [Authorize(Policy ="administratorPolicy")]
+   // [Authorize(Policy ="administratorPolicy")]
     [Route("api/admin/encounter")]
     public class EncounterController : BaseApiController
     {
@@ -22,9 +22,9 @@ namespace Explorer.API.Controllers.Administrator.Encounter
             var result = _encounterService.GetPaged(page, pageSize);
             return CreateResponse(result);
         }
-        [HttpGet("{type}/{id:long}")]
-        public ActionResult<EncounterDto> GetById([FromRoute] EncounterType type,[FromRoute] long id) {
-            var result = _encounterService.Get(type,id);
+        [HttpGet("{id:long}")]
+        public ActionResult<EncounterDto> GetById([FromRoute] long id) {
+            var result = _encounterService.Get(id);
             return CreateResponse(result);
         }
         [HttpPost]
