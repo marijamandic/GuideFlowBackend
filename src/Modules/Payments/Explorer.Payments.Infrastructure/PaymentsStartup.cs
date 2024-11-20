@@ -24,14 +24,14 @@ public static class PaymentsStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
-        services.AddScoped<ITourPurchaseTokenService, TourPurchaseTokenService>();
-        services.AddScoped<IInternalTourPurchaseTokenService, TourPurchaseTokenService>();
+        services.AddScoped<IPurchaseTokenService, PurchaseTokenService>();
+        services.AddScoped<IInternalPurchaseTokenService, PurchaseTokenService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped<IShoppingCartRepository, ShoppingCartDatabaseRepository>();
-        services.AddScoped<ITourPurchaseTokenRepository,TourPurchaseTokenDatabaseRepository>();
+        services.AddScoped<IPurchaseTokenRepository,PurchaseTokenDatabaseRepository>();
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),
