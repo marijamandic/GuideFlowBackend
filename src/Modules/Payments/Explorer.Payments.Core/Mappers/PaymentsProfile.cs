@@ -2,7 +2,7 @@
 using Explorer.Payments.API.Dtos.ShoppingCarts;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
 using Explorer.Payments.API.Dtos;
-using Explorer.Payments.Core.Domain.PurchaseTokens;
+using Explorer.Payments.Core.Domain;
 
 namespace Explorer.Payments.Core.Mappers;
 
@@ -20,6 +20,6 @@ public class PaymentsProfile : Profile
                     ProductId = (int)i.ProductId, ProductName = i.ProductName, AdventureCoin = i.AdventureCoin })));
 
         CreateMap<ItemDto, Item>().ReverseMap();
-        CreateMap<TourPurchaseTokenDto, TourPurchaseToken>().ReverseMap();
+        CreateMap<PurchaseTokenDto, PurchaseToken>().ReverseMap();
     }
 }

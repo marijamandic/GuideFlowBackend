@@ -111,9 +111,9 @@ public class PurchaseTokenCommandTests : BaseToursIntegrationTest
         storedEntity.ShouldBeNull(); // Entity should be deleted
     }
     */
-    private static TourPurchaseTokenController CreateController(IServiceScope scope)
+    private static PurchaseTokenController CreateController(IServiceScope scope)
     {
-        return new TourPurchaseTokenController(scope.ServiceProvider.GetRequiredService<ITourPurchaseTokenService>())
+        return new PurchaseTokenController(scope.ServiceProvider.GetRequiredService<IPurchaseTokenService>())
         {
             ControllerContext = BuildContext("-1")
         };

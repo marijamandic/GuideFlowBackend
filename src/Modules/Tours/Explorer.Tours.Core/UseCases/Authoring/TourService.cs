@@ -22,12 +22,12 @@ namespace Explorer.Tours.Core.UseCases.Authoring
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
-        private readonly IInternalTourPurchaseTokenService _tourPurchaseTokenService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalTourPurchaseTokenService tourPurchaseTokenService) : base(mapper) 
+        private readonly IInternalPurchaseTokenService _purchaseTokenService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
-            _tourPurchaseTokenService = tourPurchaseTokenService;
+            _purchaseTokenService = purchaseTokenService;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -227,16 +227,16 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) //ovde sad samo dobavlja tour tokene(pojedinacne) ali imaju i bundle tokeni koji ce u sebi imati vise tura
         {
-            var tokens = _tourPurchaseTokenService.GetAllByTouristId(userId).Value.Results;
+            var tourTokens = _purchaseTokenService.GetTourTokensByTouristId(userId).Value.Results;
             var purchased = new List<TourDto>();
 
-            foreach (var token in tokens)
+            foreach (var token in tourTokens)
             {
-                var tour = Get(token.TourId).Value;
+                var tour = Get(token.ProductId).Value;
                 if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
-                    purchased.Add(tour);
+                purchased.Add(tour);
             }
 
             return purchased;
@@ -303,29 +303,25 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         public Result<TourDto> CheckIfPurchased(int userId, int tourId)
         {
             try
-            {
-                if (_tourPurchaseTokenService.GetAllByTouristId(userId).Value.Results == null)
+            {   
+                //ucitavanje samo tour tokena
+                var tourTokens = _purchaseTokenService.GetTourTokensByTouristId(userId).Value.Results;
+                if(tourTokens.Count == 0)
                 {
                     return null;
                 }
-                else
+                //logika za tour token
+                var tourToken = tourTokens.Find(tt => tt.ProductId == tourId);
+                if(tourToken != null)
                 {
-                    var tokens = _tourPurchaseTokenService.GetAllByTouristId(userId).Value.Results;
-                    var purchased = new TourDto();
-
-                    foreach (var token in tokens)
-                    {
-                        if (token.TourId == tourId)
-                        {
-                            var tour = Get(token.TourId).Value;
-                            if (tour.Status == API.Dtos.TourStatus.Published)
-                                return tour;
-                        }
-                    }
-
-                    return null;
+                    var tour = Get(tourToken.ProductId).Value;
+                    if (tour.Status == API.Dtos.TourStatus.Published)
+                        return tour;
                 }
-            }catch (Exception ex)
+                //logika za bundle tokene(dodace se u expansion)
+                return null;
+            }
+            catch (Exception ex)
             {
                 return null;
             }

@@ -30,9 +30,9 @@ public class PurchaseTokenQueryTests : BaseToursIntegrationTest
         result.TotalCount.ShouldBeGreaterThan(0); // Proverava da li je TotalCount veći od nule
     }*/
 
-    private static TourPurchaseTokenController CreateController(IServiceScope scope)
+    private static PurchaseTokenController CreateController(IServiceScope scope)
     {
-        return new TourPurchaseTokenController(scope.ServiceProvider.GetRequiredService<ITourPurchaseTokenService>())
+        return new PurchaseTokenController(scope.ServiceProvider.GetRequiredService<IPurchaseTokenService>())
         {
             ControllerContext = BuildContext("-1")
         };
