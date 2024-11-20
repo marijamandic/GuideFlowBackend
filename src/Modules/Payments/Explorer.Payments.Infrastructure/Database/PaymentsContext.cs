@@ -7,7 +7,7 @@ namespace Explorer.Payments.Infrastructure.Database;
 public class PaymentsContext : DbContext
 {
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
-    public DbSet<SingleItem> SingleItems { get; set; }
+    public DbSet<Item> ShoppingCartItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
@@ -22,7 +22,7 @@ public class PaymentsContext : DbContext
     private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ShoppingCart>()
-            .HasMany(sc => sc.SingleItems)
+            .HasMany(sc => sc.Items)
             .WithOne()
             .HasForeignKey(si => si.ShoppingCartId)
             .OnDelete(DeleteBehavior.Cascade);

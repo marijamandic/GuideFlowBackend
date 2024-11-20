@@ -18,7 +18,7 @@ public class ShoppingCartDatabaseRepository : IShoppingCartRepository
     public ShoppingCart GetByTouristId(int touristId)
     {
         var shoppingCart = _shoppingCarts
-            .Include(sc => sc.SingleItems)
+            .Include(sc => sc.Items)
             .FirstOrDefault(sc => sc.TouristId == touristId);
 
         if (shoppingCart is null)
