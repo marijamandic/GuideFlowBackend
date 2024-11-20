@@ -21,9 +21,7 @@ public class ShoppingCartDatabaseRepository : IShoppingCartRepository
             .Include(sc => sc.Items)
             .FirstOrDefault(sc => sc.TouristId == touristId);
 
-        if (shoppingCart is null)
-            throw new ArgumentException("Tourist ID mismatch");
-        
+        if (shoppingCart is null) throw new ArgumentException("Tourist ID mismatch");
         return shoppingCart;
     }
 

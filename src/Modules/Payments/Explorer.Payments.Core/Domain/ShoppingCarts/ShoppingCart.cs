@@ -16,6 +16,7 @@ public class ShoppingCart : Entity
     public void AddToCart(Item item)
     {
         if (_items.Select(i => i.ProductId).Contains(item.ProductId)) throw new ArgumentException("Tour already in cart");
+        item.Validate();
         _items.Add(item);
     }
 
