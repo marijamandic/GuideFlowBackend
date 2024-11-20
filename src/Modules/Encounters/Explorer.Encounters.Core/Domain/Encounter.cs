@@ -14,14 +14,16 @@ namespace Explorer.Encounters.Core.Domain
         public EncounterLocation EncounterLocation { get; private set; }
         public EncounterStatus EncounterStatus { get; private set; }
         public int ExperiencePoints { get; private set; }
+        public EncounterType EncounterType { get; private set; }
         public Encounter() { }
-        public Encounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints)
+        public Encounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints , EncounterType encounterType)
         {
             Name = name;
             Description = description;
             EncounterLocation = location;
             EncounterStatus = status;
             ExperiencePoints = experiencePoints;
+            EncounterType = encounterType;
             Validate();
         }
         private void Validate()
@@ -43,11 +45,18 @@ namespace Explorer.Encounters.Core.Domain
 
             if (!Enum.IsDefined(typeof(EncounterStatus), EncounterStatus))
                 throw new ArgumentException("Invalid Status value.");
+            if (!Enum.IsDefined(typeof(EncounterType), EncounterType))
+                throw new ArgumentException("Invalid type value.");
         }
     }
-public enum EncounterStatus {
-    Active,
-    Draft,
-    Archieved
-}
+    public enum EncounterStatus {
+        Active = 0,
+        Draft = 1,
+        Archieved = 2
+    }
+    public enum EncounterType { 
+        Social = 0,
+        Location = 1,
+        Misc = 2
+    }
 }

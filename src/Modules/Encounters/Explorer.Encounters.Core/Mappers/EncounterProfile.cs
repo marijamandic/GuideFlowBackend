@@ -13,9 +13,12 @@ namespace Explorer.Encounters.Core.Mappers
     {
         public EncounterProfile()
         {
-            CreateMap<EncounterDto, Encounter>()
-           .ForMember(dest => dest.EncounterLocation, opt => opt.MapFrom(src => src.EncounterLocationDto)).ReverseMap();
+            CreateMap<EncounterDto, Encounter>().IncludeAllDerived();
+            CreateMap<Encounter,EncounterDto>().IncludeAllDerived();
             CreateMap<EncounterLocationDto, EncounterLocation>().ReverseMap();
+            CreateMap<MiscEncounterDto, MiscEncounter>().ReverseMap();
+            CreateMap<SocialEncounterDto , SocialEncounter>().ReverseMap();
+            CreateMap<HiddenLocationEncounterDto , HiddenLocationEncounter>().ReverseMap();
         }
     }
 }

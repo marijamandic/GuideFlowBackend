@@ -7,7 +7,5 @@ using System.Threading.Tasks;
 
 namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
 {
-    public interface IEncountersRepository : ICrudRepository<Encounter>
-    {
-    }
+    public interface IEncountersRepository : ICrudRepository<Encounter> { }
 }
