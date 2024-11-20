@@ -300,5 +300,35 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             return degrees * (Math.PI / 180);
         }
 
+        public Result<TourDto> CheckIfPurchased(int userId, int tourId)
+        {
+            try
+            {
+                if (_tourPurchaseTokenService.GetAllByTouristId(userId).Value.Results == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    var tokens = _tourPurchaseTokenService.GetAllByTouristId(userId).Value.Results;
+                    var purchased = new TourDto();
+
+                    foreach (var token in tokens)
+                    {
+                        if (token.TourId == tourId)
+                        {
+                            var tour = Get(token.TourId).Value;
+                            if (tour.Status == API.Dtos.TourStatus.Published)
+                                return tour;
+                        }
+                    }
+
+                    return null;
+                }
+            }catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }
