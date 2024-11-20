@@ -13,6 +13,5 @@ public interface IClubRequestService
     Result<List<ClubRequestDto>> GetRequestByTouristId(long touristId);
 
     Result<List<ClubRequestDto>> GetAll();
-    
-
+    public Result<List<ClubRequestDto>> GetRequestByClubId(long clubId);
 }

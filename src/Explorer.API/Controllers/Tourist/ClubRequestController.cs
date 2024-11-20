@@ -34,6 +34,13 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("club/{clubId:long}")]
+        public ActionResult<List<ClubRequestDto>> GetRequestByClubId(long clubId)
+        {
+            var result = _clubRequestService.GetRequestByClubId(clubId);
+            return CreateResponse(result);
+        }
+
         [HttpPost]
         public ActionResult<ClubRequestDto> Create([FromBody] ClubRequestDto requestDto)
         {
@@ -71,12 +78,10 @@ namespace Explorer.API.Controllers.Tourist
         */
 
         [HttpGet("for-tourist/{touristId:long}")]
-        public ActionResult<ClubRequestDto> GetRequestByTouristId(long touristId)
+        public ActionResult<IEnumerable<ClubRequestDto>> GetRequestByTouristId(long touristId)
         {
             var result = _clubRequestService.GetRequestByTouristId(touristId);
             return CreateResponse(result);
         }
-
-
     }
 }

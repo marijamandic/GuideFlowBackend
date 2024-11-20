@@ -25,6 +25,14 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("club/{clubId:long}")]
+        public ActionResult<List<ClubInvitationDto>> GetInvitationsByClub(long clubId)
+        {
+            var result = _clubInvitationService.GetInvitationsByClub(clubId);
+            return CreateResponse(result);
+        }
+
+
         [HttpGet("{invitationId:int}")]
         public ActionResult<ClubInvitationDto> GetInvitation(int invitationId)
         {
