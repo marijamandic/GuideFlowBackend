@@ -18,7 +18,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         _shoppingCartRepository = shoppingCartRepository;
     }
 
-    public Result<PagedResult<ItemDto>> AddToCart(int touristId, InputDto itemInput)
+    public Result<PagedResult<ItemDto>> AddToCart(int touristId, ItemInputDto itemInput)
     {
         try
         {

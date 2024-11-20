@@ -1,6 +1,6 @@
 ﻿namespace Explorer.Payments.API.Dtos.ShoppingCarts;
 
-public class InputDto
+public class ItemInputDto
 {
     public ProductType Type { get; set; }
     public int ProductId { get; set; }

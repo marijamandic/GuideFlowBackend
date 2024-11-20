@@ -18,6 +18,14 @@ public class Item : Entity
         ProductId = productId;
         ProductName = productName;
         AdventureCoin = adventureCoin;
+        Validate();
+    }
+
+    public void Validate()
+    {
+        if (!Enum.IsDefined(typeof(ProductType), Type)) throw new ArgumentException("Invalid Product Type");
+        if (string.IsNullOrWhiteSpace(ProductName)) throw new ArgumentException("Invalid Product Name");
+        if (AdventureCoin < 0) throw new ArgumentException("Invalid Adventure Coin");
     }
 }
 
