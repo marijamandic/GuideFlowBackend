@@ -4,5 +4,5 @@ public class ShoppingCartDto
 {
     public int Id { get; set; }
     public int TouristId { get; set; }
-    public List<SingleItemDto> SingleItems { get; set; } = new();
+    public List<ItemDto> Items { get; set; } = new();
 }

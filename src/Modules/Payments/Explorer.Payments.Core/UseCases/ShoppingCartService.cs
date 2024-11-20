@@ -18,46 +18,61 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         _shoppingCartRepository = shoppingCartRepository;
     }
 
-    public Result<PagedResult<SingleItemDto>> AddToCart(int touristId, SingleItemInputDto itemInput)
+    public Result<PagedResult<ItemDto>> AddToCart(int touristId, InputDto itemInput)
     {
-        var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
-
-        var item = new SingleItemDto
-        {
-            ShoppingCartId = (int)shoppingCart.Id,
-            TourId = itemInput.TourId,
-            TourName = itemInput.TourName,
-            AdventureCoin = itemInput.AdventureCoin
-        };
-
         try
         {
-            shoppingCart.AddToCart(_mapper.Map<SingleItem>(item));
+            var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+
+            var item = new ItemDto
+            {
+                ShoppingCartId = (int)shoppingCart.Id,
+                Type = itemInput.Type,
+                ProductId = itemInput.ProductId,
+                ProductName = itemInput.ProductName,
+                AdventureCoin = itemInput.AdventureCoin
+            };
+
+            shoppingCart.AddToCart(_mapper.Map<Item>(item));
             _shoppingCartRepository.Save(shoppingCart);
 
-            var items = shoppingCart.SingleItems.Select(i => _mapper.Map<SingleItemDto>(i)).ToList();
-            return new PagedResult<SingleItemDto>(items, items.Count);
+            var items = shoppingCart.Items.Select(i => _mapper.Map<ItemDto>(i)).ToList();
+            return new PagedResult<ItemDto>(items, items.Count);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            return Result.Fail("Item already in cart");
+            return Result.Fail($"Error: {e.Message}");
         }
     }
 
     public Result RemoveFromCart(int touristId, int itemId)
     {
-        var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
-        shoppingCart.RemoveFromCart(shoppingCart.GetById(itemId));
-        _shoppingCartRepository.Save(shoppingCart);
-        return Result.Ok();
+        try
+        {
+            var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+            shoppingCart.RemoveFromCart(shoppingCart.GetById(itemId));
+            _shoppingCartRepository.Save(shoppingCart);
+            return Result.Ok();
+        }
+        catch (Exception e)
+        {
+            return Result.Fail($"Error: {e.Message}");
+        }
     }
 
     public Result ClearCart(int touristId)
     {
-        var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
-        shoppingCart.ClearCart();
-        _shoppingCartRepository.Save(shoppingCart);
-        return Result.Ok();
+        try
+        {
+            var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+            shoppingCart.ClearCart();
+            _shoppingCartRepository.Save(shoppingCart);
+            return Result.Ok();
+        }
+        catch (Exception e)
+        {
+            return Result.Fail($"Error: {e.Message}");
+        }
     }
 
     public Result<ShoppingCartDto> GetByTouristId(int touristId)

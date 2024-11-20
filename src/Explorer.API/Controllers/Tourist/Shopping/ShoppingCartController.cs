@@ -17,15 +17,15 @@ public class ShoppingCartController : BaseApiController
         _shoppingCartService = shoppingCartService;
     }
 
-    [HttpPost("single-items")]
-    public ActionResult<PagedResult<SingleItemDto>> AddToCart([FromBody] SingleItemInputDto item)
+    [HttpPost("items")]
+    public ActionResult<PagedResult<ItemDto>> AddToCart([FromBody] InputDto item)
     {
         int touristId = int.Parse(User.FindFirst("id")!.Value);
         var result = _shoppingCartService.AddToCart(touristId, item);
         return CreateResponse(result);
     }
 
-    [HttpDelete("single-items/{itemId:int}")]
+    [HttpDelete("items/{itemId:int}")]
     public ActionResult RemoveFromCart([FromRoute] int itemId)
     {
         int touristId = int.Parse(User.FindFirst("id")!.Value);

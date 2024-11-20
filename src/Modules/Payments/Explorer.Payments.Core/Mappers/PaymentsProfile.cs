@@ -11,13 +11,15 @@ public class PaymentsProfile : Profile
     public PaymentsProfile()
     {
         CreateMap<ShoppingCartDto, ShoppingCart>().IncludeAllDerived()
-            .ForMember(dest => dest.SingleItems, opt => opt.MapFrom(src => src.SingleItems.Select(i => new SingleItem(i.Id, i.ShoppingCartId, i.TourId, i.TourName, i.AdventureCoin))));
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items.Select(i =>
+                new Item(i.Id, i.ShoppingCartId, (Domain.ShoppingCarts.ProductType)i.Type, i.ProductId, i.ProductName, i.AdventureCoin))));
 
         CreateMap<ShoppingCart, ShoppingCartDto>().IncludeAllDerived()
-            .ForMember(dest => dest.SingleItems, opt => opt.MapFrom(src => src.SingleItems.Select(i => 
-                new SingleItemDto { Id = (int)i.Id, ShoppingCartId = (int)i.ShoppingCartId, TourId = (int)i.TourId, TourName = i.TourName, AdventureCoin = i.AdventureCoin })));
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items.Select(i => 
+                new ItemDto { Id = (int)i.Id, ShoppingCartId = (int)i.ShoppingCartId, Type = (API.Dtos.ShoppingCarts.ProductType)i.Type,
+                    ProductId = (int)i.ProductId, ProductName = i.ProductName, AdventureCoin = i.AdventureCoin })));
 
-        CreateMap<SingleItemDto, SingleItem>().ReverseMap();
+        CreateMap<ItemDto, Item>().ReverseMap();
         CreateMap<TourPurchaseTokenDto, TourPurchaseToken>().ReverseMap();
     }
 }

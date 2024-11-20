@@ -34,11 +34,11 @@ namespace Explorer.Payments.Core.UseCases
                 if (!shoppingCartResult.IsSuccess)
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Shopping cart retrieval failed.");
 
-                var tourPurchaseTokens = shoppingCartResult.Value.SingleItems
+                var tourPurchaseTokens = shoppingCartResult.Value.Items
                     .Select(singleItem => MapToDomain(new TourPurchaseTokenDto
                     {
                         TouristId = shoppingCartResult.Value.TouristId,
-                        TourId = singleItem.TourId,
+                        TourId = singleItem.ProductId,
                         PurchaseDate = DateTime.UtcNow,
                         AdventureCoin = singleItem.AdventureCoin
                     }))

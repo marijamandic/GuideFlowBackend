@@ -4,34 +4,34 @@ namespace Explorer.Payments.Core.Domain.ShoppingCarts;
 
 public class ShoppingCart : Entity
 {
-    private List<SingleItem> _singleItems = new();
+    private List<Item> _items = new();
     public long TouristId { get; private set; }
-    public IReadOnlyList<SingleItem> SingleItems => new List<SingleItem>(_singleItems);
+    public IReadOnlyList<Item> Items => new List<Item>(_items);
 
     public ShoppingCart(long touristId)
     {
         TouristId = touristId;
     }
 
-    public void AddToCart(SingleItem item)
+    public void AddToCart(Item item)
     {
-        if (_singleItems.Select(i => i.TourId).Contains(item.TourId)) throw new ArgumentException("Tour already in cart");
-        _singleItems.Add(item);
+        if (_items.Select(i => i.ProductId).Contains(item.ProductId)) throw new ArgumentException("Tour already in cart");
+        _items.Add(item);
     }
 
-    public void RemoveFromCart(SingleItem item)
+    public void RemoveFromCart(Item item)
     {
-        _singleItems.Remove(item);
+        _items.Remove(item);
     }
 
     public void ClearCart()
     {
-        _singleItems.Clear();
+        _items.Clear();
     }
 
-    public SingleItem GetById(long itemId)
+    public Item GetById(long itemId)
     {
-        var item = _singleItems.FirstOrDefault(i => i.Id == itemId);
+        var item = _items.FirstOrDefault(i => i.Id == itemId);
         if (item is null) throw new ArgumentException("Item does not exits");
         return item;
     }
