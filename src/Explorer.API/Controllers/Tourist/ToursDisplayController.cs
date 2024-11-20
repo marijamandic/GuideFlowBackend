@@ -32,5 +32,18 @@ namespace Explorer.API.Controllers.Tourist
 
             return CreateResponse(result);
         }
+
+        [HttpGet("purchased/{userId:int}/{tourId:int}")]
+        public ActionResult<IEnumerable<TourDto>> CheckIfPurchased(int userId, int tourId)
+        {
+            var result = _tourService.CheckIfPurchased(userId, tourId);
+
+            if (result == null)
+            {
+                return Ok(null);
+            }
+
+            return CreateResponse(result);
+        }
     }
 }
