@@ -8,7 +8,10 @@ namespace Explorer.Encounters.Core.Domain
 {
     public class SocialEncounter : Encounter
     {
+        //broj turista koji je potreban za izazov
         public int TouristNumber {  get; private set; }
+
+        //opseg u kom treba da se nalaze turisti 
         public double EncounterRange { get; private set; }
 
         public SocialEncounter() { }
