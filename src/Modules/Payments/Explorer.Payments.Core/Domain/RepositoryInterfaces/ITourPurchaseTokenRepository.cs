@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
 {
-    public interface IPurchaseTokenRepository
+    public interface ITourPurchaseTokenRepository
     {
-        PurchaseToken Create(PurchaseToken entity);
-        PagedResult<PurchaseToken> GetTourTokensByTouristId(long touristId);
+        TourPurchaseToken Create(TourPurchaseToken entity);
+        PagedResult<TourPurchaseToken> GetTokensByTouristId(long touristId);
+        TourPurchaseToken GetTokenByTouristAndTourId(long touristId, long tourId);
     }
 }

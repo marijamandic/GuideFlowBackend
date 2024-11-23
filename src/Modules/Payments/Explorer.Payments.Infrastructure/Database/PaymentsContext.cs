@@ -1,4 +1,5 @@
 ﻿using Explorer.Payments.Core.Domain;
+using Explorer.Payments.Core.Domain.Payments;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +9,9 @@ public class PaymentsContext : DbContext
 {
     public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<Item> ShoppingCartItems { get; set; }
-    public DbSet<PurchaseToken> PurchaseTokens { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<PaymentItem> PaymentItems { get; set; }
+    public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
 
@@ -17,6 +20,7 @@ public class PaymentsContext : DbContext
         modelBuilder.HasDefaultSchema("payments");
 
         ConfigureShoppingCart(modelBuilder);
+        ConfigurePayment(modelBuilder);
     }
 
     private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
@@ -26,5 +30,14 @@ public class PaymentsContext : DbContext
             .WithOne()
             .HasForeignKey(si => si.ShoppingCartId)
             .OnDelete(DeleteBehavior.Cascade);
+    }
+
+    private void ConfigurePayment(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Payment>()
+                    .HasMany(p => p.PaymentItems)
+                    .WithOne()
+                    .HasForeignKey(pi => pi.PaymentId)
+                    .OnDelete(DeleteBehavior.Cascade);
     }
 }

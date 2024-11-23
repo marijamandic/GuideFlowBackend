@@ -56,6 +56,10 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<ProfileInfo>(s => s.UserId);
+
+        modelBuilder.Entity<Tourist>()
+            .ToTable("Tourists")
+            .HasBaseType<User>();
     }
 
     private static void ConfigureClubInvitation(ModelBuilder modelBuilder)

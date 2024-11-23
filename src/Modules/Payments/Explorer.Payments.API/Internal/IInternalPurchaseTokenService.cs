@@ -11,6 +11,7 @@ namespace Explorer.Payments.API.Internal
 {
     public interface IInternalPurchaseTokenService
     {
-        Result<PagedResult<PurchaseTokenDto>> GetTourTokensByTouristId(int touristId);
+        Result<PagedResult<TourPurchaseTokenDto>> GetTokensByTouristId(int touristId);
+        Result<TourPurchaseTokenDto> GetTokenByTouristAndTourId(int touristId, int tourId);
     }
 }

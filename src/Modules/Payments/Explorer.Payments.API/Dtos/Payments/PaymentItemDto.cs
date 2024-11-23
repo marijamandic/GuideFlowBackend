@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Payments.API.Dtos
+namespace Explorer.Payments.API.Dtos.Payments
 {
-    public class PurchaseTokenDto
+    public class PaymentItemDto
     {
         public int Id { get; set; }
-        public int TouristId { get; set; }
-        public ProductType Type { get; set; }
+        public int PaymentId { get; set; }
         public int ProductId { get; set; }
-        public DateTime PurchaseDate { get; set; }
+        public required string ProductName { get; set; }
+        public ProductType Type { get; set; }
         public int AdventureCoin { get; set; }
     }
 }

@@ -227,16 +227,16 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) //ovde sad samo dobavlja tour tokene(pojedinacne) ali imaju i bundle tokeni koji ce u sebi imati vise tura
+        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) 
         {
-            var tourTokens = _purchaseTokenService.GetTourTokensByTouristId(userId).Value.Results;
+            var tokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
             var purchased = new List<TourDto>();
 
-            foreach (var token in tourTokens)
+            foreach (var token in tokens)
             {
-                var tour = Get(token.ProductId).Value;
+                var tour = Get(token.TourId).Value;
                 if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
-                purchased.Add(tour);
+                    purchased.Add(tour);
             }
 
             return purchased;
@@ -304,21 +304,20 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         {
             try
             {   
-                //ucitavanje samo tour tokena
-                var tourTokens = _purchaseTokenService.GetTourTokensByTouristId(userId).Value.Results;
+                var tourTokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
                 if(tourTokens.Count == 0)
                 {
                     return null;
                 }
-                //logika za tour token
-                var tourToken = tourTokens.Find(tt => tt.ProductId == tourId);
+
+                var tourToken = tourTokens.Find(tt => tt.TourId == tourId);
                 if(tourToken != null)
                 {
-                    var tour = Get(tourToken.ProductId).Value;
+                    var tour = Get(tourToken.TourId).Value;
                     if (tour.Status == API.Dtos.TourStatus.Published)
                         return tour;
                 }
-                //logika za bundle tokene(dodace se u expansion)
+
                 return null;
             }
             catch (Exception ex)
