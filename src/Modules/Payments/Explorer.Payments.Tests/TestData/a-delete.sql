@@ -1,3 +1,3 @@
 ﻿DELETE FROM payments."ShoppingCarts";
 DELETE FROM payments."ShoppingCartItems";
-DELETE FROM payments."PurchaseTokens";
+DELETE FROM payments."TourPurchaseTokens";

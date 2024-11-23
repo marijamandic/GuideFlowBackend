@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Dtos.Payments;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payments.API.Public
 {
-    public interface IPurchaseTokenService
+    public interface ITourPurchaseTokenService
     {
-        Result<PagedResult<PurchaseTokenDto>> Create(int touristId);
+        Result<PagedResult<TourPurchaseTokenDto>> Create(PaymentDto payment);
     }
 }
