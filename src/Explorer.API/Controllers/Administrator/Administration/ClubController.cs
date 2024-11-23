@@ -71,5 +71,12 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("{id:int}")]
+        public ActionResult<ClubDto> GetClubById(int id)
+        {
+            var result = _clubService.Get(id);
+            return CreateResponse(result); 
+        }
+
     }
 }

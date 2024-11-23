@@ -60,5 +60,13 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
                 .Where(cr => cr.TouristId == touristId)
                 .ToList();
         }
+
+        public List<ClubRequest> GetRequestsByClubId(long clubId)
+        {
+            return _dbContext.ClubRequests
+                .Where(cr => cr.ClubId == clubId)
+                .ToList();
+        }
+
     }
 }

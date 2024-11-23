@@ -17,7 +17,6 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubRequest> ClubRequests { get; set; }
     public DbSet<ProfileInfo> Profiles { get; set; }
     public DbSet<ClubPost> ClubPosts { get; set; }
-
     public DbSet<AppRating> Ratings { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<ProblemNotification> ProblemNotifications { get; set; }
@@ -36,6 +35,7 @@ public class StakeholdersContext : DbContext
        );
 
         modelBuilder.Entity<User>().HasIndex(u => u.Username).IsUnique();
+
         modelBuilder.Entity<User>().Property(tour => tour.Location).HasColumnType("jsonb");
 
 
@@ -56,10 +56,6 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<ProfileInfo>(s => s.UserId);
-
-        modelBuilder.Entity<Tourist>()
-            .ToTable("Tourists")
-            .HasBaseType<User>();
     }
 
     private static void ConfigureClubInvitation(ModelBuilder modelBuilder)
@@ -112,4 +108,5 @@ public class StakeholdersContext : DbContext
             .ToTable("ProblemNotifications")
             .HasBaseType<Notification>();
     }
+
 }
