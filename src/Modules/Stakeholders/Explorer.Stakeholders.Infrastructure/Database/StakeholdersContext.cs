@@ -20,6 +20,7 @@ public class StakeholdersContext : DbContext
     public DbSet<AppRating> Ratings { get; set; }
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<ProblemNotification> ProblemNotifications { get; set; }
+    public DbSet<Tourist> Tourists {  get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
 
@@ -56,6 +57,10 @@ public class StakeholdersContext : DbContext
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<ProfileInfo>(s => s.UserId);
+
+        modelBuilder.Entity<Tourist>()
+            .ToTable("Tourists")
+            .HasBaseType<User>();
     }
 
     private static void ConfigureClubInvitation(ModelBuilder modelBuilder)
