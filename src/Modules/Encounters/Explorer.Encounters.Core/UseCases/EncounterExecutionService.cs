@@ -25,6 +25,7 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result<EncounterExecutionDto> Create(EncounterDto encounterDto)
         {
+
             // var allExecution = _encounterExecutionRepository.
             // dobavi listu execution-a
             if(encounterDto.Id != null && encounterDto.EncounterType.Equals(Domain.EncounterType.Social))
