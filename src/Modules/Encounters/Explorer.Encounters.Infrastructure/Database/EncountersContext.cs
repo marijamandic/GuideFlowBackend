@@ -14,6 +14,7 @@ namespace Explorer.Encounters.Infrastructure.Database
         public DbSet<SocialEncounter> SocialEncounters { get; set; }
         public DbSet<HiddenLocationEncounter> HiddenLocationEncounters { get; set; }
         public DbSet<MiscEncounter> MiscEncounters { get; set; }
+        public DbSet<EncounterExecution> EncounterExecutions { get; set; }
         public EncountersContext(DbContextOptions<EncountersContext> options) : base(options) { }
 
         protected override void OnModelCreating (ModelBuilder modelBuilder)

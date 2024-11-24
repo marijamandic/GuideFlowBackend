@@ -15,16 +15,14 @@ namespace Explorer.Encounters.Core.UseCases
 {
     public class EncounterExecutionService : BaseService<EncounterExecutionDto, EncounterExecution>, IEncounterExecutionService
     {
-        private readonly IEncounterExecutionRepository _encounterExecutionRepository;
-        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IMapper mapper) : base(mapper)
+        public Result<EncounterExecutionDto> Create(EncounterDto encounterDto)
         {
-            _encounterExecutionRepository = encounterExecutionRepository;
-        }
+            // var allExecution = _encounterExecutionRepository.
+            // dobavi listu execution-a
+            if(encounterDto.Id != null && encounterDto.EncounterType.Equals(Domain.EncounterType.Social))
+            {
 
-        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
-        {
-
-            //ako postoji ecounteer sa tim id-jem  i nije complete prebaci na pridruzi 
+            }
             throw new NotImplementedException();
         }
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
