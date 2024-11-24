@@ -4,6 +4,7 @@ using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.API.Dtos.Execution;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -20,17 +21,24 @@ namespace Explorer.Encounters.Core.UseCases
         {
             _encounterExecutionRepository = encounterExecutionRepository;
         }
-        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterDto)
+        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
         {
-
-            // var allExecution = _encounterExecutionRepository.
-            // dobavi listu execution-a
-           /* if(encounterDto.Id != null && encounterDto.EncounterType.Equals(Domain.EncounterType.Social))
+            var allExecution = _encounterExecutionRepository.GetAll();
+            var execution = MapToDomain(encounterExecutionDto);
+            
+            if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social))
             {
+                Join();
+            }
+            else if(!allExecution.Contains(execution))
+            {
+                _encounterExecutionRepository.Create(execution);
+                return MapToDto(execution);
+            }
 
-            }*/
-            throw new NotImplementedException();
+            return Result.Fail("Execution not created");
         }
+
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
             var encounter = _encounterExecutionRepository.Update(MapToDomain(encounterExecutionDto));
@@ -63,7 +71,7 @@ namespace Explorer.Encounters.Core.UseCases
             return MapToDto(encountersExecutions);
         }
     
-       
+       public void Join() { }
      
     
     }

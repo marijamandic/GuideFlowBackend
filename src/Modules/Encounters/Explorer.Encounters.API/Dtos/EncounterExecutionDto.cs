@@ -9,12 +9,12 @@ namespace Explorer.Encounters.API.Dtos
 {
     public class EncounterExecutionDto
     {
+        public long Id { get; set; }
+        public int UserId { get; set; }
+        public int EncounterId { get; set; }
+        public bool IsComplete { get; set; }
+        public List<User> touristsIncluded { get; set; }
+        public EncounterType EncounterType { get; set; }
 
-        public int UserIs { get; set; }
-        public int encounterId { get; private set; }
-
-        public bool isComplete { get; private set; }
-
-        public List<User> touristsIncluded { get; private set; } 
     }
 }

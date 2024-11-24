@@ -10,5 +10,6 @@ namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
     public interface IEncounterExecutionRepository: ICrudRepository<EncounterExecution>
     {
         List<EncounterExecution> GetAll();
+        EncounterExecution GetByUserId(int userId);
     }
 }

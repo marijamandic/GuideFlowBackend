@@ -21,11 +21,6 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             _context = context;
         }
 
-        public List<EncounterExecution> GetAll()
-        {
-            return _context.EncounterExecutions.ToList();
-        }
-
         public EncounterExecution Create(EncounterExecution encounterExecution)
         {
             _context.EncounterExecutions.Add(encounterExecution);
@@ -70,6 +65,11 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
         public List<EncounterExecution> GetAll()
         {
             return _context.EncounterExecutions.ToList();
+        }
+
+        public EncounterExecution GetByUserId(int userId)
+        {
+            return _context.EncounterExecutions.FirstOrDefault(e => e.userId == userId);
         }
     }
 }
