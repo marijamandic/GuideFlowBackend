@@ -15,14 +15,19 @@ namespace Explorer.Encounters.Core.UseCases
 {
     public class EncounterExecutionService : BaseService<EncounterExecutionDto, EncounterExecution>, IEncounterExecutionService
     {
-        public Result<EncounterExecutionDto> Create(EncounterDto encounterDto)
+        private readonly IEncounterExecutionRepository _encounterExecutionRepository;
+        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IMapper mapper) : base(mapper)
+        {
+            _encounterExecutionRepository = encounterExecutionRepository;
+        }
+        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterDto)
         {
             // var allExecution = _encounterExecutionRepository.
             // dobavi listu execution-a
-            if(encounterDto.Id != null && encounterDto.EncounterType.Equals(Domain.EncounterType.Social))
+           /* if(encounterDto.Id != null && encounterDto.EncounterType.Equals(Domain.EncounterType.Social))
             {
 
-            }
+            }*/
             throw new NotImplementedException();
         }
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
