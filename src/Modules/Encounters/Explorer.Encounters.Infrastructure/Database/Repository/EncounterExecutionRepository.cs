@@ -66,5 +66,10 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             }
             return encounterExecution;
         }
+
+        public List<EncounterExecution> GetAll()
+        {
+            return _context.EncounterExecutions.ToList();
+        }
     }
 }
