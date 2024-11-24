@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Encounters.API.Public
 {
-    public class IEncounterExecutionService
+    public interface IEncounterExecutionService
     {
         public Result<EncounterExecutionDto> Create(EncounterDto encounterDto);
         public Result<EncounterExecutionDto> Update(EncounterDto encounterDto);
