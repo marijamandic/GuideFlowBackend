@@ -1,5 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos.Execution;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +18,50 @@ namespace Explorer.Encounters.Core.Domain
 
         public int encounterId { get; private set; }
 
+        public ExecutionStatus ExecutionStatus { get; private set; }
+
         public bool isComplete { get; private set; }
 
         public List<User> touristsIncluded { get; private set; } // turisti koji ucestvuju u izazovu
 
-        public EncounterExecution() { }
+        public SocialEncounter socialEncounter { get; private set; }
+        public MiscEncounter miscEncounter { get; private set; }
+        public HiddenLocationEncounter hiddenLocationEncounter { get; private set; }
+
+        public Encounter encounter { get; private set; }
+        private readonly IEncountersRepository encountersRepository;
+        public EncounterExecution() 
+        {
+            encounter = encountersRepository.Get(encounterId);
+            socialEncounter = (SocialEncounter?)encountersRepository.Get(encounterId);
+            miscEncounter = (MiscEncounter?)encountersRepository.Get(encounterId);
+            hiddenLocationEncounter = (HiddenLocationEncounter?)encountersRepository.Get(encounterId);
+
+        }
+
+    
+
+
+        public void CompleteSocialEncounter()
+        {
+            //TODO: za svakog turistu se resi tura???
+            if(ExecutionStatus.Equals(ExecutionStatus.Active) && touristsIncluded.Count() >= socialEncounter.TouristNumber)
+            {
+                ExecutionStatus = ExecutionStatus.Completed;
+                isComplete = true;
+            }
+        }
+
+        //da li turista moze da aktivira izazov ( za sva tri)
+        public bool IsTouristNear(double latitude, double longitude)
+        {
+            const double tolerance = 0.0018; // Tolerancija za blizinu (oko 11 metara)
+
+            bool isNearLatitude = Math.Abs(encounter.EncounterLocation.Latitude - latitude) <= tolerance;
+            bool isNearLongitude = Math.Abs(encounter.EncounterLocation.Longitude - longitude) <= tolerance;
+
+            return isNearLatitude && isNearLongitude;
+        }
 
 
 
@@ -32,6 +73,11 @@ namespace Explorer.Encounters.Core.Domain
 
     }
 
-  
+    public enum ExecutionStatus
+    {
+        Active,
+        Completed,
+        Abandoned
+    }
 
 }

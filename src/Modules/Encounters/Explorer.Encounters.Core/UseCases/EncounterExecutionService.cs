@@ -4,6 +4,9 @@ using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.API.Dtos.Execution;
 using FluentResults;
 using System;
@@ -17,30 +20,52 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterExecutionService : BaseService<EncounterExecutionDto, EncounterExecution>, IEncounterExecutionService
     {
         private readonly IEncounterExecutionRepository _encounterExecutionRepository;
-        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IMapper mapper) : base(mapper)
+        private readonly IUserRepository _userRepository;
+        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IUserRepository userRepository, IMapper mapper) : base(mapper)
         {
             _encounterExecutionRepository = encounterExecutionRepository;
+            _userRepository = userRepository;
         }
-        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
+        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto, int userId)
         {
             var allExecution = _encounterExecutionRepository.GetAll();
             var execution = MapToDomain(encounterExecutionDto);
-            
-            if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social))
+            var user = _userRepository.Get(userId);
+
+            //da li je korisnik u blizini aktivira taj izazov ili da mu se pridruzi
+            if (execution.IsTouristNear(user.Location.Longitude, user.Location.Latitude))
             {
-                Join();
-            }
-            else if(!allExecution.Contains(execution))
-            {
-                _encounterExecutionRepository.Create(execution);
-                return MapToDto(execution);
+                //ako postoji social enc baci ga na join
+                if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.isComplete)
+                {
+                    Join(user, encounterExecutionDto);
+                }
+                else if (!allExecution.Contains(execution)) // ako ne postoji onda se pravi nova ex
+                {
+                    _encounterExecutionRepository.Create(execution);
+                    return MapToDto(execution);
+                }
+                return Result.Fail("Execution not created, already exists");
             }
 
-            return Result.Fail("Execution not created");
+            return Result.Fail("Tourist can't activate or join this encounter");
+        }
+
+        private void Join(User user, EncounterExecutionDto encounterExecutionDto)
+        {
+            //doda se user u execution 
+            encounterExecutionDto.touristsIncluded.Add(user);
+            var execution = MapToDomain(encounterExecutionDto);
+
+            // prebaci se isCompleted na true ako ima dovoljno ljudi i onda se uradi update
+            execution.CompleteSocialEncounter();
+            Update(MapToDto(execution));
+
         }
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
+            
             var encounter = _encounterExecutionRepository.Update(MapToDomain(encounterExecutionDto));
             return MapToDto(encounter);
 
@@ -71,7 +96,7 @@ namespace Explorer.Encounters.Core.UseCases
             return MapToDto(encountersExecutions);
         }
     
-       public void Join() { }
+       
      
     
     }
