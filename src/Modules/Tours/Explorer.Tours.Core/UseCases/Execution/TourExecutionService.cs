@@ -48,7 +48,18 @@ namespace Explorer.Tours.Core.UseCases.Execution
         }
         public Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto) {
             var tourExecution = _tourExecutionRepository.Get(updateTourExecutionDto.TourExecutionId);
-            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude);
+            foreach (CheckpointStatus checkpointStatus in tourExecution.CheckpointsStatus) {
+                if (!checkpointStatus.Checkpoint.IsEncounterEssential)
+                {
+                    tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude, checkpointStatus);
+                }
+                else {
+                    //internal service ka EncounterExecution da proverimo da li je user odradio izazov. znaaci treba nam tourExecution.UserId i checkpointStatus.Checkpoint.EncounterId
+                    if (true) { // ovde ce biti umesto true boolean iz internal service
+                        tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude, checkpointStatus);
+                    }
+                }
+            }
             _tourExecutionRepository.Update(tourExecution);
 
             var tourExecutionDto = MapToDto(tourExecution);
