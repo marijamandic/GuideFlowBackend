@@ -66,5 +66,10 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
         {
             return _context.EncounterExecutions.ToList();
         }
+
+        public EncounterExecution GetByUserId(int userId)
+        {
+            return _context.EncounterExecutions.FirstOrDefault(e => e.userId == userId);
+        }
     }
 }
