@@ -47,14 +47,11 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
                 LastActivity = DateTime.UtcNow;
             }
         }
-        public void UpdateLocation(double longitude , double latitude) {
+        public void UpdateLocation(double longitude , double latitude , CheckpointStatus checkpointStatus) {
             LastActivity = DateTime.UtcNow;
-            foreach (var checkpointStatus in CheckpointsStatus)
+            if (!checkpointStatus.IsCompleted() && checkpointStatus.IsTouristNear(latitude, longitude))
             {
-                if (!checkpointStatus.IsCompleted() && checkpointStatus.IsTouristNear(latitude, longitude))
-                {
-                    checkpointStatus.MarkAsCompleted(); 
-                }
+                checkpointStatus.MarkAsCompleted(); 
             }
         }
         public void AddCheckpointStatuses(List<Checkpoint> checkpoints) { 

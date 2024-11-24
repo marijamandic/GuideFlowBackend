@@ -18,8 +18,10 @@ namespace Explorer.Tours.Core.Domain.Tours
         public double Longitude { get; private set; }
         public string? ImageUrl { get; private set; }
         public string Secret { get; private set; }
+        public long? EncounterId { get; private set; }
+        public bool IsEncounterEssential { get; private set; } = false;
 
-        public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl, string secret)
+        public Checkpoint(string name, string description, double latitude, double longitude, string? imageUrl, string secret,long? encounterId , bool isEncounterEssential)
         {
             Name = name;
             Description = description;
@@ -27,6 +29,8 @@ namespace Explorer.Tours.Core.Domain.Tours
             Longitude = longitude;
             ImageUrl = imageUrl;
             Secret = secret;
+            EncounterId = encounterId;
+            IsEncounterEssential = isEncounterEssential;
             Validate();
         }
         public void SetSecret(string secret) {
@@ -50,6 +54,8 @@ namespace Explorer.Tours.Core.Domain.Tours
             Longitude = updatedCheckpoint.Longitude;
             ImageUrl = updatedCheckpoint.ImageUrl;
             Secret = updatedCheckpoint.Secret;
+            IsEncounterEssential = updatedCheckpoint.IsEncounterEssential;
+            EncounterId = updatedCheckpoint.EncounterId;
         }
     }
 
