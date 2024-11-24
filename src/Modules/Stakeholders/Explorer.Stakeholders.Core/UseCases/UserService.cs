@@ -16,10 +16,12 @@ namespace Explorer.Stakeholders.Core.UseCases
     public class UserService : CrudService<UserDto, User>, IUserService
     {
         private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
         public UserService(IUserRepository userRepository, IMapper mapper) : base(userRepository, mapper)
         {
             this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         public Result<UserDto> GetById(int id)
@@ -34,6 +36,37 @@ namespace Explorer.Stakeholders.Core.UseCases
             var userDtos = users.Select(MapToDto).ToList();
             return Result.Ok(userDtos);
         }
+        public Result<TouristDto> GetTouristById(int id)
+        {
+            Tourist tourist = userRepository.GetTouristById(id);
+            TouristDto touristDto = mapper.Map<TouristDto>(tourist);
+            return Result.Ok(touristDto);
+        }
+        public Result<TouristDto> UpdateTourist(TouristDto touristDto)
+        {
+            Tourist existingTourist = userRepository.GetTouristById(touristDto.Id);
+            if (existingTourist == null)
+            {
+                return Result.Fail("Tourist not found.");
+            }
 
+            existingTourist.UpdateXp(touristDto.Xp);
+        
+            userRepository.UpdateTourist(existingTourist);
+
+            return Result.Ok(mapper.Map<TouristDto>(existingTourist));
+        }
+        /*public Result<TouristDto> AddTouristXp(int id,int amount)
+        {
+            Tourist existingTourist = userRepository.GetTouristById(id);
+            if (existingTourist == null)
+            {
+                return Result.Fail("Tourist not found.");
+            }
+            existingTourist.AddXp(amount);
+            userRepository.UpdateTourist(existingTourist);
+
+            return Result.Ok(mapper.Map<TouristDto>(existingTourist));
+        }*/
     }
 }
