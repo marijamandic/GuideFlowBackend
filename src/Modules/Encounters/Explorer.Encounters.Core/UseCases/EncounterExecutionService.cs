@@ -36,7 +36,7 @@ namespace Explorer.Encounters.Core.UseCases
             if (execution.IsTouristNear(user.Location.Longitude, user.Location.Latitude))
             {
                 //ako postoji social enc baci ga na join
-                if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.isComplete)
+                if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
                 {
                     Join(user, encounterExecutionDto);
                 }
@@ -95,9 +95,12 @@ namespace Explorer.Encounters.Core.UseCases
             var encountersExecutions = _encounterExecutionRepository.GetPaged(page, pageSize);
             return MapToDto(encountersExecutions);
         }
-    
-       
-     
-    
+
+        public Result<EncounterExecutionDto> Complete(EncounterExecutionDto encounterExecutionDto)
+        {
+            var execution = MapToDomain(encounterExecutionDto);
+            execution.Complete();
+            return MapToDto(execution);
+        }
     }
 }

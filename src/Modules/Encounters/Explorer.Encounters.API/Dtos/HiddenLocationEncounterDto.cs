@@ -11,7 +11,7 @@ namespace Explorer.Encounters.API.Dtos
         public string ImageUrl { get; set; }
         public double ActivationRange { get; set; }
         public long CheckpointId { get; set; }
-        public double Longitude { get; set; }
-        public double Latitude { get; set; }
+        public double ImageLongitude { get; set; }
+        public double ImageLatitude { get; set; }
     }
 }

@@ -52,10 +52,23 @@ namespace Explorer.Encounters.Core.Domain
             }
         }
 
+        public void Complete()
+        {
+            if (ExecutionStatus.Equals(ExecutionStatus.Active))
+            {
+                isComplete = true;
+            }
+        }
+
         //da li turista moze da aktivira izazov ( za sva tri)
         public bool IsTouristNear(double latitude, double longitude)
         {
-            const double tolerance = 0.0018; // Tolerancija za blizinu (oko 11 metara)
+            double tolerance;// Tolerancija za blizinu
+
+            if (encounter.EncounterType == EncounterType.Location)
+                tolerance = hiddenLocationEncounter.ActivationRange;
+            else
+                tolerance = 0.00245;
 
             bool isNearLatitude = Math.Abs(encounter.EncounterLocation.Latitude - latitude) <= tolerance;
             bool isNearLongitude = Math.Abs(encounter.EncounterLocation.Longitude - longitude) <= tolerance;
