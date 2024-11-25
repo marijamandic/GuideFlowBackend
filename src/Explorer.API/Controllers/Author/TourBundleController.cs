@@ -6,7 +6,7 @@ using System.Diagnostics.Eventing.Reader;
 
 namespace Explorer.API.Controllers.Author
 {
-    [Authorize(Policy = "authorPolicy")]
+   // [Authorize(Policy = "authorPolicy")]
     [Route("api/author/tourBundlesManagement")]
     public class TourBundleController : BaseApiController
     {
@@ -41,7 +41,7 @@ namespace Explorer.API.Controllers.Author
         [HttpPatch("removeTour")]
         public ActionResult<TourBundleDto> RemoveTour(long tourBundleId, long tourId)
         {
-            var result = _tourBundleService.AddTour(tourBundleId, tourId);
+            var result = _tourBundleService.RemoveTour(tourBundleId, tourId);
             return CreateResponse(result);
         }
 

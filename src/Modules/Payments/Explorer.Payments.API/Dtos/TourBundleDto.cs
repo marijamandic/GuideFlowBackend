@@ -12,12 +12,14 @@ namespace Explorer.Payments.API.Dtos
 
         public double Price { get; set; }
 
-        public Status Status { get; set; }
+        public BundleStatus Status { get; set; }
+
+        public long AuthorId { get; set; }
 
         public List<long> TourIds { get; set; } = new List<long>();
         
     }
-    public enum Status
+    public enum BundleStatus
     {
         Draft,
         Published,

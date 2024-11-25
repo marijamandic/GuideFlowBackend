@@ -13,15 +13,13 @@ namespace Explorer.Payments.Core.Domain
 
         public double Price { get; private set; }
 
-        public Status Status { get; private set; }
+        public BundleStatus Status { get; private set; }
 
         public long AuthorId { get; private set; }
 
-        private List<long> _tourIds = new List<long>();
+        public List<long> TourIds {  get; private set; } = new List<long>();
 
-        public IReadOnlyList<long> TourIds => new List<long>(_tourIds);
-
-        public TourBundle(string name, double price, Status status,long authorId) 
+        public TourBundle(string name, double price, BundleStatus status,long authorId) 
         {
             Name = name;
             Price = price;
@@ -32,34 +30,34 @@ namespace Explorer.Payments.Core.Domain
 
         public void AddTour(long tourId) 
         {
-            _tourIds.Add(tourId);
+            TourIds.Add(tourId);
         }
 
         public void RemoveTour(long tourId)
         {
-            if (_tourIds.Count == 0) throw new InvalidOperationException("Cannot Remove Anymore Tours");
-            _tourIds.Remove(tourId);
+            if (TourIds.Count == 0) throw new InvalidOperationException("Cannot Remove Anymore Tours");
+            TourIds.Remove(tourId);
         }
 
         public void Publish()
         {
-            if (Status != Status.Draft) throw new InvalidOperationException("Cannot Publish Tour Bundle That Isn't Draft");
-            Status = Status.Published;
+            if (Status != BundleStatus.Draft) throw new InvalidOperationException("Cannot Publish Tour Bundle That Isn't Draft");
+            Status = BundleStatus.Published;
         }
 
         public void Archive()
         {
-            if (Status != Status.Published) throw new InvalidOperationException("Cannot Archive Tour Bundle That Isn't Published");
-            Status = Status.Archived;
+            if (Status != BundleStatus.Published) throw new InvalidOperationException("Cannot Archive Tour Bundle That Isn't Published");
+            Status = BundleStatus.Archived;
         }
 
         public void Validate()
         {
-            if (!Enum.IsDefined(typeof(Status), Status)) throw new ArgumentException("Invalid Bundle Status");
+            if (!Enum.IsDefined(typeof(BundleStatus), Status)) throw new ArgumentException("Invalid Bundle Status");
         }
     }   
 
-    public enum Status
+    public enum BundleStatus
     {
         Draft,
         Published,

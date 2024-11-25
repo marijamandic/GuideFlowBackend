@@ -34,7 +34,7 @@ namespace Explorer.Payments.Core.UseCases
             try
             {
                 var tourBundle = _tourBundleRepository.GetById(tourBundleId);
-                if (tourBundle.Status == Domain.Status.Published)
+                if (tourBundle.Status == Domain.BundleStatus.Published)
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Cannot Delete Published Tour Bundle");
                 _tourBundleRepository.Delete(tourBundle);
                 _tourBundleRepository.Save(tourBundle);
