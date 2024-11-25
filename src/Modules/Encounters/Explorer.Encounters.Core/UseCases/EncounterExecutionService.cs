@@ -26,14 +26,14 @@ namespace Explorer.Encounters.Core.UseCases
             _encounterExecutionRepository = encounterExecutionRepository;
             _userRepository = userRepository;
         }
-        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto, int userId)
+        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
         {
             var allExecution = _encounterExecutionRepository.GetAll();
             var execution = MapToDomain(encounterExecutionDto);
-            var user = _userRepository.Get(userId);
+            var user = _userRepository.Get(encounterExecutionDto.UserId);
 
             //da li je korisnik u blizini aktivira taj izazov ili da mu se pridruzi
-            if (execution.IsTouristNear(user.Location.Longitude, user.Location.Latitude))
+            if (execution.IsTouristNear(encounterExecutionDto.userLongitude, encounterExecutionDto.userLatitude))
             {
                 //ako postoji social enc baci ga na join
                 if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
@@ -42,8 +42,9 @@ namespace Explorer.Encounters.Core.UseCases
                 }
                 else if (!allExecution.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
-                    _encounterExecutionRepository.Create(execution);
-                    return MapToDto(execution);
+                    var encounterExecution = new EncounterExecution(encounterExecutionDto.Id, user.Id);
+                    _encounterExecutionRepository.Create(encounterExecution);
+                    return MapToDto(encounterExecution);
                 }
                 return Result.Fail("Execution not created, already exists");
             }

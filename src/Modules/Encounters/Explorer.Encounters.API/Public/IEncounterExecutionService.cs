@@ -12,7 +12,7 @@ namespace Explorer.Encounters.API.Public
 {
     public interface IEncounterExecutionService
     {
-        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto, int userId);
+        public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto);
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto);
         public Result Delete(int id);
         public Result<EncounterExecutionDto> Get(long id);

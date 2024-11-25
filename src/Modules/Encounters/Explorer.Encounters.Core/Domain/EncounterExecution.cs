@@ -12,43 +12,46 @@ namespace Explorer.Encounters.Core.Domain
 {
     public class EncounterExecution: Entity
     {
-        public int userId { get; private set; }
+        private readonly IEncountersRepository encountersRepository;
+
+
+        public long UserId { get; private set; }
 
         //public EncounterType encounterType;
 
-        public int encounterId { get; private set; }
+        public long EncounterId { get; private set; }
 
         public ExecutionStatus ExecutionStatus { get; private set; }
 
-        public bool isComplete { get; private set; }
+        public bool IsComplete { get; private set; }
 
-        public List<User> touristsIncluded { get; private set; } // turisti koji ucestvuju u izazovu
+        public List<User> TouristsIncluded { get; private set; } // turisti koji ucestvuju u izazovu
 
-        public SocialEncounter socialEncounter { get; private set; }
-        public MiscEncounter miscEncounter { get; private set; }
-        public HiddenLocationEncounter hiddenLocationEncounter { get; private set; }
+        public SocialEncounter SocialEncounter { get; private set; }
+        public MiscEncounter MiscEncounter { get; private set; }
+        public HiddenLocationEncounter HiddenLocationEncounter { get; private set; }
 
-        public Encounter encounter { get; private set; }
-        private readonly IEncountersRepository encountersRepository;
-        public EncounterExecution() 
+        public Encounter Encounter { get; private set; }
+        public EncounterExecution(long encounterId, long userId) 
         {
-            encounter = encountersRepository.Get(encounterId);
-            socialEncounter = (SocialEncounter?)encountersRepository.Get(encounterId);
-            miscEncounter = (MiscEncounter?)encountersRepository.Get(encounterId);
-            hiddenLocationEncounter = (HiddenLocationEncounter?)encountersRepository.Get(encounterId);
-
+            EncounterId = encounterId;
+            UserId = userId;
+            ExecutionStatus = ExecutionStatus.Active;
+            IsComplete = false;
+            /*Encounter = encountersRepository.Get(EncounterId);
+            SocialEncounter = (SocialEncounter?)encountersRepository.Get(EncounterId);
+            MiscEncounter = (MiscEncounter?)encountersRepository.Get(EncounterId);
+            HiddenLocationEncounter = (HiddenLocationEncounter?)encountersRepository.Get(EncounterId);
+*/
         }
-
-    
-
 
         public void CompleteSocialEncounter()
         {
             //TODO: za svakog turistu se resi tura???
-            if(ExecutionStatus.Equals(ExecutionStatus.Active) && touristsIncluded.Count() >= socialEncounter.TouristNumber)
+            if(ExecutionStatus.Equals(ExecutionStatus.Active) && TouristsIncluded.Count() >= SocialEncounter.TouristNumber)
             {
                 ExecutionStatus = ExecutionStatus.Completed;
-                isComplete = true;
+                IsComplete = true;
             }
         }
 
@@ -56,7 +59,7 @@ namespace Explorer.Encounters.Core.Domain
         {
             if (ExecutionStatus.Equals(ExecutionStatus.Active))
             {
-                isComplete = true;
+                IsComplete = true;
             }
         }
 
@@ -65,13 +68,13 @@ namespace Explorer.Encounters.Core.Domain
         {
             double tolerance;// Tolerancija za blizinu
 
-            if (encounter.EncounterType == EncounterType.Location)
-                tolerance = hiddenLocationEncounter.ActivationRange;
+            if (Encounter.EncounterType == EncounterType.Location)
+                tolerance = HiddenLocationEncounter.ActivationRange;
             else
                 tolerance = 0.00245;
 
-            bool isNearLatitude = Math.Abs(encounter.EncounterLocation.Latitude - latitude) <= tolerance;
-            bool isNearLongitude = Math.Abs(encounter.EncounterLocation.Longitude - longitude) <= tolerance;
+            bool isNearLatitude = Math.Abs(Encounter.EncounterLocation.Latitude - latitude) <= tolerance;
+            bool isNearLongitude = Math.Abs(Encounter.EncounterLocation.Longitude - longitude) <= tolerance;
 
             return isNearLatitude && isNearLongitude;
         }

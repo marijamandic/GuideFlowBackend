@@ -10,5 +10,7 @@
         public string? ImageUrl { get; set; }
         public string? ImageBase64 { get; set; }
         public string Secret {  get; set; }
+        public long? EncounterId { get; set; }
+        public bool IsEncounterEssential { get; set; }
     }
 }

@@ -15,6 +15,8 @@ namespace Explorer.Encounters.API.Dtos
         public bool IsComplete { get; set; }
         public List<User> touristsIncluded { get; set; }
         public EncounterType EncounterType { get; set; }
+        public double userLongitude { get; set; }
+        public double userLatitude { get; set; }
 
     }
 }

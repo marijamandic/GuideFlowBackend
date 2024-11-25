@@ -69,7 +69,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
 
         public EncounterExecution GetByUserId(int userId)
         {
-            return _context.EncounterExecutions.FirstOrDefault(e => e.userId == userId);
+            return _context.EncounterExecutions.FirstOrDefault(e => e.UserId == userId);
         }
     }
 }
