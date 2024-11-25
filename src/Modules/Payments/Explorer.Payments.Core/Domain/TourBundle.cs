@@ -15,15 +15,18 @@ namespace Explorer.Payments.Core.Domain
 
         public Status Status { get; private set; }
 
+        public long AuthorId { get; private set; }
+
         private List<long> _tourIds = new List<long>();
 
         public IReadOnlyList<long> TourIds => new List<long>(_tourIds);
 
-        public TourBundle(string name, double price, Status status) 
+        public TourBundle(string name, double price, Status status,long authorId) 
         {
             Name = name;
             Price = price;
             Status = status;
+            AuthorId = authorId;
             Validate();
         }
 
@@ -34,13 +37,24 @@ namespace Explorer.Payments.Core.Domain
 
         public void RemoveTour(long tourId)
         {
-            if (_tourIds.Count == 0) throw new ArgumentException("Cannot Remove Anymore Tours");
+            if (_tourIds.Count == 0) throw new InvalidOperationException("Cannot Remove Anymore Tours");
             _tourIds.Remove(tourId);
+        }
+
+        public void Publish()
+        {
+            if (Status != Status.Draft) throw new InvalidOperationException("Cannot Publish Tour Bundle That Isn't Draft");
+            Status = Status.Published;
+        }
+
+        public void Archive()
+        {
+            if (Status != Status.Published) throw new InvalidOperationException("Cannot Archive Tour Bundle That Isn't Published");
+            Status = Status.Archived;
         }
 
         public void Validate()
         {
-            if (Price <= 0) throw new ArgumentException("Invalid Bundle Price");
             if (!Enum.IsDefined(typeof(Status), Status)) throw new ArgumentException("Invalid Bundle Status");
         }
     }   
@@ -49,6 +63,6 @@ namespace Explorer.Payments.Core.Domain
     {
         Draft,
         Published,
-        Archieved
+        Archived
     }
 }

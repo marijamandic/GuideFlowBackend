@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Explorer.Payments.API.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,11 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
     {
         TourBundle Create(TourBundle tourBundle);
 
-        public void Save(TourBundle tourBundle);
+        TourBundle Delete(TourBundle tourBundle);
+
+        void Save(TourBundle tourBundle);
+
+        TourBundle GetById(long tourBundleId);
+        
     }
 }

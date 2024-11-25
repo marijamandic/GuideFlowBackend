@@ -27,6 +27,7 @@ public static class PaymentsStartup
         services.AddScoped<ITourPurchaseTokenService, TourPurchaseTokenService>();
         services.AddScoped<IInternalPurchaseTokenService, TourPurchaseTokenService>();
         services.AddScoped<IPaymentService,PaymentService>();
+        services.AddScoped<ITourBundleService, TourBundleService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -34,6 +35,7 @@ public static class PaymentsStartup
         services.AddScoped<IShoppingCartRepository, ShoppingCartDatabaseRepository>();
         services.AddScoped<ITourPurchaseTokenRepository,TourPurchaseTokenDatabaseRepository>();
         services.AddScoped<IPaymentRepository,PaymentDatabaseRepository>();
+        services.AddScoped<ITourBundleRepository,TourBundleRepository>();
 
         services.AddDbContext<PaymentsContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("payments"),

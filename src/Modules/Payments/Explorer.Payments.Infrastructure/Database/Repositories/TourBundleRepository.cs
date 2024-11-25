@@ -21,11 +21,24 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
 
         }
 
-        public TourBundle Create(TourBundle bundle) 
+        public TourBundle GetById(long tourBundleId)
         {
-            _tourBundles.Add(bundle);
+            var tourBundle = _tourBundles.Find(tourBundleId);
+            if (tourBundle == null) throw new NullReferenceException("Tour Bundle Not Found");
+            return tourBundle;
+        }
+        public TourBundle Create(TourBundle tourBundle) 
+        {
+            _tourBundles.Add(tourBundle);
             _paymentsContext.SaveChanges();
-            return bundle;
+            return tourBundle;
+        }
+
+        public TourBundle Delete(TourBundle tourBundle)
+        {
+            _tourBundles.Remove(tourBundle);
+            _paymentsContext.SaveChanges();
+            return tourBundle;
         }
 
         public void Save(TourBundle bundle) 
