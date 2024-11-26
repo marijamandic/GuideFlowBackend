@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.Encounter
 {
-    //[Authorize(Policy = "touristPolicy")]
+    [Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/encounterExecution")]
     public class EncounterExecutionController : BaseApiController
     {
@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers.Tourist.Encounter
         [HttpPut("{id:int}")]
         public ActionResult<EncounterExecutionDto> Update([FromBody] EncounterExecutionDto encounterExecutionDto)
         {
-            var result = _encounterExecutionService.Complete(encounterExecutionDto);
+            var result = _encounterExecutionService.Update(encounterExecutionDto);
             return CreateResponse(result);
         }
     }

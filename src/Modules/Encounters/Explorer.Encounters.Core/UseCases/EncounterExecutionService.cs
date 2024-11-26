@@ -31,11 +31,12 @@ namespace Explorer.Encounters.Core.UseCases
         public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
         {
             var allExecutions = _encounterExecutionRepository.GetAll();
-            var execution = _encounterExecutionRepository.Get(encounterExecutionDto.EncounterId);
+            var execution = MapToDomain(encounterExecutionDto);
             var user = _userRepository.Get(encounterExecutionDto.UserId);
+            var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
 
             //da li je korisnik u blizini aktivira taj izazov ili da mu se pridruzi
-            if (execution.IsTouristNear(encounterExecutionDto.UserLongitude, encounterExecutionDto.UserLatitude))
+            if (execution.IsTouristNear(encounterExecutionDto.UserLatitude, encounterExecutionDto.UserLongitude, encounter))
             {
                 //ako postoji social enc baci ga na join
                 if (allExecutions.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
@@ -44,7 +45,7 @@ namespace Explorer.Encounters.Core.UseCases
                 }
                 else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
-                    var encounterExecution = new EncounterExecution(encounterExecutionDto.Id, user.Id);
+                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, user.Id);
                     _encounterExecutionRepository.Create(encounterExecution);
                     return MapToDto(encounterExecution);
                 }
@@ -68,10 +69,20 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
-            
-            var encounter = _encounterExecutionRepository.Update(MapToDomain(encounterExecutionDto));
-            return MapToDto(encounter);
+            var encounterExecution = _encounterExecutionRepository.Get(encounterExecutionDto.Id);
+            var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
+            if(encounterExecution.Encounter.EncounterType == Domain.EncounterType.Location)
+            {
+                if (encounterExecution.IsHiddenLocationFound(encounterExecutionDto.UserLatitude, encounterExecutionDto.UserLongitude, encounter))
+                    encounterExecution.Complete();
+                else
+                    return Result.Fail("Hidden Location not found");
+            }
+            else
+                encounterExecution.Complete();
 
+            _encounterExecutionRepository.Update(encounterExecution);
+            return MapToDto(encounterExecution);
         }
         public Result Delete(int id) {
 
@@ -97,13 +108,6 @@ namespace Explorer.Encounters.Core.UseCases
         public Result<PagedResult<EncounterExecutionDto>> GetPaged(int page, int pageSize) {
             var encountersExecutions = _encounterExecutionRepository.GetPaged(page, pageSize);
             return MapToDto(encountersExecutions);
-        }
-
-        public Result<EncounterExecutionDto> Complete(EncounterExecutionDto encounterExecutionDto)
-        {
-            var execution = MapToDomain(encounterExecutionDto);
-            execution.Complete();
-            return MapToDto(execution);
         }
     }
 }

@@ -45,22 +45,35 @@ namespace Explorer.Encounters.Core.Domain
         }
 
         //da li turista moze da aktivira izazov ( za sva tri)
-        public bool IsTouristNear(double latitude, double longitude)
+        public bool IsTouristNear(double latitude, double longitude, Encounter encounter)
         {
             double tolerance;// Tolerancija za blizinu
 
-            if (Encounter.EncounterType == EncounterType.Location && Encounter is HiddenLocationEncounter hiddenLocationEncounter)
+            if (encounter.EncounterType == EncounterType.Location && encounter is HiddenLocationEncounter hiddenLocationEncounter)
                 tolerance = hiddenLocationEncounter.ActivationRange;
             else
                 tolerance = 0.00245;
 
-            bool isNearLatitude = Math.Abs(Encounter.EncounterLocation.Latitude - latitude) <= tolerance;
-            bool isNearLongitude = Math.Abs(Encounter.EncounterLocation.Longitude - longitude) <= tolerance;
+            bool isNearLatitude = Math.Abs(encounter.EncounterLocation.Latitude - latitude) <= tolerance;
+            bool isNearLongitude = Math.Abs(encounter.EncounterLocation.Longitude - longitude) <= tolerance;
 
             return isNearLatitude && isNearLongitude;
         }
 
+        public bool IsHiddenLocationFound(double latitude, double longitude, Encounter encounter)
+        {
+            const double tolerance = 0.0000448;  // 5 metara
 
+            if (encounter is HiddenLocationEncounter hiddenLocationEncounter)
+            {
+                bool isNearLatitude = Math.Abs(hiddenLocationEncounter.ImageLatitude - latitude) <= tolerance;
+                bool isNearLongitude = Math.Abs(hiddenLocationEncounter.ImageLongitude - longitude) <= tolerance;
+
+                return isNearLatitude && isNearLongitude;
+            }
+
+            return false;
+        }
 
 
         //TODO: azuriranje liste turista koji su u opsegu

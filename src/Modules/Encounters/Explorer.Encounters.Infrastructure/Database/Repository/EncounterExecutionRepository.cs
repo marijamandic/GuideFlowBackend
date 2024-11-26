@@ -48,17 +48,10 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             return task.Result;
         }
 
-        public EncounterExecution Update(EncounterExecution encounterExecution)
+        public new EncounterExecution Update(EncounterExecution encounterExecution)
         {
-            try
-            {
-                _context.Update(encounterExecution);
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException e)
-            {
-                throw new KeyNotFoundException(e.Message);
-            }
+            _context.Entry(encounterExecution).State = EntityState.Modified;
+            _context.SaveChanges();
             return encounterExecution;
         }
 
