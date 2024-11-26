@@ -1,7 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Tours.API.Dtos.Execution;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,10 +4,6 @@ using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.Core.Domain;
-using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.API.Dtos.Execution;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -20,19 +16,19 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterExecutionService : BaseService<EncounterExecutionDto, EncounterExecution>, IEncounterExecutionService
     {
         private readonly IEncounterExecutionRepository _encounterExecutionRepository;
-        private readonly IUserRepository _userRepository;
+       // private readonly IUserRepository _userRepository;
         private readonly IEncountersRepository _encounterRepository;
-        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IUserRepository userRepository, IEncountersRepository encountersRepository, IMapper mapper) : base(mapper)
+        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IEncountersRepository encountersRepository, IMapper mapper) : base(mapper)
         {
             _encounterExecutionRepository = encounterExecutionRepository;
-            _userRepository = userRepository;
+           // _userRepository = userRepository;
             _encounterRepository = encountersRepository;
         }
         public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
         {
             var allExecutions = _encounterExecutionRepository.GetAll();
             var execution = MapToDomain(encounterExecutionDto);
-            var user = _userRepository.Get(encounterExecutionDto.UserId);
+           // var user = _userRepository.Get(encounterExecutionDto.UserId);
             var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
 
             //da li je korisnik u blizini aktivira taj izazov ili da mu se pridruzi
@@ -41,11 +37,11 @@ namespace Explorer.Encounters.Core.UseCases
                 //ako postoji social enc baci ga na join
                 if (allExecutions.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
                 {
-                    Join(user, encounterExecutionDto);
+                    // Join(user, encounterExecutionDto);
                 }
                 else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
-                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, user.Id);
+                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
                     _encounterExecutionRepository.Create(encounterExecution);
                     return MapToDto(encounterExecution);
                 }
@@ -55,7 +51,7 @@ namespace Explorer.Encounters.Core.UseCases
             return Result.Fail("Tourist can't activate or join this encounter");
         }
 
-        private void Join(User user, EncounterExecutionDto encounterExecutionDto)
+       /* private void Join(User user, EncounterExecutionDto encounterExecutionDto)
         {
             //doda se user u execution 
            // encounterExecutionDto.TouristsIncluded.Add(user);
@@ -65,7 +61,7 @@ namespace Explorer.Encounters.Core.UseCases
             execution.CompleteSocialEncounter();
             Update(MapToDto(execution));
 
-        }
+        }*/
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
