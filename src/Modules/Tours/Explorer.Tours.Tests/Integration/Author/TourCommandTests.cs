@@ -175,7 +175,8 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
                     ImageBase64 = "",
-                    Secret = "tajna"
+                    Secret = "tajna",
+                    IsEncounterEssential = false
                 },
                 200
             },
@@ -189,7 +190,8 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Latitude = 45.2671,
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
-                    ImageBase64 = ""
+                    ImageBase64 = "",
+                    IsEncounterEssential= false
                 },
                 400
             },
@@ -204,7 +206,8 @@ public class TourCommandTests : BaseToursIntegrationTest
                     Longitude = 20.8335,
                     ImageUrl = "/images/start-point.jpg",
                     ImageBase64 = "",
-                    Secret = "tajna"
+                    Secret = "tajna",
+                    IsEncounterEssential = false
                 },
                 404
             }
