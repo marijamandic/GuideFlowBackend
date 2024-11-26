@@ -29,4 +29,45 @@ public class SalesDatabaseRepository : ISalesRepository
 			throw;
 		}
 	}
+
+	public async Task<Sales> GetById(long id)
+	{
+		try
+		{
+			var result = await _sales.FirstOrDefaultAsync(s => s.Id == id);
+			if (result is null) throw new ArgumentException(nameof(result));
+			return result;
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+	}
+
+	public async Task Update(Sales sales)
+	{
+		try
+		{
+			_paymentsContext.Update(sales);
+			await _paymentsContext.SaveChangesAsync();
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+	}
+
+	public async Task Delete(long id)
+	{
+		try
+		{
+			var sales = await GetById(id);
+			_paymentsContext.Remove(sales);
+			await _paymentsContext.SaveChangesAsync();
+		}
+		catch (Exception)
+		{
+			throw;
+		}
+	}
 }

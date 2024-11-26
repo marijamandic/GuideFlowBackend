@@ -42,4 +42,35 @@ public class SalesService : BaseService<SalesDto, Sales>, ISalesService
 			return Result.Fail($"{ex.Message}");
 		}
 	}
+
+	public async Task<Result> Update(SalesDto sales, int authorId)
+	{
+		if (!_internalSalesService.AreAuthorTours(authorId, sales.TourIds))
+			return Result.Fail(FailureCode.NotFound).WithError("Author ID mismatch");
+
+		try
+		{
+			var oldSales = await _salesRepository.GetById(sales.Id);
+			oldSales.Update(MapToDomain(sales));
+			await _salesRepository.Update(oldSales);
+			return Result.Ok();
+		}
+		catch (Exception ex)
+		{
+			return Result.Fail(FailureCode.InvalidArgument).WithError($"{ex.Message}");
+		}
+	}
+
+	public async Task<Result> Delete(int id)
+	{
+		try
+		{
+			await _salesRepository.Delete(id);
+			return Result.Ok();
+		}
+		catch (Exception ex)
+		{
+			return Result.Fail(FailureCode.NotFound).WithError($"{ex.Message}");
+		}
+	}
 }
