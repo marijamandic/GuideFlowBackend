@@ -52,7 +52,10 @@ namespace Explorer.Encounters.Core.Domain
     public enum EncounterStatus {
         Active = 0,
         Draft = 1,
-        Archieved = 2
+        Archieved = 2,
+        Pending = 3,
+        Canceled = 4,
+        Completed = 5
     }
     public enum EncounterType { 
         Social = 0,
