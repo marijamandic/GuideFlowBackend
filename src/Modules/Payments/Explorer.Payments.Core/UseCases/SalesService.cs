@@ -61,11 +61,15 @@ public class SalesService : BaseService<SalesDto, Sales>, ISalesService
 		}
 	}
 
-	public async Task<Result> Delete(int id)
+	public async Task<Result> Delete(int id, int authorId)
 	{
 		try
 		{
-			await _salesRepository.Delete(id);
+			var sales = await _salesRepository.GetById(id);
+			if (!_internalSalesService.AreAuthorTours(authorId, sales.TourIds.Select(id => (int)id).ToList()))
+				return Result.Fail(FailureCode.NotFound).WithError("Author ID mismatch");
+
+			await _salesRepository.Delete(sales);
 			return Result.Ok();
 		}
 		catch (Exception ex)

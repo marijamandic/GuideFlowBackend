@@ -35,7 +35,8 @@ public class SalesController : BaseApiController
 	[HttpDelete("{id:int}")]
 	public async Task<ActionResult> Delete([FromRoute] int id)
 	{
-		var result = await _salesService.Delete(id);
+		int authorId = int.Parse(User.FindFirst("id")!.Value);
+		var result = await _salesService.Delete(id, authorId);
 		return CreateResponse(result);
 	}
 }

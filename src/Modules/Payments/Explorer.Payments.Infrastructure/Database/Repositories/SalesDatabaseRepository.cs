@@ -57,11 +57,10 @@ public class SalesDatabaseRepository : ISalesRepository
 		}
 	}
 
-	public async Task Delete(long id)
+	public async Task Delete(Sales sales)
 	{
 		try
 		{
-			var sales = await GetById(id);
 			_paymentsContext.Remove(sales);
 			await _paymentsContext.SaveChangesAsync();
 		}
