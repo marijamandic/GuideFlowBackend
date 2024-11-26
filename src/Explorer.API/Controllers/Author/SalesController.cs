@@ -23,4 +23,20 @@ public class SalesController : BaseApiController
 		var result = await _salesService.Create(sales);
 		return CreateResponse(result);
 	}
+
+	[HttpPut]
+	public async Task<ActionResult> Update([FromBody] SalesDto sales)
+	{
+		int authorId = int.Parse(User.FindFirst("id")!.Value);
+		var result = await _salesService.Update(sales, authorId);
+		return CreateResponse(result);
+	}
+
+	[HttpDelete("{id:int}")]
+	public async Task<ActionResult> Delete([FromRoute] int id)
+	{
+		int authorId = int.Parse(User.FindFirst("id")!.Value);
+		var result = await _salesService.Delete(id, authorId);
+		return CreateResponse(result);
+	}
 }
