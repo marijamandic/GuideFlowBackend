@@ -19,12 +19,13 @@ namespace Explorer.Payments.Core.Domain
 
         public List<long> TourIds {  get; private set; } = new List<long>();
 
-        public TourBundle(string name, double price, BundleStatus status,long authorId) 
+        public TourBundle(string name, double price, BundleStatus status,long authorId, List<long> tourIds) 
         {
             Name = name;
             Price = price;
             Status = status;
             AuthorId = authorId;
+            TourIds = tourIds;
             Validate();
         }
 
