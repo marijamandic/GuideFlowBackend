@@ -105,5 +105,13 @@ namespace Explorer.Encounters.Core.UseCases
             var encountersExecutions = _encounterExecutionRepository.GetPaged(page, pageSize);
             return MapToDto(encountersExecutions);
         }
+
+        public Result<EncounterExecutionDto> GetByUser(long userId)
+        {
+            var encounterExecution = _encounterExecutionRepository.GetByUserId(userId);
+            if(!encounterExecution.IsComplete)
+                return MapToDto(encounterExecution);
+            return Result.Fail("There is no active executions for this user");
+        }
     }
 }

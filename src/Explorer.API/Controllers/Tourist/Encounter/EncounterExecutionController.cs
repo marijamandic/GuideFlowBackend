@@ -38,5 +38,12 @@ namespace Explorer.API.Controllers.Tourist.Encounter
             var result = _encounterExecutionService.Update(encounterExecutionDto);
             return CreateResponse(result);
         }
+
+        [HttpGet("getByUser/{userId:long}")]
+        public ActionResult<EncounterExecutionDto> GetByUserId([FromRoute] long userId)
+        {
+            var result = _encounterExecutionService.GetByUser(userId);
+            return CreateResponse(result);
+        }
     }
 }

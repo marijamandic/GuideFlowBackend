@@ -60,7 +60,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             return _context.EncounterExecutions.ToList();
         }
 
-        public EncounterExecution GetByUserId(int userId)
+        public EncounterExecution GetByUserId(long userId)
         {
             return _context.EncounterExecutions.FirstOrDefault(e => e.UserId == userId);
         }
