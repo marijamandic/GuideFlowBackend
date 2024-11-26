@@ -13,10 +13,10 @@ namespace Explorer.Encounters.API.Dtos
         public int UserId { get; set; }
         public int EncounterId { get; set; }
         public bool IsComplete { get; set; }
-        public List<User> touristsIncluded { get; set; }
+        //public List<User> TouristsIncluded { get; set; }
         public EncounterType EncounterType { get; set; }
-        public double userLongitude { get; set; }
-        public double userLatitude { get; set; }
+        public double UserLongitude { get; set; }
+        public double UserLatitude { get; set; }
 
     }
 }

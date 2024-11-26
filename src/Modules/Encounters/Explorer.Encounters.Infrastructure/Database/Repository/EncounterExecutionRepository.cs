@@ -35,7 +35,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
 
         public EncounterExecution Get(long id)
         {
-            var encounterExecution = _context.EncounterExecutions.FirstOrDefault(e => e.Id == id);
+            var encounterExecution = _context.EncounterExecutions.Include(ee => ee.Encounter).FirstOrDefault(e => e.Id == id);
             if(encounterExecution.Id == null)
                 throw new KeyNotFoundException(nameof(id));
             return encounterExecution;

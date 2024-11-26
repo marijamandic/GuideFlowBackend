@@ -17,5 +17,6 @@ namespace Explorer.Encounters.API.Public
         public Result Delete(int id);
         public Result<EncounterExecutionDto> Get(long id);
         public Result<PagedResult<EncounterExecutionDto>> GetPaged(int page, int pageSize);
+        public Result<EncounterExecutionDto> Complete(EncounterExecutionDto encounterExecutionDto);
     }
 }

@@ -21,26 +21,28 @@ namespace Explorer.Encounters.Core.UseCases
     {
         private readonly IEncounterExecutionRepository _encounterExecutionRepository;
         private readonly IUserRepository _userRepository;
-        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IUserRepository userRepository, IMapper mapper) : base(mapper)
+        private readonly IEncountersRepository _encounterRepository;
+        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IUserRepository userRepository, IEncountersRepository encountersRepository, IMapper mapper) : base(mapper)
         {
             _encounterExecutionRepository = encounterExecutionRepository;
             _userRepository = userRepository;
+            _encounterRepository = encountersRepository;
         }
         public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
         {
-            var allExecution = _encounterExecutionRepository.GetAll();
-            var execution = MapToDomain(encounterExecutionDto);
+            var allExecutions = _encounterExecutionRepository.GetAll();
+            var execution = _encounterExecutionRepository.Get(encounterExecutionDto.EncounterId);
             var user = _userRepository.Get(encounterExecutionDto.UserId);
 
             //da li je korisnik u blizini aktivira taj izazov ili da mu se pridruzi
-            if (execution.IsTouristNear(encounterExecutionDto.userLongitude, encounterExecutionDto.userLatitude))
+            if (execution.IsTouristNear(encounterExecutionDto.UserLongitude, encounterExecutionDto.UserLatitude))
             {
                 //ako postoji social enc baci ga na join
-                if (allExecution.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
+                if (allExecutions.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
                 {
                     Join(user, encounterExecutionDto);
                 }
-                else if (!allExecution.Contains(execution)) // ako ne postoji onda se pravi nova ex
+                else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
                     var encounterExecution = new EncounterExecution(encounterExecutionDto.Id, user.Id);
                     _encounterExecutionRepository.Create(encounterExecution);
@@ -55,7 +57,7 @@ namespace Explorer.Encounters.Core.UseCases
         private void Join(User user, EncounterExecutionDto encounterExecutionDto)
         {
             //doda se user u execution 
-            encounterExecutionDto.touristsIncluded.Add(user);
+           // encounterExecutionDto.TouristsIncluded.Add(user);
             var execution = MapToDomain(encounterExecutionDto);
 
             // prebaci se isCompleted na true ako ima dovoljno ljudi i onda se uradi update
