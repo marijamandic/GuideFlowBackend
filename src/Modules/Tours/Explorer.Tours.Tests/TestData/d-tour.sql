@@ -28,4 +28,3 @@ VALUES
     (-12, 'Forest Expedition', 106, 'Explore dense forests and wildlife.', 2, 1, NULL, 20.0, 
     '{{"Cost": 200.00, "Currency": 1}}', 4.9, ARRAY['Forest', 'Wildlife', 'Adventure'], 
     '[{{"Time": 240, "TransportType": 0}}, {{"Time": 90, "TransportType": 1}}]');
-

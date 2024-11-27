@@ -13,6 +13,8 @@ public class PaymentsContext : DbContext
     public DbSet<PaymentItem> PaymentItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
     public DbSet<TourBundle> TourBundles { get; set; }
+    public DbSet<Sales> Sales { get; set; }
+
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -22,6 +24,7 @@ public class PaymentsContext : DbContext
         ConfigureShoppingCart(modelBuilder);
         ConfigurePayment(modelBuilder);
         ConfigureTourBundle(modelBuilder);
+        ConfigureSales(modelBuilder);
     }
 
     private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
@@ -46,5 +49,15 @@ public class PaymentsContext : DbContext
     {
         modelBuilder.Entity<TourBundle>().Property(item => item.TourIds)
                      .HasColumnType("jsonb");
+    }
+
+    private static void ConfigureSales(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Sales>()
+            .Property(s => s.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        modelBuilder.Entity<Sales>()
+            .ToTable(s => s.HasCheckConstraint("CK_Sales_EndsAt_Within_Range", "\"EndsAt\" >= \"CreatedAt\" AND \"EndsAt\" <= \"CreatedAt\" + INTERVAL '14 days'"));
     }
 }

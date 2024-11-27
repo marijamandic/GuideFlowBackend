@@ -5,6 +5,7 @@ using Explorer.Payments.API.Dtos;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.API.Dtos.Payments;
 using Explorer.Payments.Core.Domain.Payments;
+using Explorer.Payments.API.Dtos.Sales;
 
 namespace Explorer.Payments.Core.Mappers;
 
@@ -26,5 +27,6 @@ public class PaymentsProfile : Profile
         CreateMap<PaymentDto,Payment>().ReverseMap();
         CreateMap<PaymentItemDto, PaymentItem>().ReverseMap();
         CreateMap<TourBundleDto, TourBundle>().ReverseMap();
+        CreateMap<SalesDto, Sales>().ReverseMap();
     }
 }
