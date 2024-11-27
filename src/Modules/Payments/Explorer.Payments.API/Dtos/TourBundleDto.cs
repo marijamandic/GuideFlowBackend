@@ -15,9 +15,9 @@ namespace Explorer.Payments.API.Dtos
 
         public BundleStatus Status { get; set; }
 
-        public long AuthorId { get; set; }
+        public int AuthorId { get; set; }
 
-        public List<long> TourIds { get; set; } = new List<long>();
+        public List<int> TourIds { get; set; } = new List<int>();
         
     }
     public enum BundleStatus

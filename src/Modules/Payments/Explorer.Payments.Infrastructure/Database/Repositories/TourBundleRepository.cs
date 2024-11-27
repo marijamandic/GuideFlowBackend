@@ -28,6 +28,13 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
             return new PagedResult<TourBundle>(tourBundles, tourBundles.Count);
         }
 
+        public TourBundle Get(long id)
+        {
+            var entity = _tourBundles.Where(tb => tb.Id == id).FirstOrDefault();
+            if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+            return entity;
+        }
+
         public TourBundle GetById(long tourBundleId)
         {
             var tourBundle = _tourBundles.Find(tourBundleId);

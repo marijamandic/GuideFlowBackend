@@ -28,6 +28,7 @@ public static class PaymentsStartup
         services.AddScoped<IInternalPurchaseTokenService, TourPurchaseTokenService>();
         services.AddScoped<IPaymentService,PaymentService>();
         services.AddScoped<ITourBundleService, TourBundleService>();
+        services.AddScoped<IInternalTourBundleService, TourBundleService>();
         services.AddScoped<ISalesService, SalesService>();
     }
 

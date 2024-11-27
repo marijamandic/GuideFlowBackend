@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Payments.Core.UseCases
 {
-    public class TourBundleService : BaseService<TourBundleDto, TourBundle>, ITourBundleService
+    public class TourBundleService : BaseService<TourBundleDto, TourBundle>, ITourBundleService, IInternalTourBundleService
     {
         private readonly ITourBundleRepository _tourBundleRepository;
 
@@ -26,6 +27,19 @@ namespace Explorer.Payments.Core.UseCases
         public Result<PagedResult<TourBundleDto>> GetAll()
         {
             return MapToDto(_tourBundleRepository.GetAll());
+        }
+
+        public Result<TourBundleDto> Get(int id)
+        {
+            try
+            {
+                var result = _tourBundleRepository.Get(id);
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
         }
 
         public Result<TourBundleDto> Create(TourBundleDto tourBundleDto)
@@ -115,5 +129,17 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
+        public Result<List<int>> GetToursById(int bundleId)
+        {
+            try
+            {
+                var result = Get(bundleId);
+                return result.Value.TourIds;
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
     }
 }
