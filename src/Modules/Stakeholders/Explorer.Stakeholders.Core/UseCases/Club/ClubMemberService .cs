@@ -14,6 +14,11 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
     public class ClubMemberService : IClubMemberService
     {
         private readonly IClubMemberRepository _clubMemberRepository;
+        private readonly IClubService _clubService;
+
+        private ClubMemberService(IClubService clubService) { 
+            _clubService = clubService;
+        }
 
         public ClubMemberService(IClubMemberRepository clubMemberRepository)
         {

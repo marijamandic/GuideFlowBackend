@@ -2,6 +2,7 @@
 using Explorer.Stakeholders.API.Dtos.Club;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.UseCases;
+using Explorer.Stakeholders.Core.UseCases.Club;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -9,16 +10,19 @@ using System.IO;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "touristPolicy")]
+    // [Authorize(Policy = "touristPolicy")]
     [Route("api/manageclub/club")]
     public class ClubController : BaseApiController
     {
         private readonly IClubService _clubService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        public ClubController(IClubService clubService, IWebHostEnvironment webHostEnvironment)
+        private readonly IClubMemberService _clubMemberService;
+
+        public ClubController(IClubService clubService, IWebHostEnvironment webHostEnvironment, IClubMemberService clubMemberService)
         {
             _clubService = clubService;
             _webHostEnvironment = webHostEnvironment;
+            _clubMemberService = clubMemberService;
         }
         [HttpGet]
         public ActionResult<PagedResult<ClubDto>> GetAll([FromQuery] int page, [FromQuery] int pageSize)
@@ -45,6 +49,16 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubService.Create(clubDto);
             return CreateResponse(result);
         }
+
+        [HttpGet("top-by-members")]
+        public ActionResult<List<ClubDto>> GetTopClubsByMembers()
+        {
+            int topCount = 5;
+            var result = _clubService.GetTopClubsByMembers(topCount);
+            return result.IsSuccess ? Ok(result.Value) : StatusCode(500, result.Errors);
+        }
+
+
         [HttpPut("{id:int}")]
         public ActionResult<ClubDto> Update([FromBody] ClubDto clubDto)
         {

@@ -14,5 +14,6 @@ namespace Explorer.Stakeholders.API.Dtos.Club
         public string Description { get; set; }
         public string? ImageUrl { get; set; }
         public string? ImageBase64 { get; set; }
+        public object MemberCount { get; set; }
     }
 }
