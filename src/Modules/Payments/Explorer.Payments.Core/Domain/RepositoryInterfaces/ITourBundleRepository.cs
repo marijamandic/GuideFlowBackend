@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
 {
     public interface ITourBundleRepository
     {
+        PagedResult<TourBundle> GetAll();
         TourBundle Create(TourBundle tourBundle);
 
         TourBundle Delete(TourBundle tourBundle);

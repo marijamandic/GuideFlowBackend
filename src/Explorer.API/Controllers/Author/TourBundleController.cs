@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.API.Dtos;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,13 @@ namespace Explorer.API.Controllers.Author
         public TourBundleController(ITourBundleService tourBundleService)
         {
             _tourBundleService = tourBundleService;
+        }
+
+        [HttpGet]
+        public ActionResult<PagedResult<TourBundleDto>> GetAll() 
+        {
+            var result = _tourBundleService.GetAll();
+            return CreateResponse(result);
         }
 
         [HttpPost]

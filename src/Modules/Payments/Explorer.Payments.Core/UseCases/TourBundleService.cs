@@ -23,6 +23,11 @@ namespace Explorer.Payments.Core.UseCases
             _tourBundleRepository = tourBundleRepository;
         }
 
+        public Result<PagedResult<TourBundleDto>> GetAll()
+        {
+            return MapToDto(_tourBundleRepository.GetAll());
+        }
+
         public Result<TourBundleDto> Create(TourBundleDto tourBundleDto)
         {
             _tourBundleRepository.Create(MapToDomain(tourBundleDto));

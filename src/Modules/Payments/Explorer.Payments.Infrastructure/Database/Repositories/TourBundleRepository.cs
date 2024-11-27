@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.Core.Domain;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,12 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
             _paymentsContext =  paymentsContext;
             _tourBundles = _paymentsContext.Set<TourBundle>();
 
+        }
+
+        public PagedResult<TourBundle> GetAll()
+        {
+            var tourBundles = _tourBundles.ToList();
+            return new PagedResult<TourBundle>(tourBundles, tourBundles.Count);
         }
 
         public TourBundle GetById(long tourBundleId)
