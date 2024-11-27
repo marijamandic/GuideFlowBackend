@@ -3,7 +3,7 @@
 public class ProblemNotification : Notification
 {
     public long ProblemId { get; private set; }
-    public bool IsNewDeadline { get; private set; }
+    public ProblemNotificationType Pnt { get; private set; }
 
     public ProblemNotification(
         long userId,
@@ -13,9 +13,16 @@ public class ProblemNotification : Notification
         bool isOpened,
         NotificationType type,
         long problemId,
-        bool isNewDeadline) : base(userId, sender, message, createdAt, isOpened, type)
+        ProblemNotificationType pnt) : base(userId, sender, message, createdAt, isOpened, type)
     {
         ProblemId = problemId;
-        IsNewDeadline = isNewDeadline;
+        Pnt = pnt;
+    }
+
+    public enum ProblemNotificationType
+    {
+        NewMessage,
+        NewDeadline,
+        DeadlinePassed
     }
 }

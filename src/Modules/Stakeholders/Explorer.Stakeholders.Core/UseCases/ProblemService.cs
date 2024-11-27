@@ -15,7 +15,6 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
 
     private readonly IInternalProblemService _internalProblemService;
     private readonly INotificationService _notificationService;
-    private readonly IMapper _mapper;
 
     public ProblemService(
         IMapper mapper,
@@ -25,7 +24,6 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
     {
         _problemRepository = problemRepository;
         _internalProblemService = internalProblemService;
-        _mapper = mapper;
         _notificationService = notificationService;
     }
 
@@ -93,7 +91,7 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
             Sender = jwtUser.Username,
             Message = messageInput.Content,
             ProblemId = messageInput.ProblemId,
-            IsNewDeadline = false
+            Pnt = ProblemNotificationType.NewMessage
         };
 
         _notificationService.Create(notificationInput);
@@ -142,7 +140,7 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
             Sender = jwtUser.Username,
             Message = $"New problem resoltion deadline set to {deadline.ToShortDateString()}",
             ProblemId = id,
-            IsNewDeadline = true
+            Pnt = ProblemNotificationType.NewDeadline
         };
 
         _notificationService.Create(notification);

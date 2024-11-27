@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Internal;
+using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Shopping;
@@ -20,12 +22,12 @@ namespace Explorer.Tours.Core.UseCases.Authoring
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
-        private readonly IPurchaseTokensService _purchaseTokenService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IPurchaseTokensService purchaseTokenService) : base(mapper) 
+        private readonly IInternalPurchaseTokenService _purchaseTokenService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
-            _purchaseTokenService=purchaseTokenService;
+            _purchaseTokenService = purchaseTokenService;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -225,9 +227,9 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) 
         {
-            var tokens = _purchaseTokenService.GetTokensByUserId(userId).Value.Results.Where(t => t.UserId == userId);
+            var tokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
             var purchased = new List<TourDto>();
 
             foreach (var token in tokens)
@@ -252,5 +254,76 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
+        public Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize)
+        {
+            try
+            {
+                var publishedTours = tourRepository.GetPaged(page, pageSize).Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
+                var matchingTours = new List<TourDto>();
+                foreach (var tour in publishedTours)
+                {
+                    foreach (var checkpoint in tour.Checkpoints)
+                    {
+                        double distanceToCheckpoint = CalculateDistance(lat, lon, checkpoint.Latitude, checkpoint.Longitude);
+                        if (distanceToCheckpoint <= distance)
+                            matchingTours.Add(MapToDto(tour));
+                        break;
+                    }
+                }
+                return Result.Ok(matchingTours);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+            }
+        }
+
+        private double CalculateDistance(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double R = 6371; // Radius of the Earth in kilometers
+            double dLat = DegreesToRadians(lat2 - lat1);
+            double dLon = DegreesToRadians(lon2 - lon1);
+            double a =
+                Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                Math.Cos(DegreesToRadians(lat1)) * Math.Cos(DegreesToRadians(lat2)) *
+                Math.Sin(dLon / 2) * Math.Sin(dLon / 2);
+            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+            return R * c; // Distance in kilometers
+        }
+
+        private double DegreesToRadians(double degrees)
+        {
+            return degrees * (Math.PI / 180);
+        }
+
+        public Result<TourDto> CheckIfPurchased(int userId, int tourId)
+        {
+            try
+            {   
+                var tourTokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
+                if(tourTokens.Count == 0)
+                {
+                    return null;
+                }
+
+                var tourToken = tourTokens.Find(tt => tt.TourId == tourId);
+                if(tourToken != null)
+                {
+                    var tour = Get(tourToken.TourId).Value;
+                    if (tour.Status == API.Dtos.TourStatus.Published)
+                        return tour;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -18,14 +18,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
 
         public new PagedResult<Tour> GetPaged(int page, int pageSize)
         {
-            var task = DbContext.Tours.Include(t=>t.Checkpoints).Include(t=>t.Reviews).GetPagedById(page, pageSize);
+            var task = DbContext.Tours.Where(t=> t.Status != TourStatus.Deleted).Include(t=>t.Checkpoints).Include(t=>t.Reviews).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
 
         public new Tour Get(long id)
         {
-            var entity = DbContext.Tours.Where(t => t.Id == id)
+            var entity = DbContext.Tours.Where(t => t.Id == id && t.Status != TourStatus.Deleted)
             .Include(t => t.Checkpoints)
             .Include(t => t.Reviews)
             .FirstOrDefault();

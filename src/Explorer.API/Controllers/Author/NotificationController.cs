@@ -27,4 +27,12 @@ public class NotificationController : BaseApiController
         }
         else return BadRequest("Invalid user");
     }
+
+    [HttpPatch]
+    public ActionResult<ProblemNotificationDto> PatchIsOpened([FromQuery] int id, [FromQuery] bool isOpened)
+    {
+        int userId = int.Parse(User.FindFirst("id")!.Value);
+        var result = _notificationService.PatchIsOpened(id, userId, isOpened);
+        return CreateResponse(result);
+    }
 }

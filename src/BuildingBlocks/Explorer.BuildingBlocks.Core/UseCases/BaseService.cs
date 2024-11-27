@@ -12,7 +12,7 @@ namespace Explorer.BuildingBlocks.Core.UseCases;
 /// <typeparam name="TDomain">Type of domain object that maps to TDto</typeparam>
 public abstract class BaseService<TDto, TDomain> where TDomain : Entity
 {
-    private readonly IMapper _mapper;
+    protected readonly IMapper _mapper;
 
     protected BaseService(IMapper mapper)
     {

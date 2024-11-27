@@ -45,5 +45,6 @@ public class StakeholderProfile : Profile
 
         CreateMap<MessageDto, Message>().ReverseMap();
         CreateMap<ProblemNotificationDto, ProblemNotification>().ReverseMap();
+        CreateMap<ClubPostDto, ClubPost>().ReverseMap();
     }
 }

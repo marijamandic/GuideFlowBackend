@@ -22,7 +22,7 @@ namespace Explorer.Tours.Core.Domain.TourExecutions
         }
         public bool IsTouristNear(double latitude, double longitude)
         {
-            const double tolerance = 0.1; // Tolerancija za blizinu (oko 11 metara)
+            const double tolerance = 0.0018; // Tolerancija za blizinu (oko 11 metara)
 
             bool isNearLatitude = Math.Abs(Checkpoint.Latitude - latitude) <= tolerance;
             bool isNearLongitude = Math.Abs(Checkpoint.Longitude - longitude) <= tolerance;

@@ -151,5 +151,12 @@ namespace Explorer.API.Controllers.Authoring.Tour
 
             return CreateResponse(result);
         }
+
+        [HttpGet("search/{latitude:double}/{longitude:double}/{distance:double}")]
+        public ActionResult<List<TourDto>> SearchTours(double latitude, double longitude, double distance, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _tourService.SearchTours(latitude, longitude, distance, page, pageSize);
+            return CreateResponse(result);
+        }
     }
 }
