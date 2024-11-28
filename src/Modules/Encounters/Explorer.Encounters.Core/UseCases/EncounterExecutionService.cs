@@ -35,12 +35,12 @@ namespace Explorer.Encounters.Core.UseCases
                 //ako je social enc napravi ga i proveri da l ima dovoljno ljudi, ako ima zavrsi ga
                 if (encounter is SocialEncounter socialEncounter)
                 {
-                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
-                    _encounterExecutionRepository.Create(encounterExecution);
+                   //var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
+                    _encounterExecutionRepository.Create(execution);
 
                     CompleteSocialEncounter(socialEncounter);
                     
-                    return MapToDto(encounterExecution);
+                    return MapToDto(execution);
 
                 }else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
@@ -66,8 +66,16 @@ namespace Explorer.Encounters.Core.UseCases
             {
                 execution.CountParticipants(activeExecutions.Count);
                 execution.CompleteSocialEncounter();
+                Update(MapToDto(execution));
             }
         }
+
+       /* public Result CheckActiveParticipants(int executionId,int longitude,int latitude)
+        {
+            var execution = Get(executionId);
+            var encounter = _encounterRepository.Get(execution.encounterId);
+            if (execution.isTouristNear());
+        }*/
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
@@ -80,8 +88,10 @@ namespace Explorer.Encounters.Core.UseCases
                 else
                     return Result.Fail("Hidden Location not found");
             }
-            else
+            else if (encounterExecution.Encounter.EncounterType == Domain.EncounterType.Misc)
+            {
                 encounterExecution.Complete();
+            }
 
             _encounterExecutionRepository.Update(encounterExecution);
             return MapToDto(encounterExecution);
@@ -119,5 +129,18 @@ namespace Explorer.Encounters.Core.UseCases
                 return MapToDto(encounterExecution);
             return Result.Fail("There is no active executions for this user");
         }
+
+        public Result<EncounterExecutionDto> FindExecution(long userId, long encounterId)
+        { 
+            var allExecutions = _encounterExecutionRepository.GetAll(); // Pretpostavljamo da imate GetAll()
+            var execution = allExecutions.FirstOrDefault(e => e.UserId == userId && e.EncounterId == encounterId);
+            if (execution == null)
+            {
+                return Result.Ok<EncounterExecutionDto>(null); // Vraća null ako nije pronađeno
+            }
+
+            return MapToDto(execution);
+        }
+
     }
 }

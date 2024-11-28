@@ -45,5 +45,19 @@ namespace Explorer.API.Controllers.Tourist.Encounter
             var result = _encounterExecutionService.GetByUser(userId);
             return CreateResponse(result);
         }
+
+        [HttpGet("findExecution/{userId:long}/{encounterId:long}")]
+        public ActionResult<EncounterExecutionDto> FindExecution([FromRoute] long userId, [FromRoute] long encounterId)
+        {
+            var result = _encounterExecutionService.FindExecution(userId, encounterId);
+
+            if (result.Value == null)
+            {
+                return Ok(null); // Umesto greške, vraća se null
+            }
+
+            return CreateResponse(result);
+        }
+
     }
 }

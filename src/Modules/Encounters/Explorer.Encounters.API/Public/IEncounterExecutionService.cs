@@ -18,6 +18,6 @@ namespace Explorer.Encounters.API.Public
         public Result<EncounterExecutionDto> Get(long id);
         public Result<PagedResult<EncounterExecutionDto>> GetPaged(int page, int pageSize);
         public Result<EncounterExecutionDto> GetByUser(long userId);
-
+        public Result<EncounterExecutionDto> FindExecution(long userId, long encounterId);
     }
 }

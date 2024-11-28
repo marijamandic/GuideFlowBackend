@@ -33,8 +33,14 @@ namespace Explorer.Encounters.Core.Domain
         {
             if (ExecutionStatus.Equals(ExecutionStatus.Active) && Encounter is SocialEncounter socialEncounter)
             {
-                if(socialEncounter.TouristNumber <= Participants )
-                IsComplete = true;
+                if(socialEncounter.TouristNumber <= Participants)
+                {
+                    IsComplete = true;
+                }
+                else
+                {
+                    IsComplete= false;
+                }
             }
         }
 
