@@ -15,7 +15,6 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
 
     private readonly IInternalProblemService _internalProblemService;
     private readonly INotificationService _notificationService;
-    private readonly IMapper _mapper;
 
     public ProblemService(
         IMapper mapper,
@@ -25,7 +24,6 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
     {
         _problemRepository = problemRepository;
         _internalProblemService = internalProblemService;
-        _mapper = mapper;
         _notificationService = notificationService;
     }
 

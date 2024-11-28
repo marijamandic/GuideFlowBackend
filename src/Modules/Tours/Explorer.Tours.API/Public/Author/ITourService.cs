@@ -26,5 +26,6 @@ namespace Explorer.Tours.API.Public.Author
         Result DeleteCheckpoint(int id, CheckpointDto checkpoint);
         Result<List<long>> GetTourIdsByAuthorId(int authorId);
         Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize);
+        Result<TourDto> CheckIfPurchased(int userId, int tourId);
     }
 }
