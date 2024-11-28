@@ -11,5 +11,6 @@ namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
     {
         List<EncounterExecution> GetAll();
         EncounterExecution GetByUserId(long userId);
+        List<EncounterExecution> GetByEncounterId(long encounterId);
     }
 }

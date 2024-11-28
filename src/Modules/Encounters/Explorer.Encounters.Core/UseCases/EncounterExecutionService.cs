@@ -7,6 +7,7 @@ using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,18 +29,22 @@ namespace Explorer.Encounters.Core.UseCases
         {
             var allExecutions = _encounterExecutionRepository.GetAll();
             var execution = MapToDomain(encounterExecutionDto);
-           // var user = _userRepository.Get(encounterExecutionDto.UserId);
             var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
 
             //da li je korisnik u blizini aktivira taj izazov ili da mu se pridruzi
-            if (execution.IsTouristNear(encounterExecutionDto.UserLatitude, encounterExecutionDto.UserLongitude, encounter))
+            if (execution.IsTouristNear(encounter))
             {
-                //ako postoji social enc baci ga na join
-                if (allExecutions.Contains(execution) && encounterExecutionDto.EncounterType.Equals(Domain.EncounterType.Social) && !encounterExecutionDto.IsComplete)
+                //ako je social enc napravi ga i proveri da l ima dovoljno ljudi, ako ima zavrsi ga
+                if (encounter is SocialEncounter socialEncounter)
                 {
-                    // Join(user, encounterExecutionDto);
-                }
-                else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
+                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
+                    _encounterExecutionRepository.Create(encounterExecution);
+
+                    CompleteSocialEncounter(socialEncounter);
+                    
+                    return MapToDto(encounterExecution);
+
+                }else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
                     var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
                     _encounterExecutionRepository.Create(encounterExecution);
@@ -51,17 +56,24 @@ namespace Explorer.Encounters.Core.UseCases
             return Result.Fail("Tourist can't activate or join this encounter");
         }
 
-       /* private void Join(User user, EncounterExecutionDto encounterExecutionDto)
-        {
-            //doda se user u execution 
-           // encounterExecutionDto.TouristsIncluded.Add(user);
-            var execution = MapToDomain(encounterExecutionDto);
+         public void CompleteSocialEncounter(SocialEncounter socialEncounter) {
+            var executionsByEncounter = _encounterExecutionRepository.GetByEncounterId(socialEncounter.Id);
 
-            // prebaci se isCompleted na true ako ima dovoljno ljudi i onda se uradi update
-            execution.CompleteSocialEncounter();
-            Update(MapToDto(execution));
+                foreach (var e in executionsByEncounter)
+                {
 
-        }*/
+                    if (e.IsTouristNear(e.Encounter))
+                    {
+                        e.CountParticipants(executionsByEncounter.Count);
+                        e.CompleteSocialEncounter();
+                    }else
+                    {
+                        e.CountParticipants(executionsByEncounter.Count-1);
+
+                    }
+                }
+
+         }
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
