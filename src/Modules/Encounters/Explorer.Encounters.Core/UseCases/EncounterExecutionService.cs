@@ -17,12 +17,10 @@ namespace Explorer.Encounters.Core.UseCases
     public class EncounterExecutionService : BaseService<EncounterExecutionDto, EncounterExecution>, IEncounterExecutionService
     {
         private readonly IEncounterExecutionRepository _encounterExecutionRepository;
-       // private readonly IUserRepository _userRepository;
         private readonly IEncountersRepository _encounterRepository;
         public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IEncountersRepository encountersRepository, IMapper mapper) : base(mapper)
         {
             _encounterExecutionRepository = encounterExecutionRepository;
-           // _userRepository = userRepository;
             _encounterRepository = encountersRepository;
         }
         public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
@@ -56,24 +54,20 @@ namespace Explorer.Encounters.Core.UseCases
             return Result.Fail("Tourist can't activate or join this encounter");
         }
 
-         public void CompleteSocialEncounter(SocialEncounter socialEncounter) {
-            var executionsByEncounter = _encounterExecutionRepository.GetByEncounterId(socialEncounter.Id);
 
-                foreach (var e in executionsByEncounter)
-                {
+        public void CompleteSocialEncounter(SocialEncounter socialEncounter)
+        {
+            var activeExecutions = _encounterExecutionRepository
+                .GetByEncounterId(socialEncounter.Id)
+                .Where(e => e.IsTouristNear(e.Encounter))
+                .ToList();
 
-                    if (e.IsTouristNear(e.Encounter))
-                    {
-                        e.CountParticipants(executionsByEncounter.Count);
-                        e.CompleteSocialEncounter();
-                    }else
-                    {
-                        e.CountParticipants(executionsByEncounter.Count-1);
-
-                    }
-                }
-
-         }
+            foreach (var execution in activeExecutions)
+            {
+                execution.CountParticipants(activeExecutions.Count);
+                execution.CompleteSocialEncounter();
+            }
+        }
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
         {
