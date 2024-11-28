@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Public;
+using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using System.ComponentModel.Design;
 namespace Explorer.API.Controllers.Tourist
 {
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/tourist/tourspecifications")]
+    [Route("api/tourist/tourSpecifications")]
     public class TourSpecificationController : BaseApiController
     {
         private readonly ITourSpecificationService _tourSpecificationService;
@@ -51,7 +52,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpGet("{userId:long}")]
         public ActionResult<TourSpecificationDto> GetByUserId(long userId)
         {
-            var result = _tourSpecificationService.GetTourSpecificationsByUserId(userId);
+            var result = _tourSpecificationService.GetByUserId(userId);
             if (result.IsSuccess)
             {
                 return Ok(result.Value);
@@ -59,13 +60,5 @@ namespace Explorer.API.Controllers.Tourist
 
             return NotFound(result.Errors);
         }
-
-        [HttpGet("{userId}/hasPreference")]
-        public async Task<IActionResult> CheckUserPreference(int userId)
-        {
-            var hasPreference = await _tourSpecificationService.HasPreferenceAsync(userId);
-            return Ok(hasPreference);
-        }
-
     }
 }
