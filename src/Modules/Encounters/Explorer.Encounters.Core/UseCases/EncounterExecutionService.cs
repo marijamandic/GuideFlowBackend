@@ -85,6 +85,7 @@ namespace Explorer.Encounters.Core.UseCases
             {
                 if (encounterExecution.IsHiddenLocationFound(encounterExecutionDto.UserLatitude, encounterExecutionDto.UserLongitude, encounter))
                     encounterExecution.Complete();
+                    
                 else
                     return Result.Fail("Hidden Location not found");
             }
@@ -92,7 +93,8 @@ namespace Explorer.Encounters.Core.UseCases
             {
                 encounterExecution.Complete();
             }
-
+            //if executiom.IsCompleted
+            //Dodaj metodu _internalTouristService.UpdateTourist(int id , broj poenaa);
             _encounterExecutionRepository.Update(encounterExecution);
             return MapToDto(encounterExecution);
         }
@@ -132,11 +134,11 @@ namespace Explorer.Encounters.Core.UseCases
 
         public Result<EncounterExecutionDto> FindExecution(long userId, long encounterId)
         { 
-            var allExecutions = _encounterExecutionRepository.GetAll(); // Pretpostavljamo da imate GetAll()
+            var allExecutions = _encounterExecutionRepository.GetAll();
             var execution = allExecutions.FirstOrDefault(e => e.UserId == userId && e.EncounterId == encounterId);
             if (execution == null)
             {
-                return Result.Ok<EncounterExecutionDto>(null); // Vraća null ako nije pronađeno
+                return Result.Ok<EncounterExecutionDto>(null);
             }
 
             return MapToDto(execution);
