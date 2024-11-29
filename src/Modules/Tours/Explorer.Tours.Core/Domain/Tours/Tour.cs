@@ -128,7 +128,8 @@ namespace Explorer.Tours.Core.Domain.Tours
     {
         Draft,
         Published,
-        Archived
+        Archived,
+        Deleted
     }
 
     public enum Level 

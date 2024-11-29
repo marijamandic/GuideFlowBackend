@@ -30,7 +30,8 @@ namespace Explorer.Tours.API.Dtos
     {
         Draft,
         Published,
-        Archived
+        Archived,
+        Deleted
     }
 
     public enum Level
