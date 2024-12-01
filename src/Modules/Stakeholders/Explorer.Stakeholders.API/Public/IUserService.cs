@@ -19,7 +19,5 @@ namespace Explorer.Stakeholders.API.Public
             public Result<List<UserDto>> GetAllUsers();
             Result Delete(int id);
             Result<TouristDto> GetTouristById(int id);
-            Result<TouristDto> UpdateTourist(TouristDto touristDto);
-            //Result<TouristDto> AddTouristXp(int id, int amount);
         }
 }

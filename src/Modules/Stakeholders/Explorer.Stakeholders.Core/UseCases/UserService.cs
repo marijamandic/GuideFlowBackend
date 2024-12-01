@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class UserService : CrudService<UserDto, User>, IUserService
+    public class UserService : CrudService<UserDto, User>, IUserService, IInternalTouristService
     {
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
@@ -42,7 +43,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             TouristDto touristDto = mapper.Map<TouristDto>(tourist);
             return Result.Ok(touristDto);
         }
-        public Result<TouristDto> UpdateTourist(TouristDto touristDto)
+        /*public Result<TouristDto> UpdateTourist(TouristDto touristDto)
         {
             Tourist existingTourist = userRepository.GetTouristById(touristDto.Id);
             if (existingTourist == null)
@@ -55,8 +56,8 @@ namespace Explorer.Stakeholders.Core.UseCases
             userRepository.UpdateTourist(existingTourist);
 
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
-        }
-        /*public Result<TouristDto> AddTouristXp(int id,int amount)
+        }*/
+        public Result<TouristDto> AddTouristXp(int id,int amount)
         {
             Tourist existingTourist = userRepository.GetTouristById(id);
             if (existingTourist == null)
@@ -67,6 +68,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             userRepository.UpdateTourist(existingTourist);
 
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
-        }*/
+        }
     }
 }

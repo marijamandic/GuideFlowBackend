@@ -1,5 +1,6 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.Domain;
@@ -39,6 +40,7 @@ public static class StakeholdersStartup
         services.AddScoped<IClubRequestService, ClubRequestService>();
         services.AddScoped<IClubMemberService, ClubMemberService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IInternalTouristService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
         services.AddScoped<IAccountService, AccountService>();
