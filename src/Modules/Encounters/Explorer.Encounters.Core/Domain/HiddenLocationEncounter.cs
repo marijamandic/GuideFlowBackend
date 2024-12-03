@@ -15,9 +15,9 @@ namespace Explorer.Encounters.Core.Domain
         public double ImageLongitude { get; private set; }
 
         public HiddenLocationEncounter() { }
-        public HiddenLocationEncounter(string name,string description,EncounterLocation location,EncounterStatus status,int experiencePoints,EncounterType encounterType,
+        public HiddenLocationEncounter(string name,string description,EncounterLocation location,EncounterStatus status,int experiencePoints,EncounterType encounterType,bool isCreatedByAuthor,
                                  string imageUrl,double activationRange,long checkpointId,
-                                 double imageLatitude, double imageLongitude): base(name, description, location, status, experiencePoints, encounterType)
+                                 double imageLatitude, double imageLongitude): base(name, description, location, status, experiencePoints, encounterType, isCreatedByAuthor)
         {
             ImageUrl = imageUrl;
             ActivationRange = activationRange;

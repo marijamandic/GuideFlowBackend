@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExecutionStatus = Explorer.Tours.Core.Domain.TourExecutions.ExecutionStatus;
+using Explorer.Encounters.API.Internal;
 
 namespace Explorer.Tours.Core.UseCases.Execution
 {
@@ -22,10 +23,12 @@ namespace Explorer.Tours.Core.UseCases.Execution
     {
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ITourService _tourService;
+        private readonly IInternalEncounterExecutionService _internalEncounterExecutionService;
         private readonly IMapper _mapper;
-        public TourExecutionService(IMapper mapper , ITourExecutionRepository tourExecutionRepository , ITourService tourService) : base(mapper) {
+        public TourExecutionService(IMapper mapper , ITourExecutionRepository tourExecutionRepository , ITourService tourService , IInternalEncounterExecutionService internalEncounterExecutionService) : base(mapper) {
             _tourExecutionRepository = tourExecutionRepository;
             _tourService = tourService;
+            _internalEncounterExecutionService = internalEncounterExecutionService;
             _mapper = mapper;
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
@@ -48,7 +51,19 @@ namespace Explorer.Tours.Core.UseCases.Execution
         }
         public Result<TourExecutionDto> Update(UpdateTourExecutionDto updateTourExecutionDto) {
             var tourExecution = _tourExecutionRepository.Get(updateTourExecutionDto.TourExecutionId);
-            tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude);
+            foreach (CheckpointStatus checkpointStatus in tourExecution.CheckpointsStatus) {
+                if (!checkpointStatus.Checkpoint.IsEncounterEssential)
+                {
+                    tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude, checkpointStatus);
+                }
+                else {
+              
+                    var isFinished = _internalEncounterExecutionService.IsEncounterExecutionFinished(tourExecution.UserId, (long)checkpointStatus.Checkpoint.EncounterId);
+                    if (isFinished.IsSuccess && isFinished.Value) { 
+                        tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude, checkpointStatus);
+                    }
+                }
+            }
             _tourExecutionRepository.Update(tourExecution);
 
             var tourExecutionDto = MapToDto(tourExecution);
