@@ -4,6 +4,7 @@ using Explorer.Encounters.API.Dtos;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.API.Internal;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,12 @@ namespace Explorer.Encounters.Core.UseCases
     {
         private readonly IEncounterExecutionRepository _encounterExecutionRepository;
         private readonly IEncountersRepository _encounterRepository;
-        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IEncountersRepository encountersRepository, IMapper mapper) : base(mapper)
+        private readonly IInternalTouristService _internalTouristService;
+        public EncounterExecutionService(IEncounterExecutionRepository encounterExecutionRepository, IEncountersRepository encountersRepository, IMapper mapper,IInternalTouristService internalTouristService) : base(mapper)
         {
             _encounterExecutionRepository = encounterExecutionRepository;
             _encounterRepository = encountersRepository;
+            _internalTouristService = internalTouristService;
         }
         public Result<EncounterExecutionDto> Create(EncounterExecutionDto encounterExecutionDto)
         {
@@ -93,8 +96,11 @@ namespace Explorer.Encounters.Core.UseCases
             {
                 encounterExecution.Complete(MapToDomain(encounterExecutionDto));
             }
-            //if executiom.IsCompleted
-            //Dodaj metodu _internalTouristService.UpdateTourist(int id , broj poenaa);
+            //Dodaj Xp Touristi koji je resio izazov
+            if (encounterExecution.IsComplete)
+            {
+                _internalTouristService.AddTouristXp(encounterExecutionDto.UserId, encounter.ExperiencePoints);
+            }
             _encounterExecutionRepository.Update(encounterExecution);
             return MapToDto(encounterExecution);
         }
