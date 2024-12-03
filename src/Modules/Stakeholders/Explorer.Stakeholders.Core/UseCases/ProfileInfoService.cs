@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -15,43 +16,23 @@ namespace Explorer.Stakeholders.Core.UseCases
 {
     public class ProfileInfoService : CrudService<ProfileInfoDto, ProfileInfo>, IProfileInfoService
     {
-        public ProfileInfoService(ICrudRepository<ProfileInfo> repository, IMapper mapper) : base(repository, mapper) { }
-
-        public Result<List<ProfileInfoDto>> GetAll()
+        private readonly IProfileInfoRepository profileInfoRepository;
+        public ProfileInfoService(IProfileInfoRepository profileInfoRepository, IMapper mapper) : base(profileInfoRepository, mapper)
         {
-            var pagedResult = GetPaged(1, int.MaxValue);
-
-            if (pagedResult.IsFailed)
-            {
-                return Result.Fail<List<ProfileInfoDto>>(pagedResult.Errors);
-            }
-
-            return Result.Ok(pagedResult.Value.Results);
+            this.profileInfoRepository = profileInfoRepository;
         }
 
-        public Result<PagedResult<ProfileInfoDto>> GetPaged(int pageIndex, int pageSize)
+        public Result<ProfileInfoDto> GetByUserId(int id)
         {
-            return base.GetPaged(pageIndex, pageSize);
+            ProfileInfo profileInfo = profileInfoRepository.GetById(id);
+            return MapToDto(profileInfo);
         }
 
-        public Result<ProfileInfoDto> GetByUserId(int userId)
+        public Result<List<ProfileInfoDto>> GetAllUsers()
         {
-            var allProfiles = GetAll(); // Prvo preuzimamo sve profile
-            if (allProfiles.IsFailed)
-            {
-                return Result.Fail("Greška prilikom preuzimanja svih profila.");
-            }
-
-            var profile = allProfiles.Value.FirstOrDefault(p => p.UserId == userId); // Tražimo profil sa zadatim ID-om
-
-            if (profile != null)
-            {
-                return Result.Ok(profile); // Ako je profil pronađen, vraćamo ga
-            }
-            else
-            {
-                return Result.Fail($"Profil sa UserID-om {userId} nije pronađen."); // Ako nije, vraćamo grešku
-            }
+            var profiles = profileInfoRepository.GetAll();
+            var profileInfoDtos = profiles.Select(MapToDto).ToList();
+            return Result.Ok(profileInfoDtos);
         }
 
 
