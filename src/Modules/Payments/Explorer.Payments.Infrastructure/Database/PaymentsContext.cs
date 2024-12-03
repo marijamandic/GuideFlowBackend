@@ -12,6 +12,7 @@ public class PaymentsContext : DbContext
     public DbSet<Payment> Payments { get; set; }
     public DbSet<PaymentItem> PaymentItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
+    public DbSet<TourBundle> TourBundles { get; set; }
     public DbSet<Sales> Sales { get; set; }
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }
@@ -42,7 +43,6 @@ public class PaymentsContext : DbContext
                     .HasForeignKey(pi => pi.PaymentId)
                     .OnDelete(DeleteBehavior.Cascade);
     }
-
     private static void ConfigureSales(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Sales>()

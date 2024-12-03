@@ -45,5 +45,12 @@ namespace Explorer.API.Controllers.Tourist
 
             return CreateResponse(result);
         }
+
+        [HttpGet("bundle/{id:int}")]
+        public ActionResult<PagedResult<TourDto>> GetToursByBundleId(int id)
+        {
+            var result = _tourService.GetToursByBundleId(id);
+            return CreateResponse(result);
+        }
     }
 }

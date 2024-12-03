@@ -23,5 +23,15 @@ public class Sales : Entity
 		bool endsAtIsInRange = EndsAt < CreatedAt || EndsAt > CreatedAt.AddDays(14);
 		if (CreatedAt != default && endsAtIsInRange)
 			throw new ArgumentException("Invalid EndsAt");
+
+		if (Discount < 0) throw new ArgumentException("Invalid Discount");
+	}
+
+	public void Update(Sales sales)
+	{
+		EndsAt = sales.EndsAt;
+		Discount = sales.Discount;
+		TourIds = new List<long>(sales.TourIds);
+		Validate();
 	}
 }
