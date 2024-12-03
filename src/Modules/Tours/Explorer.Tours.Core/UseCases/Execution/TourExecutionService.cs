@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ExecutionStatus = Explorer.Tours.Core.Domain.TourExecutions.ExecutionStatus;
+using Explorer.Encounters.API.Internal;
 
 namespace Explorer.Tours.Core.UseCases.Execution
 {
@@ -22,10 +23,12 @@ namespace Explorer.Tours.Core.UseCases.Execution
     {
         private readonly ITourExecutionRepository _tourExecutionRepository;
         private readonly ITourService _tourService;
+        private readonly IInternalEncounterExecutionService _internalEncounterExecutionService;
         private readonly IMapper _mapper;
-        public TourExecutionService(IMapper mapper , ITourExecutionRepository tourExecutionRepository , ITourService tourService) : base(mapper) {
+        public TourExecutionService(IMapper mapper , ITourExecutionRepository tourExecutionRepository , ITourService tourService , IInternalEncounterExecutionService internalEncounterExecutionService) : base(mapper) {
             _tourExecutionRepository = tourExecutionRepository;
             _tourService = tourService;
+            _internalEncounterExecutionService = internalEncounterExecutionService;
             _mapper = mapper;
         }
         public Result<TourExecutionDto> Create(CreateTourExecutionDto createTourExecutionDto) {
@@ -54,8 +57,9 @@ namespace Explorer.Tours.Core.UseCases.Execution
                     tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude, checkpointStatus);
                 }
                 else {
-                    //internal service ka EncounterExecution da proverimo da li je user odradio izazov. znaaci treba nam tourExecution.UserId i checkpointStatus.Checkpoint.EncounterId
-                    if (true) { // ovde ce biti umesto true boolean iz internal service
+              
+                    var isFinished = _internalEncounterExecutionService.IsEncounterExecutionFinished(tourExecution.UserId, (long)checkpointStatus.Checkpoint.EncounterId);
+                    if (isFinished.IsSuccess && isFinished.Value) { 
                         tourExecution.UpdateLocation(updateTourExecutionDto.Longitude, updateTourExecutionDto.Latitude, checkpointStatus);
                     }
                 }

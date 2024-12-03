@@ -84,14 +84,14 @@ namespace Explorer.Encounters.Core.UseCases
             if(encounterExecution.Encounter.EncounterType == Domain.EncounterType.Location)
             {
                 if (encounterExecution.IsHiddenLocationFound(encounterExecutionDto.UserLatitude, encounterExecutionDto.UserLongitude, encounter))
-                    encounterExecution.Complete();
+                    encounterExecution.Complete(MapToDomain(encounterExecutionDto));
                     
                 else
                     return Result.Fail("Hidden Location not found");
             }
             else if (encounterExecution.Encounter.EncounterType == Domain.EncounterType.Misc)
             {
-                encounterExecution.Complete();
+                encounterExecution.Complete(MapToDomain(encounterExecutionDto));
             }
             //if executiom.IsCompleted
             //Dodaj metodu _internalTouristService.UpdateTourist(int id , broj poenaa);
@@ -127,6 +127,7 @@ namespace Explorer.Encounters.Core.UseCases
         public Result<EncounterExecutionDto> GetByUser(long userId)
         {
             var encounterExecution = _encounterExecutionRepository.GetByUserId(userId);
+            if (encounterExecution is null) return Result.Fail("There is no encounter executions for this user");
             if(!encounterExecution.IsComplete)
                 return MapToDto(encounterExecution);
             return Result.Fail("There is no active executions for this user");
@@ -144,5 +145,10 @@ namespace Explorer.Encounters.Core.UseCases
             return MapToDto(execution);
         }
 
+        public Result<List<long>> GetAllEncountersIdsByUserId(long userId)
+        {
+            var encounterExecutionIds = _encounterExecutionRepository.GetAllEncounterIdsByUserId(userId);
+            return encounterExecutionIds;
+        }
     }
 }

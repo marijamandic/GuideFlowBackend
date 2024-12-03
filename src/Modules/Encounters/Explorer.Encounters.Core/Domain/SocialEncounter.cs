@@ -15,7 +15,7 @@ namespace Explorer.Encounters.Core.Domain
         public double EncounterRange { get; private set; }
 
         public SocialEncounter() { }
-        public SocialEncounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints, EncounterType encounterType ,int touristNumber, double encounterRange) : base(name, description, location, status, experiencePoints, encounterType) { 
+        public SocialEncounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints, EncounterType encounterType ,int touristNumber, double encounterRange, bool isCreatedByAuthor) : base(name, description, location, status, experiencePoints, encounterType, isCreatedByAuthor) { 
             TouristNumber = touristNumber;
             EncounterRange = encounterRange;
             Validate();

@@ -49,11 +49,14 @@ namespace Explorer.Encounters.Core.Domain
             Participants = participants;
         }
 
-        public void Complete()
+        public void Complete(EncounterExecution encounterExecution)
         {
             if (ExecutionStatus.Equals(ExecutionStatus.Active))
             {
                 IsComplete = true;
+                ExecutionStatus = ExecutionStatus.Completed;
+                UserLongitude = encounterExecution.UserLongitude;
+                UserLatitude = encounterExecution.UserLatitude;
             }
         }
 
