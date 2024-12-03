@@ -19,7 +19,7 @@ namespace Explorer.Payments.Core.Domain
 
         public List<long> TourIds {  get; private set; } = new List<long>();
 
-        public TourBundle(string name, double price, BundleStatus status,long authorId, List<long> tourIds) 
+        public TourBundle(string name, double price, BundleStatus status, long authorId, List<long> tourIds)
         {
             Name = name;
             Price = price;
@@ -27,17 +27,6 @@ namespace Explorer.Payments.Core.Domain
             AuthorId = authorId;
             TourIds = tourIds;
             Validate();
-        }
-
-        public void AddTour(long tourId) 
-        {
-            TourIds.Add(tourId);
-        }
-
-        public void RemoveTour(long tourId)
-        {
-            if (TourIds.Count == 0) throw new InvalidOperationException("Cannot Remove Anymore Tours");
-            TourIds.Remove(tourId);
         }
 
         public void Publish()

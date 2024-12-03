@@ -23,7 +23,6 @@ public class PaymentsContext : DbContext
 
         ConfigureShoppingCart(modelBuilder);
         ConfigurePayment(modelBuilder);
-        ConfigureTourBundle(modelBuilder);
         ConfigureSales(modelBuilder);
     }
 
@@ -44,13 +43,6 @@ public class PaymentsContext : DbContext
                     .HasForeignKey(pi => pi.PaymentId)
                     .OnDelete(DeleteBehavior.Cascade);
     }
-
-    private static void ConfigureTourBundle(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<TourBundle>().Property(item => item.TourIds)
-                     .HasColumnType("jsonb");
-    }
-
     private static void ConfigureSales(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Sales>()

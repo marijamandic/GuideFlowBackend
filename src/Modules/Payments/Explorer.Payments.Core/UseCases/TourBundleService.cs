@@ -56,7 +56,6 @@ namespace Explorer.Payments.Core.UseCases
                 if (tourBundle.Status == Domain.BundleStatus.Published)
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Cannot Delete Published Tour Bundle");
                 _tourBundleRepository.Delete(tourBundle);
-                _tourBundleRepository.Save(tourBundle);
                 return MapToDto(tourBundle);
             }
             catch (KeyNotFoundException e)
@@ -65,37 +64,18 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
-        public Result<TourBundleDto> AddTour(long tourBundleId, long tourId)
+        public Result<TourBundleDto> Modify(TourBundleDto tourBundleDto)
         {
             try
             {
-                var tourBundle = _tourBundleRepository.GetById(tourBundleId);
-                tourBundle.AddTour(tourId);
+                tourBundleDto.TourIds = tourBundleDto.TourIds.Distinct().ToList();
+                var tourBundle = MapToDomain(tourBundleDto);    
                 _tourBundleRepository.Save(tourBundle);
                 return MapToDto(tourBundle);
             }
             catch (KeyNotFoundException e)
             {
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-        }
-
-        public Result<TourBundleDto> RemoveTour(long tourBundleId, long tourId)
-        {
-            try
-            {
-                var tourBundle = _tourBundleRepository.GetById(tourBundleId);
-                tourBundle.RemoveTour(tourId);
-                _tourBundleRepository.Save(tourBundle);
-                return MapToDto(tourBundle);
-            }
-            catch (KeyNotFoundException e)
-            {
-                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
-            }
-            catch (InvalidOperationException e)
-            {
-                return Result.Fail(FailureCode.Internal).WithError(e.Message);
             }
         }
 

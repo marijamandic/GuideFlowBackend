@@ -19,9 +19,7 @@ namespace Explorer.Payments.API.Public
 
         Result<TourBundleDto> Delete(long tourBundleId);
 
-        Result<TourBundleDto> AddTour(long tourBundleId, long tourId);
-
-        Result<TourBundleDto> RemoveTour(long tourBundleId, long tourId);
+        Result<TourBundleDto> Modify(TourBundleDto tourBundleDto);
 
         Result<TourBundleDto> Publish(long tourBundleId);
 
