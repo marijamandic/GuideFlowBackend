@@ -39,20 +39,6 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
-        [HttpPatch("addTour")]
-        public ActionResult<TourBundleDto> AddTour(long tourBundleId, long tourId)
-        {
-            var result = _tourBundleService.AddTour(tourBundleId, tourId);
-            return CreateResponse(result);
-        }
-
-        [HttpPatch("removeTour")]
-        public ActionResult<TourBundleDto> RemoveTour(long tourBundleId, long tourId)
-        {
-            var result = _tourBundleService.RemoveTour(tourBundleId, tourId);
-            return CreateResponse(result);
-        }
-
         [HttpPatch("publish")]
         public ActionResult<TourBundleDto> Publish(long tourBundleId)
         {
@@ -64,6 +50,13 @@ namespace Explorer.API.Controllers.Author
         public ActionResult<TourBundleDto> Archieve(long tourBundleId)
         {
             var result = _tourBundleService.Archive(tourBundleId);
+            return CreateResponse(result);
+        }
+
+        [HttpPut]
+        public ActionResult<TourBundleDto> Modify([FromBody] TourBundleDto tourBundleDto)
+        {
+            var result = _tourBundleService.Modify(tourBundleDto);
             return CreateResponse(result);
         }
 

@@ -21,7 +21,6 @@ public class PaymentsContext : DbContext
 
         ConfigureShoppingCart(modelBuilder);
         ConfigurePayment(modelBuilder);
-        ConfigureTourBundle(modelBuilder);
     }
 
     private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
@@ -42,9 +41,4 @@ public class PaymentsContext : DbContext
                     .OnDelete(DeleteBehavior.Cascade);
     }
 
-    private static void ConfigureTourBundle(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<TourBundle>().Property(item => item.TourIds)
-                     .HasColumnType("jsonb");
-    }
 }
