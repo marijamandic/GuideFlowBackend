@@ -53,5 +53,33 @@ namespace Explorer.Tours.Core.UseCases.Administration
                     .CausedBy(ex));
             }
         }
+
+        public Result<IEnumerable<PublicPointDto>> GetAllAccepted()
+        {
+            try
+            {
+                var pendingPoints = _publicPointRepository.GetAll()
+                    .Where(p => p.ApprovalStatus == Domain.ApprovalStatus.Accepted)
+                    .Select(p => new PublicPointDto
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Latitude = p.Latitude,
+                        Longitude = p.Longitude,
+                        ImageUrl = p.ImageUrl,
+                        ApprovalStatus = (API.Dtos.ApprovalStatus)p.ApprovalStatus,
+                        PointType = (API.Dtos.PointType)p.PointType,
+                        AuthorId = p.AuthorId
+                    });
+
+                return Result.Ok(pendingPoints);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail(new Error("Failed to retrieve pending public points.")
+                    .CausedBy(ex));
+            }
+        }
     }
 }
