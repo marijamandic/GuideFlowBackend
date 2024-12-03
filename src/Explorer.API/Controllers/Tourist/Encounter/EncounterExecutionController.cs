@@ -45,6 +45,11 @@ namespace Explorer.API.Controllers.Tourist.Encounter
             var result = _encounterExecutionService.GetByUser(userId);
             return CreateResponse(result);
         }
+        [HttpGet("getAllByUser/{userId:long}")]
+        public ActionResult<List<long>> GetAlEncounterIdsByUserId([FromRoute] long userId) {
+            var result = _encounterExecutionService.GetAllEncountersIdsByUserId(userId);
+            return CreateResponse(result);
+        }
 
         [HttpGet("findExecution/{userId:long}/{encounterId:long}")]
         public ActionResult<EncounterExecutionDto> FindExecution([FromRoute] long userId, [FromRoute] long encounterId)

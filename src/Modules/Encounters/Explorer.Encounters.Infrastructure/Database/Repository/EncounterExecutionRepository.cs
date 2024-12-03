@@ -70,6 +70,12 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             return _context.EncounterExecutions.Where(e => e.EncounterId == id).ToList();
         }
 
-
+        public List<long> GetAllEncounterIdsByUserId(long userId)
+        {
+            return _context.EncounterExecutions
+                   .Where(e => e.UserId == userId) 
+                   .Select(e => e.EncounterId)    
+                   .ToList();
+        }
     }
 }

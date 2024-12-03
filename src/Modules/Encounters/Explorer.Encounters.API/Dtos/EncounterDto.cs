@@ -19,7 +19,8 @@ namespace Explorer.Encounters.API.Dtos
         public EncounterLocationDto EncounterLocation { get; set; }
         public EncounterStatus EncounterStatus { get; set; }
         public int ExperiencePoints { get; set; }
-        public EncounterType EncounterType { get; set; }
+        public EncounterType EncounterType { get; set; } 
+        public bool? IsCreatedByAuthor { get; set; }
     }
     public enum EncounterStatus
     {

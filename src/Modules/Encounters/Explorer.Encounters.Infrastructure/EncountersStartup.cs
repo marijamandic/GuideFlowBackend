@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Encounters.API.Internal;
 using Explorer.Encounters.API.Public;
 using Explorer.Encounters.Core.Domain;
 using Explorer.Encounters.Core.Domain.RepositoryInterfaces;
@@ -31,6 +32,7 @@ namespace Explorer.Encounters.Infrastructure
         {
             services.AddScoped<IEncounterService,EncounterService>();
             services.AddScoped<IEncounterExecutionService, EncounterExecutionService>();
+            services.AddScoped<IInternalEncounterExecutionService, InternalEncounterExecutionService>();
         }
         private static void SetupInfrastructure(IServiceCollection services)
         {

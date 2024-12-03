@@ -15,8 +15,9 @@ namespace Explorer.Encounters.Core.Domain
         public EncounterStatus EncounterStatus { get; private set; }
         public int ExperiencePoints { get; private set; }
         public EncounterType EncounterType { get; private set; }
+        public bool IsCreatedByAuthor { get; private set; } = false;
         public Encounter() { }
-        public Encounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints , EncounterType encounterType)
+        public Encounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints , EncounterType encounterType , bool isCreatedByAuthor)
         {
             Name = name;
             Description = description;
@@ -24,6 +25,7 @@ namespace Explorer.Encounters.Core.Domain
             EncounterStatus = status;
             ExperiencePoints = experiencePoints;
             EncounterType = encounterType;
+            IsCreatedByAuthor = isCreatedByAuthor;
             Validate();
         }
         private void Validate()
