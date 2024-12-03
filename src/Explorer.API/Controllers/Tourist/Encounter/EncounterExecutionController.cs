@@ -39,6 +39,8 @@ namespace Explorer.API.Controllers.Tourist.Encounter
             return CreateResponse(result);
         }
 
+
+
         [HttpGet("getByUser/{userId:long}")]
         public ActionResult<EncounterExecutionDto> GetByUserId([FromRoute] long userId)
         {
@@ -61,6 +63,14 @@ namespace Explorer.API.Controllers.Tourist.Encounter
                 return Ok(null); // Umesto greške, vraća se null
             }
 
+            return CreateResponse(result);
+        }
+
+
+        [HttpPut("completeSocial/{id:int}")]
+        public void CompleteSocialEncounter([FromBody] EncounterExecutionDto encounterExecutionDto)
+        {
+            var result = _encounterExecutionService.CompleteSocialEncounter(encounterExecutionDto);
             return CreateResponse(result);
         }
 
