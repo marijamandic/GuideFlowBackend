@@ -70,5 +70,17 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
         }
+
+        public Result<TouristDto> TakeTouristAdventureCoins(int touristId, int amount)
+        {
+            Tourist existingTourist = userRepository.GetTouristById(touristId);
+            if (existingTourist == null)
+            {
+                return Result.Fail("Tourist not found.");
+            }
+            existingTourist.UpdateWallet(existingTourist.Wallet - amount);
+            userRepository.UpdateTourist(existingTourist);
+            return Result.Ok(mapper.Map<TouristDto>(existingTourist));
+        }
     }
 }

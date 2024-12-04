@@ -13,5 +13,6 @@ namespace Explorer.Payments.API.Public
     {
         Result<PaymentDto> Create(int touristId);
         Result<PagedResult<PaymentDto>> GetAllByTouristId(int touristId);
+        public Result Checkout(int touristId);
     }
 }

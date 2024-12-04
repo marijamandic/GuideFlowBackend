@@ -86,9 +86,4 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
     }
 
-    public Result<UserDto> Checkout(int touristId)
-    { 
-        UserDto tourist = _userService.GetById(touristId).Value;
-        return Result.Ok(tourist);
-    }
 }

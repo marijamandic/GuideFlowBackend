@@ -4,6 +4,9 @@ using Explorer.Payments.API.Dtos.Payments;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.Payments;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
+using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -18,11 +21,13 @@ namespace Explorer.Payments.Core.UseCases
         private readonly IPaymentRepository _paymentRepository;
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ITourPurchaseTokenService _tourPurchaseTokenService;
-        public PaymentService(IMapper mapper,IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService):base(mapper) 
+        private readonly IUserService _userService;
+        public PaymentService(IMapper mapper, IUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService):base(mapper) 
         { 
             _paymentRepository = paymentRepository;
             _shoppingCartService = shoppingCartService;
             _tourPurchaseTokenService = tourPurchaseTokenService;
+            _userService = userService;
         }
 
         public Result<PaymentDto> Create(int touristId)
@@ -41,6 +46,8 @@ namespace Explorer.Payments.Core.UseCases
 
                 var payment = _paymentRepository.Create(MapToDomain(paymentDto));
 
+                var shoppingCartCostSum = 0;
+
                 foreach (var item in shoppingCartResult.Value.Items)
                 {
                     var paymentItem = _mapper.Map<PaymentItem>(new PaymentItemDto
@@ -52,7 +59,10 @@ namespace Explorer.Payments.Core.UseCases
                         AdventureCoin = item.AdventureCoin
                     });
                     payment.AddToPayment(paymentItem);
+                    shoppingCartCostSum += item.AdventureCoin;
                 }
+
+                _userService.TakeTouristAdventureCoins(touristId, shoppingCartCostSum);
 
                 _shoppingCartService.ClearCart(touristId);
 
@@ -68,7 +78,6 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
-
         public Result<PagedResult<PaymentDto>> GetAllByTouristId(int touristId)
         {
             try
@@ -80,6 +89,28 @@ namespace Explorer.Payments.Core.UseCases
             {
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
+        }
+
+        public Result Checkout(int touristId)
+        {
+            var result = _userService.GetTouristById(touristId);
+            TouristDto tourist = result.Value;
+            //ShoppingCart touristsCart = _shoppingCartRepository.GetByTouristId(touristId);
+            var touristsCart = _shoppingCartService.GetByTouristId(touristId);
+
+            int shoppingCartSum = 0;
+
+            foreach (var item in touristsCart.Value.Items)
+            {
+                shoppingCartSum += item.AdventureCoin;
+            }
+
+            if (shoppingCartSum <= tourist.Wallet)
+            {
+                Create(touristId);
+                return Result.Ok();
+            }
+            return Result.Fail("Nema novaca");
         }
     }
 }

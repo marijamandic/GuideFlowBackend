@@ -12,10 +12,11 @@ namespace Explorer.API.Controllers.Tourist.Shopping;
 public class ShoppingCartController : BaseApiController
 {
     private readonly IShoppingCartService _shoppingCartService;
-
-    public ShoppingCartController(IShoppingCartService shoppingCartService)
+    private readonly IPaymentService _paymentService;
+    public ShoppingCartController(IShoppingCartService shoppingCartService, IPaymentService paymentService)
     {
         _shoppingCartService = shoppingCartService;
+        _paymentService = paymentService;
     }
 
     [HttpPost("items")]
@@ -43,16 +44,10 @@ public class ShoppingCartController : BaseApiController
     }
 
     [HttpPost("checkout/{touristId:int}")]
-    public ActionResult<String> Checkout([FromRoute] int touristId)
+    public ActionResult Checkout([FromRoute] int touristId)
     {
-        var success = _shoppingCartService.Checkout(touristId);
-        if(touristId == 1)
-        {
-            return Ok(success.Value);
-        }
-        else
-        {
-            return BadRequest(new { success = false, message = "Nemate dovoljno sredstava" });
-        }
+        var success = _paymentService.Checkout(touristId);
+
+        return CreateResponse(success);
     }
 }
