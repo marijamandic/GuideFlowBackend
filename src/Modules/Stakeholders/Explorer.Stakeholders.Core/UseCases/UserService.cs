@@ -34,6 +34,5 @@ namespace Explorer.Stakeholders.Core.UseCases
             var userDtos = users.Select(MapToDto).ToList();
             return Result.Ok(userDtos);
         }
-
     }
 }

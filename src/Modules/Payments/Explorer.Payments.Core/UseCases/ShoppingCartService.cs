@@ -5,17 +5,23 @@ using Explorer.Payments.API.Dtos.ShoppingCarts;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Explorer.Payments.Core.UseCases;
 
 public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
-
-    public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IMapper mapper) : base(mapper)
+    private readonly IUserService _userService;
+    public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IUserService userService, IMapper mapper) : base(mapper)
     {
         _shoppingCartRepository = shoppingCartRepository;
+        _userService = userService;
     }
 
     public Result<PagedResult<ItemDto>> AddToCart(int touristId, ItemInputDto itemInput)
@@ -78,5 +84,11 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
     public Result<ShoppingCartDto> GetByTouristId(int touristId)
     {
         return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+    }
+
+    public Result<UserDto> Checkout(int touristId)
+    { 
+        UserDto tourist = _userService.GetById(touristId).Value;
+        return Result.Ok(tourist);
     }
 }

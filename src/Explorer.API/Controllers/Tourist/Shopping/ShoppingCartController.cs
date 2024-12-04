@@ -1,12 +1,13 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
 using Explorer.Payments.API.Public;
+using Explorer.Stakeholders.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.Shopping;
 
-[Authorize(Policy = "touristPolicy")]
+//[Authorize(Policy = "touristPolicy")]
 [Route("api/shopping-cart")]
 public class ShoppingCartController : BaseApiController
 {
@@ -39,5 +40,19 @@ public class ShoppingCartController : BaseApiController
         int touristId = int.Parse(User.FindFirst("id")!.Value);
         var result = _shoppingCartService.GetByTouristId(touristId);
         return CreateResponse(result);
+    }
+
+    [HttpPost("checkout/{touristId:int}")]
+    public ActionResult<String> Checkout([FromRoute] int touristId)
+    {
+        var success = _shoppingCartService.Checkout(touristId);
+        if(touristId == 1)
+        {
+            return Ok(success.Value);
+        }
+        else
+        {
+            return BadRequest(new { success = false, message = "Nemate dovoljno sredstava" });
+        }
     }
 }

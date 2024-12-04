@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
+using Explorer.Stakeholders.API.Dtos;
 using FluentResults;
 
 namespace Explorer.Payments.API.Public;
@@ -10,4 +11,5 @@ public interface IShoppingCartService
     Result RemoveFromCart(int touristId, int itemId);
     Result ClearCart(int touristId);
     Result<ShoppingCartDto> GetByTouristId(int touristId);
+    Result<UserDto> Checkout(int touristId);
 }
