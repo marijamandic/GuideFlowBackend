@@ -41,7 +41,7 @@ namespace Explorer.Encounters.Core.UseCases
                    //var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
                     _encounterExecutionRepository.Create(execution);
 
-                    CompleteSocialEncounter(socialEncounter);
+                    //CompleteSocialEncounter(socialEncounter);
                     
                     return MapToDto(execution);
 
@@ -58,19 +58,28 @@ namespace Explorer.Encounters.Core.UseCases
         }
 
 
-        public void CompleteSocialEncounter(SocialEncounter socialEncounter)
+        public Result<EncounterExecutionDto> CompleteSocialEncounter(EncounterExecutionDto encounterExecutionDto)
         {
-            var activeExecutions = _encounterExecutionRepository
-                .GetByEncounterId(socialEncounter.Id)
-                .Where(e => e.IsTouristNear(e.Encounter))
-                .ToList();
-
-            foreach (var execution in activeExecutions)
+            var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
+            //ako je social enc napravi ga i proveri da l ima dovoljno ljudi, ako ima zavrsi ga
+            if (encounter is SocialEncounter socialEncounter)
             {
-                execution.CountParticipants(activeExecutions.Count);
-                execution.CompleteSocialEncounter();
-                Update(MapToDto(execution));
+                
+                var activeExecutions = _encounterExecutionRepository
+            .GetByEncounterId(socialEncounter.Id)
+            .Where(e => e.IsTouristNear(e.Encounter))
+            .ToList();
+
+                foreach (var execution in activeExecutions)
+                {
+                    execution.CountParticipants(activeExecutions.Count);
+                    execution.CompleteSocialEncounter();
+                    Update(MapToDto(execution));
+                }
             }
+
+            return encounterExecutionDto;
+
         }
 
        /* public Result CheckActiveParticipants(int executionId,int longitude,int latitude)
