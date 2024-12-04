@@ -81,4 +81,11 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         // Assuming there's a property "PersonId" that you intend to return
         return user.Id; // Adjust this if there's a specific PersonId to return
     }
+
+    public Tourist CreateTourist(Tourist tourist)
+    {
+        DbContext.Tourists.Add(tourist);
+        DbContext.SaveChanges();
+        return tourist;
+    }
 }

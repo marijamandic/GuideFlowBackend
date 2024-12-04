@@ -15,7 +15,8 @@ public class ProblemNotificationDto
 
 public enum NotificationType
 {
-    ProblemNotification
+    ProblemNotification,
+    MoneyExchange
 }
 
 public enum ProblemNotificationType

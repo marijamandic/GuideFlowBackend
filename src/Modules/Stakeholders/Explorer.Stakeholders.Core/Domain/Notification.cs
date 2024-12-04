@@ -22,11 +22,12 @@ public class Notification : Entity
         Validate();
     }
 
+    public Notification() { }
     private void Validate()
     {
         if (string.IsNullOrWhiteSpace(Sender)) throw new ArgumentException("Invalid Sender");
         else if (string.IsNullOrWhiteSpace(Message)) throw new ArgumentException("Invalid Message");
-        else if (Type != NotificationType.ProblemNotification) throw new ArgumentException("Invalid Notification Type");
+        else if (Type != NotificationType.ProblemNotification && Type != NotificationType.MoneyExchange) throw new ArgumentException("Invalid Notification Type");
     }
 
     public void UpdateIsOpened(bool isOpened)
@@ -37,5 +38,6 @@ public class Notification : Entity
 
 public enum NotificationType
 {
-    ProblemNotification
+    ProblemNotification,
+    MoneyExchange
 }

@@ -70,5 +70,47 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
         }
+
+        public Result<TouristDto> AddTouristMoney(int id, int amount)
+        {
+            Tourist existingTourist = userRepository.GetTouristById(id);
+            if (existingTourist == null)
+            {
+                return Result.Fail("Tourist not found.");
+            }
+            existingTourist.AddMoney(amount);
+            userRepository.UpdateTourist(existingTourist);
+
+            return Result.Ok(mapper.Map<TouristDto>(existingTourist));
+        }
+
+        public Result<TouristDto> CreateTourist(UserDto userDto)
+        {
+            // Kreirajte novog turistu
+            Location location = new Location(userDto.Location.Longitude, userDto.Location.Latitude);
+            var tourist = new Tourist(
+                username: userDto.Username,
+                password: userDto.Password,
+                role: Domain.UserRole.Tourist,
+                isActive: true,
+                location: location,
+                wallet: 0,
+                xp: 0,
+                level: 0
+            );
+
+            var savedTourist = userRepository.CreateTourist(tourist);
+
+            var touristDto = new TouristDto
+            {
+                Id = savedTourist.Id,
+                Wallet = savedTourist.Wallet,
+                Xp = savedTourist.Xp,
+                Level = savedTourist.Level
+            };
+
+            return Result.Ok(touristDto);
+        }
+
     }
 }
