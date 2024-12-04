@@ -154,6 +154,7 @@ namespace Explorer.Encounters.Core.UseCases
         public Result<List<long>> GetAllEncountersIdsByUserId(long userId)
         {
             var encounterExecutionIds = _encounterExecutionRepository.GetAllEncounterIdsByUserId(userId);
+            if (encounterExecutionIds is null) return Result.Fail("Not found");
             return encounterExecutionIds;
         }
     }

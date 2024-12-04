@@ -28,6 +28,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         public Result<UserDto> GetById(int id)
         {
             User user = userRepository.GetById(id);
+            if (user is null) return Result.Fail("User not found");
             return MapToDto(user);
         }
 

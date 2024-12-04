@@ -48,7 +48,7 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         var user = DbContext.Users
             .FirstOrDefault(u => u.Id == id);
 
-        if (user == null) throw new KeyNotFoundException("User not found: " + id);
+        //if (user == null) throw new KeyNotFoundException("User not found: " + id);
         return user;
     }
     public Tourist GetTouristById(long id)
