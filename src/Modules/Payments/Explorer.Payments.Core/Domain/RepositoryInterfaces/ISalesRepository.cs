@@ -6,4 +6,5 @@ public interface ISalesRepository
 	Task<Sales> GetById(long id);
 	Task Update(Sales sales);
 	Task Delete(Sales sales);
+    Task<IEnumerable<Sales>> GetAll();
 }

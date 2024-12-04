@@ -62,5 +62,28 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
         {
             throw new NotImplementedException();
         }
+        public PagedResult<Encounter> SearchAndFilter(string? name, int? type)
+        {
+            IQueryable<Encounter> query = _context.Encounters;
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                string normalizedName = name.ToLower();
+                query = query.Where(e => EF.Functions.Like(e.Name.ToLower(), $"%{normalizedName}%"));
+            }
+
+            if (type.HasValue)
+            {
+                // Pretvaranje int vrednosti u EncounterType ako je validno
+                if (Enum.IsDefined(typeof(EncounterType), type.Value))
+                {
+                    var encounterType = (EncounterType)type.Value;
+                    query = query.Where(e => e.EncounterType == encounterType);
+                }
+            }
+
+            var results = query.ToList();
+            return new PagedResult<Encounter>(results, results.Count);
+        }
     }
 }

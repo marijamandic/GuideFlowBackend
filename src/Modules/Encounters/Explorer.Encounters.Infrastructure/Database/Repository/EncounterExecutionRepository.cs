@@ -73,7 +73,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
         public List<long> GetAllEncounterIdsByUserId(long userId)
         {
             return _context.EncounterExecutions
-                   .Where(e => e.UserId == userId) 
+                   .Where(e => e.UserId == userId && e.IsComplete==true) 
                    .Select(e => e.EncounterId)    
                    .ToList();
         }
