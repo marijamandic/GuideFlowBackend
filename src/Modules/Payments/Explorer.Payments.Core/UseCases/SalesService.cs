@@ -77,4 +77,32 @@ public class SalesService : BaseService<SalesDto, Sales>, ISalesService
 			return Result.Fail(FailureCode.NotFound).WithError($"{ex.Message}");
 		}
 	}
+
+    public async Task<IEnumerable<SalesDto>> GetAll()
+    {
+        try
+        {
+            var sales = await _salesRepository.GetAll();
+
+            if (sales == null || !sales.Any())
+            {
+                return Enumerable.Empty<SalesDto>();
+            }
+
+            var salesDtos = sales
+                .Select(MapToDto)
+                .OrderByDescending(dto => dto.Discount)
+                .ToList();
+
+            return salesDtos;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Greška prilikom dohvatanja podataka: {ex.Message}");
+        }
+    }
+
+
+
+
 }
