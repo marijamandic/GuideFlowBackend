@@ -68,7 +68,7 @@ namespace Explorer.API.Controllers.Tourist.Encounter
 
 
         [HttpPut("completeSocial/{id:int}")]
-        public void CompleteSocialEncounter([FromBody] EncounterExecutionDto encounterExecutionDto)
+        public ActionResult<EncounterExecutionDto> CompleteSocialEncounter([FromBody] EncounterExecutionDto encounterExecutionDto)
         {
             var result = _encounterExecutionService.CompleteSocialEncounter(encounterExecutionDto);
             return CreateResponse(result);
