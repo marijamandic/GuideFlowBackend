@@ -12,7 +12,6 @@ namespace Explorer.Stakeholders.API.Dtos.Club
         public long ClubId { get; set; }
         public long UserId { get; set; }
         public DateTime JoinedDate { get; set; }
-
     }
 
 }

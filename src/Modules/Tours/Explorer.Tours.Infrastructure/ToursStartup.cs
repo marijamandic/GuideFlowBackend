@@ -56,6 +56,7 @@ public static class ToursStartup
         services.AddScoped<IPublicPointNotificationService, PublicPointNotificationService>();
         services.AddScoped<IInternalProblemService, InternalProblemService>();
         services.AddScoped<IPublicPointService, PublicPointService>();
+        services.AddScoped<IInternalSalesService, InternalSalesService>();
 
     }
 
@@ -71,7 +72,7 @@ public static class ToursStartup
         services.AddScoped(typeof(ICrudRepository<EquipmentManagement>), typeof(CrudDatabaseRepository<EquipmentManagement, ToursContext>));
         services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
         services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
-        services.AddScoped(typeof(ICrudRepository<TourSpecifications>), typeof(CrudDatabaseRepository<TourSpecifications, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourSpecification>), typeof(CrudDatabaseRepository<TourSpecification, ToursContext>));
         services.AddScoped(typeof(ICrudRepository<PublicPoint>), typeof(CrudDatabaseRepository<PublicPoint, ToursContext>));
         services.AddScoped<ITourExecutionRepository, TourExecutionRepository>();
         services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));

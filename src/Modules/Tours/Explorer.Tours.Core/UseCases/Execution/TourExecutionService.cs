@@ -144,7 +144,10 @@ namespace Explorer.Tours.Core.UseCases.Execution
                     var checkpointStatus = tourExecutionDto.CheckpointsStatus.FirstOrDefault(checkpointStatus => cs.Id == checkpointStatus.Id);
                     if (checkpointStatus != null && checkpointStatus.Checkpoint != null)
                     {
-                        checkpointStatus.Checkpoint.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
+                        if(checkpointStatus.Checkpoint.IsEncounterEssential)
+                            checkpointStatus.Checkpoint.Secret = "Morate da stignete do kljucne tacke i resite izazov da bi ste otkrili tajnu";
+                        else
+                            checkpointStatus.Checkpoint.Secret="Morate da stignete do kljucne tacke da bi ste otkrili tajnu";
                     }
                 }
             }

@@ -32,6 +32,7 @@ namespace Explorer.API.Controllers.Authoring.Tour
             return CreateResponse(result);
         }
 
+
         [HttpGet("{id:int}")]
         public ActionResult<TourDto> GetTour(int id)
         {
