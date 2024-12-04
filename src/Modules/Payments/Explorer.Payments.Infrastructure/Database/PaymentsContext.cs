@@ -13,6 +13,8 @@ public class PaymentsContext : DbContext
     public DbSet<Payment> Payments { get; set; }
     public DbSet<PaymentItem> PaymentItems { get; set; }
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
+    public DbSet<TourBundle> TourBundles { get; set; }
+    public DbSet<Sales> Sales { get; set; }
 
     public DbSet<Coupon> Coupons { get; set; }
 
@@ -25,6 +27,7 @@ public class PaymentsContext : DbContext
         ConfigureShoppingCart(modelBuilder);
         ConfigurePayment(modelBuilder);
         ConfigureCoupon(modelBuilder);
+        ConfigureSales(modelBuilder);
     }
 
     private static void ConfigureShoppingCart(ModelBuilder modelBuilder)
@@ -68,5 +71,15 @@ public class PaymentsContext : DbContext
             entity.Property(c => c.Redeemed)
                 .HasDefaultValue(false);
         });
+    }
+    
+    private static void ConfigureSales(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Sales>()
+            .Property(s => s.CreatedAt)
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+        modelBuilder.Entity<Sales>()
+            .ToTable(s => s.HasCheckConstraint("CK_Sales_EndsAt_Within_Range", "\"EndsAt\" >= \"CreatedAt\" AND \"EndsAt\" <= \"CreatedAt\" + INTERVAL '14 days'"));
     }
 }
