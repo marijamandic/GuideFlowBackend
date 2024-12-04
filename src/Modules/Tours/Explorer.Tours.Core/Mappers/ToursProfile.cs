@@ -22,7 +22,7 @@ public class ToursProfile : Profile
         CreateMap<TransportDurationDto, TransportDuration>().ReverseMap();
         CreateMap<OrderItemDto, OrderItem>().ReverseMap();
         CreateMap<EquipmentDto, Equipment>().ReverseMap();
-        CreateMap<TourSpecificationDto, TourSpecifications>().ReverseMap();
+        CreateMap<TourSpecificationDto, TourSpecification>().ReverseMap();
         CreateMap<TourEquipmentDto, TourEquipment>().ReverseMap(); 
         CreateMap<TourObjectDto, TourObject>().ReverseMap();
         CreateMap<EquipmentManagementDto, EquipmentManagement>().ReverseMap();
@@ -34,5 +34,6 @@ public class ToursProfile : Profile
         CreateMap<ShoppingCartDto, ShoppingCart>().ReverseMap();
         CreateMap<PurchaseTokenDto, PurchaseToken>().ReverseMap();
         CreateMap<PublicPointNotificationDto, PublicPointNotification>().ReverseMap();
+        CreateMap<TransportRatingDto, TransportRating>().ReverseMap();
     }
 }

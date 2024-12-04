@@ -52,7 +52,7 @@ public static class StakeholdersStartup
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));      
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
-        services.AddScoped(typeof(ICrudRepository<ProfileInfo>), typeof(CrudDatabaseRepository<ProfileInfo, StakeholdersContext>)); 
+        services.AddScoped<IProfileInfoRepository, ProfileInfoDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>)); 
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubRequestRepository, ClubRequestDatabaseRepository>();

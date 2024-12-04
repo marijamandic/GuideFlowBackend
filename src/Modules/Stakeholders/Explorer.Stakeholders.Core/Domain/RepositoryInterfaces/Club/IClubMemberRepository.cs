@@ -10,6 +10,8 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club
     public interface IClubMemberRepository
     {
         ClubMember GetById(long clubId, long userId);
+
+        public List<ClubMember> GetAll();
         List<ClubMember> GetByClubId(long clubId);
         ClubMember Create(ClubMember clubMember);
         void Update(ClubMember clubMember);

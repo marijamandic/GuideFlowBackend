@@ -23,6 +23,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
                 .FirstOrDefault(cm => cm.ClubId == clubId && cm.UserId == userId);
         }
 
+        public List<ClubMember> GetAll()
+        {
+            return _dbContext.ClubMembers.ToList();
+        }
+
+
         public List<ClubMember> GetByClubId(long clubId)
         {
             return _dbContext.ClubMembers
