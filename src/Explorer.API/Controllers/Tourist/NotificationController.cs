@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,11 @@ namespace Explorer.API.Controllers.Tourist;
 public class NotificationController : BaseApiController
 {
     private readonly INotificationService _notificationService;
-
-    public NotificationController(INotificationService notificationService)
+    private readonly NotificationMoneyExchangeService _moneyExchangeService;
+    public NotificationController(INotificationService notificationService, NotificationMoneyExchangeService moneyExchangeService)
     {
         _notificationService = notificationService;
+        _moneyExchangeService = moneyExchangeService;
     }
 
     [HttpGet]
@@ -28,19 +30,23 @@ public class NotificationController : BaseApiController
         else return BadRequest("Invalid user");
     }
 
-    [HttpPost]
-    public ActionResult CreateProblemNotification([FromBody] CreateProblemNotificationInputDto notificationInput)
+    [HttpGet("by-user/{userId}")]
+    public ActionResult<IEnumerable<NotificationDto>> NotificationsByUser(int userId)
     {
-        if (int.TryParse(User.FindFirst("id")?.Value, out int userId))
+        if (userId <= 0)
         {
-            notificationInput.UserId = userId;
-            var result = _notificationService.Create(notificationInput);
-            return CreateResponse(result);
+            return BadRequest("Invalid user ID.");
         }
-        else
-        {
-            return BadRequest("Invalid user");
-        }
+
+        var result = _moneyExchangeService.GetNotificationsByUserId(userId);
+        return CreateResponse(result);
+    }
+
+    [HttpPatch("{id}")]
+    public ActionResult UpdateNotification(int id, [FromBody] NotificationDto updatedNotification)
+    {
+        var result = _moneyExchangeService.UpdateNotification(id, updatedNotification);
+        return CreateResponse(result);
     }
 
 }

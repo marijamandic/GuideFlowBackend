@@ -8,4 +8,8 @@ public interface INotificationRepository
     void Create(ProblemNotification notification);
     PagedResult<ProblemNotification> GetByUserId(long userId);
     ProblemNotification GetById(long id);
+    void Create(Notification notification); // Kreiranje Notification
+    IEnumerable<Notification> GetAll();    // Dohvat svih Notification
+    Notification NotificationById(long id);
+    Notification SaveNotification(Notification notification);
 }
