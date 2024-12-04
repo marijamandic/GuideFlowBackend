@@ -83,7 +83,7 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             if ((latitude.HasValue && longitude.HasValue) && (latitude != 0 && longitude != 0))
             {
                 const double earthRadiusKm = 6371; // Zemljin poluprecnik u kilometrima
-                const double maxDistanceKm = 0.1; // Maksimalna udaljenost u kilometrima (100m)
+                const double maxDistanceKm = 1; // Maksimalna udaljenost u kilometrima (100m)
 
                 double lat = latitude.Value;
                 double lon = longitude.Value;
