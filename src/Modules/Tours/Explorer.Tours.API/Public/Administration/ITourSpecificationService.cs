@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.API.Public
+namespace Explorer.Tours.API.Public.Administration
 {
     public interface ITourSpecificationService
     {
@@ -15,8 +15,8 @@ namespace Explorer.Tours.API.Public
         Result<TourSpecificationDto> Create(TourSpecificationDto tourSpecificationDto);
         Result<TourSpecificationDto> Update(TourSpecificationDto tourSpecificationDto);
         Result Delete(int id);
-        Result<TourSpecificationDto> GetTourSpecificationsByUserId(long userId);
-        Task<bool> HasPreferenceAsync(int userId);
+        Result<TourSpecificationDto> GetByUserId(long userId);
+        Result AddTransportRating(long tourSpecificationId, IEnumerable<TransportRatingDto> transportRatingsDto);
 
     }
 }
