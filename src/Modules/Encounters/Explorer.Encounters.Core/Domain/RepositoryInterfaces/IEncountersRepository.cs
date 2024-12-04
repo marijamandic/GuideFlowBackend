@@ -9,6 +9,6 @@ namespace Explorer.Encounters.Core.Domain.RepositoryInterfaces
 {
     public interface IEncountersRepository : ICrudRepository<Encounter> 
     {
-        PagedResult<Encounter> SearchAndFilter(string? name, int? type);
+        PagedResult<Encounter> SearchAndFilter(string? name, int? type, double? latitude, double? longitude);
     }
 }
