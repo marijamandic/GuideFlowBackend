@@ -11,7 +11,7 @@ namespace Explorer.Encounters.Core.Domain
         public string ActionDescription { get; private set; }
 
         public MiscEncounter() { }
-        public MiscEncounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints,EncounterType encounterType ,string actionDescription) : base(name, description, location, status, experiencePoints,encounterType)
+        public MiscEncounter(string name, string description, EncounterLocation location, EncounterStatus status, int experiencePoints,EncounterType encounterType, bool isCreatedByAuthor, string actionDescription) : base(name, description, location, status, experiencePoints,encounterType, isCreatedByAuthor)
         {
             ActionDescription = actionDescription;
             Validate();

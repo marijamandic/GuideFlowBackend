@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Explorer.BuildingBlocks.Core.Domain;
-using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain.TourExecutions;
+using Explorer.Tours.Core.Domain.Tours;
 
 namespace Explorer.Tours.Core.Domain
 {

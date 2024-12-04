@@ -44,5 +44,10 @@ namespace Explorer.Encounters.Core.UseCases
         {
             throw new NotImplementedException();
         }
+        public Result<PagedResult<EncounterDto>> SearchAndFilter(string? name, int? type)
+        {
+            var encounters = _encountersRepository.SearchAndFilter(name, type);
+            return MapToDto(encounters);
+        }
     }
 }

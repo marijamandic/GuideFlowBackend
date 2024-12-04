@@ -33,12 +33,12 @@ namespace Explorer.Tours.Core.Domain
         }
 
     }
-/*
+
     public enum TransportMode
     {
         Car,
         Bicycle,
         Walking,
         Boat
-    }*/
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Public;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,6 +37,15 @@ namespace Explorer.API.Controllers
             }
             return Ok(result.Value);
         }
-
+        [HttpGet("getTourist/{touristId}")]
+        public ActionResult<TouristDto> GetTouristById(int touristId)
+        {
+            var result = _userService.GetTouristById(touristId);
+            if (result.IsFailed)
+            {
+                return BadRequest("Failed to fetch users");
+            }
+            return Ok(result.Value);
+        }
     }
 }
