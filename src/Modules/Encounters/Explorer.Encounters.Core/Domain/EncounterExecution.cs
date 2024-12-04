@@ -68,7 +68,9 @@ namespace Explorer.Encounters.Core.Domain
             double latitude  = UserLatitude;
 
             if (encounter.EncounterType == EncounterType.Location && encounter is HiddenLocationEncounter hiddenLocationEncounter)
-                tolerance = hiddenLocationEncounter.ActivationRange/111000;
+                tolerance = hiddenLocationEncounter.ActivationRange / 111000;
+            //else if (encounter.EncounterType == EncounterType.Social && encounter is SocialEncounter socialEncounter)
+            //    tolerance = socialEncounter.EncounterRange / 111000;
             else
                 tolerance = 0.000135;   // 15 metara
 
