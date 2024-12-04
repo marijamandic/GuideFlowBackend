@@ -12,4 +12,38 @@ public class Tourist : User
         Xp = xp;
         Level = level;
     }
+    public void UpdateWallet(double wallet)
+    {
+        Wallet = wallet;
+    }
+
+    public void UpdateXp(int xp)
+    {
+        Xp = xp;
+        UpdateLevel();
+    }
+
+    public void UpdateLevel()
+    {
+        int newLevel = Level;
+        int xpRequiredForNextLevel = 20 * newLevel;
+
+        int remainingXp = Xp;
+
+        while (remainingXp >= xpRequiredForNextLevel)
+        {
+            remainingXp -= xpRequiredForNextLevel;
+            newLevel++;
+            xpRequiredForNextLevel = 20 * newLevel;
+        }
+
+        Xp = remainingXp;
+
+        Level = newLevel;
+    }
+    public void AddXp(int amount)
+    {
+        Xp += amount;
+        UpdateLevel();
+    }
 }

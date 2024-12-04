@@ -9,4 +9,6 @@ public interface IUserRepository : ICrudRepository<User>
     User? GetActiveByName(string username);
     List<User> GetAll();
     long GetPersonId(long userId);
+    Tourist GetTouristById(long id);
+    Tourist UpdateTourist(Tourist tourist);
 }

@@ -17,6 +17,7 @@ namespace Explorer.Stakeholders.API.Public
             Result<UserDto> Create(UserDto userDto);  
             Result<UserDto> Update(UserDto userDto);  
             public Result<List<UserDto>> GetAllUsers();
-            Result Delete(int id);                    
+            Result Delete(int id);
+            Result<TouristDto> GetTouristById(int id);
         }
 }

@@ -13,6 +13,7 @@ namespace Explorer.Stakeholders.API.Dtos
         public string Password { get; set; }    
         public UserRole Role { get; set; }
         public LocationDto Location { get; set; }
+        public bool? IsActive { get; set; } = true;
     }
 
 }
