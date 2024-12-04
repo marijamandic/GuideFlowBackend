@@ -11,4 +11,5 @@ public interface IUserRepository : ICrudRepository<User>
     long GetPersonId(long userId);
     Tourist GetTouristById(long id);
     Tourist UpdateTourist(Tourist tourist);
+    Tourist CreateTourist(Tourist tourist);
 }

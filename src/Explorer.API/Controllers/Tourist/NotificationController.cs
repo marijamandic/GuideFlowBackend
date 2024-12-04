@@ -27,4 +27,20 @@ public class NotificationController : BaseApiController
         }
         else return BadRequest("Invalid user");
     }
+
+    [HttpPost]
+    public ActionResult CreateProblemNotification([FromBody] CreateProblemNotificationInputDto notificationInput)
+    {
+        if (int.TryParse(User.FindFirst("id")?.Value, out int userId))
+        {
+            notificationInput.UserId = userId;
+            var result = _notificationService.Create(notificationInput);
+            return CreateResponse(result);
+        }
+        else
+        {
+            return BadRequest("Invalid user");
+        }
+    }
+
 }

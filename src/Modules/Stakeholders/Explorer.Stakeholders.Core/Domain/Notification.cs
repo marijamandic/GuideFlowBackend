@@ -37,5 +37,6 @@ public class Notification : Entity
 
 public enum NotificationType
 {
-    ProblemNotification
+    ProblemNotification,
+    MoneyExchange
 }

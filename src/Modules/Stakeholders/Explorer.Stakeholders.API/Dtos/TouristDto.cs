@@ -8,7 +8,7 @@ namespace Explorer.Stakeholders.API.Dtos
 {
     public class TouristDto
     {
-        public int Id { get; set; }
+        public double Id { get; set; }
         public double Wallet { get; set; }
         public int Xp { get; set; }
         public int Level { get; set; }
