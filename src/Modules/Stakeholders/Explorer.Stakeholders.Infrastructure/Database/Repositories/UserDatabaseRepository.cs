@@ -86,7 +86,6 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
     {
         DbContext.Tourists.Add(tourist);
         DbContext.SaveChanges();
-
         return tourist;
     }
 }
