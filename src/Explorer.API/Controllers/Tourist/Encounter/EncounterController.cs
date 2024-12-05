@@ -33,5 +33,11 @@ namespace Explorer.API.Controllers.Tourist.Encounter
             var result = _encounterService.Create(encounterDto);
             return CreateResponse(result);
         }
+        [HttpGet("search")]
+        public ActionResult<PagedResult<EncounterDto>> SearchAndFilter([FromQuery] SearchAndFilterParamsDto search)
+        {
+            var result = _encounterService.SearchAndFilter(search.Name, search.Type, search.UserLatitude, search.UserLongitude);
+            return CreateResponse(result);
+        }
     }
 }

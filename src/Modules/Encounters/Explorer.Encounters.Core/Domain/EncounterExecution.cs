@@ -68,9 +68,11 @@ namespace Explorer.Encounters.Core.Domain
             double latitude  = UserLatitude;
 
             if (encounter.EncounterType == EncounterType.Location && encounter is HiddenLocationEncounter hiddenLocationEncounter)
-                tolerance = hiddenLocationEncounter.ActivationRange;
+                tolerance = hiddenLocationEncounter.ActivationRange / 111000;
+            //else if (encounter.EncounterType == EncounterType.Social && encounter is SocialEncounter socialEncounter)
+                //tolerance = socialEncounter.EncounterRange / 111000;
             else
-                tolerance = 0.00245;
+                tolerance = 0.00335;   // 15 metara
 
             bool isNearLatitude = Math.Abs((double)(encounter.EncounterLocation.Latitude - latitude)) <= tolerance;
             bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= tolerance;
@@ -80,7 +82,7 @@ namespace Explorer.Encounters.Core.Domain
 
         public bool IsHiddenLocationFound(double latitude, double longitude, Encounter encounter)
         {
-            const double tolerance = 0.0000448;  // 5 metara
+            const double tolerance = 0.000448;  // 5 metara
 
             if (encounter is HiddenLocationEncounter hiddenLocationEncounter)
             {
