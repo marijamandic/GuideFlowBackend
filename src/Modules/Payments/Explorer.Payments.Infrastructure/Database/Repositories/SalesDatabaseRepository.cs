@@ -69,4 +69,17 @@ public class SalesDatabaseRepository : ISalesRepository
 			throw;
 		}
 	}
+    public async Task<IEnumerable<Sales>> GetAll()
+    {
+        try
+        {
+            return await _sales.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Greška prilikom dohvatanja podataka: {ex.Message}");
+        }
+    }
+
+
 }

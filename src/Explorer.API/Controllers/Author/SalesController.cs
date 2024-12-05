@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Author;
 
-[Authorize(Policy = "authorPolicy")]
+/*[Authorize(Policy = "authorPolicy")]
+[Authorize(Policy = "touristPolicy")]*/
 [Route("api/sales")]
 public class SalesController : BaseApiController
 {
@@ -16,7 +17,16 @@ public class SalesController : BaseApiController
 		_salesService = salesService;
 	}
 
-	[HttpPost]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<SalesDto>>> GetAll()
+    {
+        var result = await _salesService.GetAll();
+        return Ok(result);
+    }
+
+
+
+    [HttpPost]
 	public async Task<ActionResult> Create([FromBody] SalesInputDto sales)
 	{
 		sales.AuthorId = int.Parse(User.FindFirst("id")!.Value);

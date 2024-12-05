@@ -31,6 +31,12 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         DbContext.SaveChanges();
         return user;
     }
+    public Tourist UpdateTourist(Tourist tourist)
+    {
+        DbContext.Entry(tourist).State = EntityState.Modified;
+        DbContext.SaveChanges();
+        return tourist;
+    }
 
     public bool Exists(string username)
     {
@@ -42,7 +48,15 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         var user = DbContext.Users
             .FirstOrDefault(u => u.Id == id);
 
-        if (user == null) throw new KeyNotFoundException("User not found: " + id);
+        //if (user == null) throw new KeyNotFoundException("User not found: " + id);
+        return user;
+    }
+    public Tourist GetTouristById(long id)
+    {
+        var user = DbContext.Users.OfType<Tourist>()
+            .FirstOrDefault(u => u.Id == id);
+
+       // if (user == null) throw new KeyNotFoundException("Tourist not found: " + id);
         return user;
     }
 
@@ -66,5 +80,12 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
 
         // Assuming there's a property "PersonId" that you intend to return
         return user.Id; // Adjust this if there's a specific PersonId to return
+    }
+
+    public Tourist CreateTourist(Tourist tourist)
+    {
+        DbContext.Tourists.Add(tourist);
+        DbContext.SaveChanges();
+        return tourist;
     }
 }

@@ -17,7 +17,7 @@ public class ToursContext : DbContext
     public DbSet<Tour> Tours { get; set; }
     public DbSet<EquipmentManagement> EquipmentManagements { get; set; }
     public DbSet<TourReview> TourReviews { get; set; }
-    public DbSet<TourSpecifications> TourSpecifications { get; set; }
+    public DbSet<TourSpecification> TourSpecifications { get; set; }
     public DbSet<PublicPoint> PublicPoints { get; set; }
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<CheckpointStatus> CheckpointStatuses { get; set; }
@@ -25,7 +25,7 @@ public class ToursContext : DbContext
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<PurchaseToken> PurchaseTokens { get; set; }
     public DbSet<PublicPointNotification> PublicPointNotifications { get; set; }
-
+    public DbSet<TransportRating> TransportRatings { get; set; }
 
     public ToursContext(DbContextOptions<ToursContext> options) : base(options) {}
 
@@ -45,6 +45,11 @@ public class ToursContext : DbContext
             .WithMany()
             .HasForeignKey(cs => cs.CheckpointId);
         modelBuilder.Entity<Tour>().HasMany(tr => tr.Reviews).WithOne().HasForeignKey(r=>r.TourId);
+        modelBuilder.Entity<TourSpecification>()
+            .HasMany(ts => ts.TransportRatings)
+            .WithOne(tr => tr.TourSpecification)
+            .HasForeignKey(tr => tr.TourSpecificationId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
 

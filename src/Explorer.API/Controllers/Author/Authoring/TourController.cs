@@ -32,6 +32,7 @@ namespace Explorer.API.Controllers.Authoring.Tour
             return CreateResponse(result);
         }
 
+
         [HttpGet("{id:int}")]
         public ActionResult<TourDto> GetTour(int id)
         {
@@ -85,7 +86,7 @@ namespace Explorer.API.Controllers.Authoring.Tour
         [HttpPut("editingCheckpoint/{id:int}")]
         public ActionResult<TourDto> UpdateCheckpoint(int id, [FromBody] CheckpointDto checkpoint)
         {
-            if (!string.IsNullOrEmpty(checkpoint.ImageUrl))
+            if (!string.IsNullOrEmpty(checkpoint.ImageUrl) && !string.IsNullOrEmpty(checkpoint.ImageBase64))
             {
                 var oldFilePath = Path.Combine(_webHostEnvironment.WebRootPath, checkpoint.ImageUrl);
                 if (System.IO.File.Exists(oldFilePath))

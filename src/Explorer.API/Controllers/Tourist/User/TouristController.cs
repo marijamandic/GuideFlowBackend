@@ -35,7 +35,7 @@ namespace Explorer.API.Controllers
         [HttpPost]
         public ActionResult<UserDto> CreateTourist([FromBody] UserDto userDto)
         {
-            var result = _userService.Create(userDto);
+            var result = _userService.CreateTourist(userDto);
             return CreateResponse(result);
         }
 

@@ -1,5 +1,6 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.Domain;
@@ -39,18 +40,20 @@ public static class StakeholdersStartup
         services.AddScoped<IClubRequestService, ClubRequestService>();
         services.AddScoped<IClubMemberService, ClubMemberService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IInternalTouristService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IClubPostService, ClubPostService>();
+        services.AddScoped<NotificationMoneyExchangeService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));      
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
-        services.AddScoped(typeof(ICrudRepository<ProfileInfo>), typeof(CrudDatabaseRepository<ProfileInfo, StakeholdersContext>)); 
+        services.AddScoped<IProfileInfoRepository, ProfileInfoDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>)); 
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubRequestRepository, ClubRequestDatabaseRepository>();

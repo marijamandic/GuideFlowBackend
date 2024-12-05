@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
@@ -23,11 +24,13 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService) : base(mapper) 
+        private readonly IInternalTourBundleService _tourBundleService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
             _purchaseTokenService = purchaseTokenService;
+            _tourBundleService = tourBundleService;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -325,5 +328,30 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return null;
             }
         }
+
+        public Result<PagedResult<TourDto>> GetToursByBundleId(int id)
+        {
+            try
+            {
+                var result = _tourBundleService.GetToursById(id);
+
+                if (!result.IsSuccess || result.Value == null || !result.Value.Any())
+                {
+                    return Result.Fail(FailureCode.NotFound).WithError("No tours found for the given bundle ID.");
+                }
+
+                var tours = result.Value
+                                  .Select(tourId => tourRepository.Get(tourId))
+                                  .ToList();
+
+                var pagedResult = new PagedResult<Tour>(tours, tours.Count);
+                return MapToDto(pagedResult);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
     }
 }
