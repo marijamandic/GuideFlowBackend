@@ -353,5 +353,23 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
+        }
+
+        public async Task<Result<PagedResult<TourDetailsDto>>> GetDetailsByTouristId(int touristId)
+        {
+            try
+            {
+                //var result = await tourRepository.GetByIds(ids.Select(id => (long)id).ToList());
+                //var details = result.Select(tour =>
+                //    new TourDetailsDto { Id = (int)tour.Id, Description = tour.Description, Level = (API.Dtos.Level)tour.Level, Tags = tour.Taggs })
+                //    .ToList();
+                //return Result.Ok(new PagedResult<TourDetailsDto>(details, details.Count));
+                return Result.Ok();
+            }
+            catch (Exception e)
+            {
+                return Result.Fail($"{e.Message}");
+            }
+        }
     }
 }
