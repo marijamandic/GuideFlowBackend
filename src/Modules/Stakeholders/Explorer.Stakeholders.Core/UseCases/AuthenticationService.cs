@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Internal;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
-using Explorer.Tours.API.Internal;
 using FluentResults;
 
 namespace Explorer.Stakeholders.Core.UseCases;
@@ -55,7 +55,7 @@ public class AuthenticationService : IAuthenticationService
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
             var profileInfo = _profileInfoRepository.Create(new ProfileInfo(user.Id, account.Name, account.Surname, "images/profileInfo/1c0f2ce0-b565-49d1-8455-02efdaae83a2.png", "bio", "moto"));
             if(account.Role == API.Dtos.UserRole.Tourist)
-                _shoppingCartService.Create(user.Id);
+                _shoppingCartService.Create((int)user.Id);
 
             return _tokenGenerator.GenerateAccessToken(user, person.Id);
         }
