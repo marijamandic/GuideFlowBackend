@@ -48,10 +48,10 @@ namespace Explorer.Encounters.Infrastructure.Database.Repository
             return task.Result;
         }
 
-        public new EncounterExecution Update(EncounterExecution encounterExecution)
+        public new async Task<EncounterExecution> Update(EncounterExecution encounterExecution)
         {
             _context.Entry(encounterExecution).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return encounterExecution;
         }
 
