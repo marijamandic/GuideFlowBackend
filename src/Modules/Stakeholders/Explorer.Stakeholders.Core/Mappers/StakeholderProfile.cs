@@ -20,7 +20,8 @@ public class StakeholderProfile : Profile
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
         CreateMap<UserDto, User>()
-            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
+            .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location)).IncludeAllDerived();
+        CreateMap<User, UserDto>().ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location)).IncludeAllDerived();
         CreateMap<ProblemDto, Problem>().ReverseMap();
         CreateMap<RatingAppDto, AppRating>().ReverseMap();
         CreateMap<LocationDto, Location>().ReverseMap();
@@ -49,7 +50,10 @@ public class StakeholderProfile : Profile
         CreateMap<ClubPostDto, ClubPost>().ReverseMap();
         CreateMap<Tourist, TouristDto>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-        .ReverseMap();
+        .IncludeAllDerived();
+        CreateMap<TouristDto, Tourist>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+        .IncludeAllDerived();
 
     }
 }
