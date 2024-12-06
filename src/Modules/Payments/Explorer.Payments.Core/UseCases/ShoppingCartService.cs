@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
@@ -9,7 +11,7 @@ using FluentResults;
 
 namespace Explorer.Payments.Core.UseCases;
 
-public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService
+public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService , IInternalShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
 
@@ -78,5 +80,19 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
     public Result<ShoppingCartDto> GetByTouristId(int touristId)
     {
         return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+    }
+
+    public Result<ShoppingCartDto> Create(int touristId)
+    {
+        try
+        {
+            ShoppingCart shoppingCart = new(touristId);
+            var result = _shoppingCartRepository.Create(shoppingCart);
+            return MapToDto(result);
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 }

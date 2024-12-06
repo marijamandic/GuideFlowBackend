@@ -1,4 +1,4 @@
-﻿using Explorer.Tours.API.Dtos.Shopping;
+﻿using Explorer.Payments.API.Dtos.ShoppingCarts;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -6,10 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Explorer.Tours.API.Internal
+namespace Explorer.Payments.API.Internal
 {
     public interface IInternalShoppingCartService
     {
-        Result<ShoppingCartDto> Create(long userId);   
+        Result<ShoppingCartDto> Create(int touristId);
     }
 }

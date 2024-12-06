@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-    public class TouristDto
+    public class TouristDto : UserDto
     {
-        public double Id { get; set; }
         public double Wallet { get; set; }
         public int Xp { get; set; }
         public int Level { get; set; }
