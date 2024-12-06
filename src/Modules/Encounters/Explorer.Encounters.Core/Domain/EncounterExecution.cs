@@ -68,14 +68,16 @@ namespace Explorer.Encounters.Core.Domain
             double latitude  = UserLatitude;
 
             if (encounter.EncounterType == EncounterType.Location && encounter is HiddenLocationEncounter hiddenLocationEncounter)
-                tolerance = hiddenLocationEncounter.ActivationRange / 111000;
+                tolerance = hiddenLocationEncounter.ActivationRange / 111000.0;
             //else if (encounter.EncounterType == EncounterType.Social && encounter is SocialEncounter socialEncounter)
                 //tolerance = socialEncounter.EncounterRange / 111000;
             else
-                tolerance = 0.00335;   // 15 metara
+                tolerance = 2000.0 / 111000.0;   // 20 metara
+
+            double lonTolerance = tolerance / Math.Cos(latitude* Math.PI / 180.0);
 
             bool isNearLatitude = Math.Abs((double)(encounter.EncounterLocation.Latitude - latitude)) <= tolerance;
-            bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= tolerance;
+            bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= lonTolerance;
 
             return isNearLatitude && isNearLongitude;
         }
