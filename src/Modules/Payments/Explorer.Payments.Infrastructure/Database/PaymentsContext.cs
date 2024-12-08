@@ -15,7 +15,6 @@ public class PaymentsContext : DbContext
     public DbSet<TourPurchaseToken> TourPurchaseTokens { get; set; }
     public DbSet<TourBundle> TourBundles { get; set; }
     public DbSet<Sales> Sales { get; set; }
-
     public DbSet<Coupon> Coupons { get; set; }
 
     public PaymentsContext(DbContextOptions<PaymentsContext> options) : base(options) { }

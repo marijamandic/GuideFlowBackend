@@ -25,15 +25,23 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IMapper mapper;
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService) : base(mapper) 
-        { 
-            this.tourRepository=tourRepository;
-            this.mapper=mapper;
-            _purchaseTokenService = purchaseTokenService;
-            _tourBundleService = tourBundleService;
-        }
+        private readonly IInternalTourService _internalTourService;
 
-        public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
+		public TourService(
+			ITourRepository tourRepository,
+			IMapper mapper,
+			IInternalPurchaseTokenService purchaseTokenService,
+			IInternalTourBundleService tourBundleService,
+			IInternalTourService internalTourService) : base(mapper)
+		{
+			this.tourRepository = tourRepository;
+			this.mapper = mapper;
+			_purchaseTokenService = purchaseTokenService;
+			_tourBundleService = tourBundleService;
+			_internalTourService = internalTourService;
+		}
+
+		public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
         {
             var result = tourRepository.GetPaged(page, pageSize);
             return MapToDto(result);
@@ -353,23 +361,21 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        }
-
-        public async Task<Result<PagedResult<TourDetailsDto>>> GetDetailsByTouristId(int touristId)
-        {
-            try
-            {
-                //var result = await tourRepository.GetByIds(ids.Select(id => (long)id).ToList());
-                //var details = result.Select(tour =>
-                //    new TourDetailsDto { Id = (int)tour.Id, Description = tour.Description, Level = (API.Dtos.Level)tour.Level, Tags = tour.Taggs })
-                //    .ToList();
-                //return Result.Ok(new PagedResult<TourDetailsDto>(details, details.Count));
-                return Result.Ok();
-            }
-            catch (Exception e)
-            {
-                return Result.Fail($"{e.Message}");
-            }
-        }
-    }
+		public async Task<Result<PagedResult<TourDetailsDto>>> GetDetailsByTouristId(int touristId)
+		{
+			try
+			{
+                var ids = await _internalTourService.GetTourIdsByTouristId(touristId);
+                var result = await tourRepository.GetByIds(ids.Value.Select(id => (long)id).ToList());
+                var details = result.Select(tour =>
+                    new TourDetailsDto { Id = (int)tour.Id, Description = tour.Description, Level = (API.Dtos.Level)tour.Level, Tags = tour.Taggs })
+                    .ToList();
+                return Result.Ok(new PagedResult<TourDetailsDto>(details, details.Count));
+			}
+			catch (Exception e)
+			{
+				return Result.Fail($"{e.Message}");
+			}
+		}
+	}
 }
