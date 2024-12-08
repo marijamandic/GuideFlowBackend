@@ -1,4 +1,5 @@
-﻿using Explorer.Payments.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.BuildingBlocks.Core.Domain;
+using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,7 +25,12 @@ public class ShoppingCartDatabaseRepository : IShoppingCartRepository
         if (shoppingCart is null) throw new ArgumentException("Tourist ID mismatch");
         return shoppingCart;
     }
-
+    public ShoppingCart Create(ShoppingCart entity)
+    {
+        _shoppingCarts.Add(entity);
+        _paymentsContext.SaveChanges();
+        return entity;
+    }
     public void Save(ShoppingCart shoppingCart)
     {
         _paymentsContext.Entry(shoppingCart).State = EntityState.Modified;

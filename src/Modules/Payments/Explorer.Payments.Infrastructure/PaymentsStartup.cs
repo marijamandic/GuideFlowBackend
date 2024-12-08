@@ -24,6 +24,7 @@ public static class PaymentsStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IShoppingCartService, ShoppingCartService>();
+        services.AddScoped<IInternalShoppingCartService, ShoppingCartService>();
         services.AddScoped<ITourPurchaseTokenService, TourPurchaseTokenService>();
         services.AddScoped<IInternalPurchaseTokenService, TourPurchaseTokenService>();
         services.AddScoped<IPaymentService,PaymentService>();

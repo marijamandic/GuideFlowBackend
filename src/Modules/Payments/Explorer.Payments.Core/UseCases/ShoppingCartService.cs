@@ -2,6 +2,7 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
+using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
@@ -10,16 +11,16 @@ using FluentResults;
 
 namespace Explorer.Payments.Core.UseCases;
 
-public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService
+public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService, IInternalShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly IInternalTourService _internalTourService;
+    private readonly Tours.API.Internal.IInternalTourService _internalTourService;
     private readonly ITourBundleService _tourBundleService;
 
 	public ShoppingCartService(
 		IMapper mapper,
 		IShoppingCartRepository shoppingCartRepository,
-		IInternalTourService internalTourService,
+		Tours.API.Internal.IInternalTourService internalTourService,
 		ITourBundleService tourBundleService) : base(mapper)
 	{
 		_shoppingCartRepository = shoppingCartRepository;
@@ -169,6 +170,20 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         catch (Exception)
         {
             throw;
+        }
+    }
+
+    public Result<ShoppingCartDto> Create(int touristId)
+    {
+        try
+        {
+            ShoppingCart shoppingCart = new(touristId);
+            var result = _shoppingCartRepository.Create(shoppingCart);
+            return MapToDto(result);
+        }
+        catch (ArgumentException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
 }
