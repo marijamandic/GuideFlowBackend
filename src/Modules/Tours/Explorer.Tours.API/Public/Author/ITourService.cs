@@ -28,6 +28,5 @@ namespace Explorer.Tours.API.Public.Author
         Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize);
         Result<TourDto> CheckIfPurchased(int userId, int tourId);
         Result<PagedResult<TourDto>> GetToursByBundleId(int id);
-        Task<Result<PagedResult<TourDetailsDto>>> GetDetailsByTouristId(int touristId);
     }
 }

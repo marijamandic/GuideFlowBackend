@@ -14,13 +14,13 @@ namespace Explorer.Payments.Core.UseCases;
 public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService, IInternalShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly Tours.API.Internal.IInternalTourService _internalTourService;
+    private readonly IInternalTourService _internalTourService;
     private readonly ITourBundleService _tourBundleService;
 
 	public ShoppingCartService(
 		IMapper mapper,
 		IShoppingCartRepository shoppingCartRepository,
-		Tours.API.Internal.IInternalTourService internalTourService,
+		IInternalTourService internalTourService,
 		ITourBundleService tourBundleService) : base(mapper)
 	{
 		_shoppingCartRepository = shoppingCartRepository;

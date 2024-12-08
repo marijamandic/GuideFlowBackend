@@ -52,22 +52,5 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             var result = DbContext.Tours.Where(t => t.AuthorId == authorId).ToList();
             return new PagedResult<Tour>(result, result.Count);
         }
-
-        public async Task<PagedResult<Tour>> GetByIds(List<long> ids)
-        {
-            try
-            {
-                var tours = await DbContext.Tours
-                    .Where(t => ids.Contains(t.Id) && t.Status != TourStatus.Deleted)
-                    .Include(t => t.Checkpoints)
-                    .Include(t => t.Reviews)
-                    .ToListAsync();
-                return new PagedResult<Tour>(tours, tours.Count);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
     }
 }

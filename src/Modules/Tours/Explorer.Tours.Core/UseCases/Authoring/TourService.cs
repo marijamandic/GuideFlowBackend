@@ -1,45 +1,31 @@
 ﻿using AutoMapper;
-using Explorer.BuildingBlocks.Core.Domain;
 using Explorer.BuildingBlocks.Core.UseCases;
-using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Internal;
-using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
-using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
-using Explorer.Tours.API.Public.Shopping;
-using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
-    public class TourService : BaseService<TourDto, Tour>, ITourService, API.Internal.IInternalTourService
+	public class TourService : BaseService<TourDto, Tour>, ITourService, API.Internal.IInternalTourService
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
-        private readonly Payments.API.Internal.IInternalTourService _internalTourService;
 
 		public TourService(
 			ITourRepository tourRepository,
 			IMapper mapper,
 			IInternalPurchaseTokenService purchaseTokenService,
-			IInternalTourBundleService tourBundleService,
-			Payments.API.Internal.IInternalTourService internalTourService) : base(mapper)
+			IInternalTourBundleService tourBundleService) : base(mapper)
 		{
 			this.tourRepository = tourRepository;
 			this.mapper = mapper;
 			_purchaseTokenService = purchaseTokenService;
 			_tourBundleService = tourBundleService;
-			_internalTourService = internalTourService;
 		}
 
 		public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -361,22 +347,5 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
-
-		public async Task<Result<PagedResult<TourDetailsDto>>> GetDetailsByTouristId(int touristId)
-		{
-			try
-			{
-                var ids = await _internalTourService.GetTourIdsByTouristId(touristId);
-                var result = await tourRepository.GetByIds(ids.Value.Select(id => (long)id).ToList());
-                var details = result.Select(tour =>
-                    new TourDetailsDto { Id = (int)tour.Id, Description = tour.Description, Level = (API.Dtos.Level)tour.Level, Tags = tour.Taggs })
-                    .ToList();
-                return Result.Ok(new PagedResult<TourDetailsDto>(details, details.Count));
-			}
-			catch (Exception e)
-			{
-				return Result.Fail($"{e.Message}");
-			}
-		}
 	}
 }
