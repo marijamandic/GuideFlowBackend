@@ -77,7 +77,7 @@ namespace Explorer.Encounters.Core.Domain
             double lonTolerance = tolerance / Math.Cos(latitude* Math.PI / 180.0);
 
             bool isNearLatitude = Math.Abs((double)(encounter.EncounterLocation.Latitude - latitude)) <= tolerance;
-            bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= lonTolerance;
+            bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= tolerance;
 
             return isNearLatitude && isNearLongitude;
         }
