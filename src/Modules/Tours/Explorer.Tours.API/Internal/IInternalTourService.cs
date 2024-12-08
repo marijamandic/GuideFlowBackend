@@ -3,7 +3,7 @@ using FluentResults;
 
 namespace Explorer.Tours.API.Internal;
 
-public interface IInternalShoppingCartService
+public interface IInternalTourService
 {
-	TourDto GetById(long id);
+	Result<TourDto> Get(int id);
 }

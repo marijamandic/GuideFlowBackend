@@ -5,6 +5,7 @@ using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Shopping;
 using Explorer.Tours.Core.Domain;
@@ -19,20 +20,20 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
-    public class TourService : BaseService<TourDto, Tour>, ITourService
+    public class TourService : BaseService<TourDto, Tour>, ITourService, API.Internal.IInternalTourService
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
-        private readonly IInternalTourService _internalTourService;
+        private readonly Payments.API.Internal.IInternalTourService _internalTourService;
 
 		public TourService(
 			ITourRepository tourRepository,
 			IMapper mapper,
 			IInternalPurchaseTokenService purchaseTokenService,
 			IInternalTourBundleService tourBundleService,
-			IInternalTourService internalTourService) : base(mapper)
+			Payments.API.Internal.IInternalTourService internalTourService) : base(mapper)
 		{
 			this.tourRepository = tourRepository;
 			this.mapper = mapper;

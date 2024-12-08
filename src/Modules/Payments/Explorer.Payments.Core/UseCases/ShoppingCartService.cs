@@ -2,11 +2,9 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
-using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
-using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal;
 using FluentResults;
 
@@ -15,17 +13,17 @@ namespace Explorer.Payments.Core.UseCases;
 public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, IShoppingCartService
 {
     private readonly IShoppingCartRepository _shoppingCartRepository;
-    private readonly IInternalShoppingCartService _internalShoppingCartService;
+    private readonly IInternalTourService _internalTourService;
     private readonly ITourBundleService _tourBundleService;
 
 	public ShoppingCartService(
 		IMapper mapper,
 		IShoppingCartRepository shoppingCartRepository,
-		IInternalShoppingCartService internalShoppingCartService,
+		IInternalTourService internalTourService,
 		ITourBundleService tourBundleService) : base(mapper)
 	{
 		_shoppingCartRepository = shoppingCartRepository;
-		_internalShoppingCartService = internalShoppingCartService;
+		_internalTourService = internalTourService;
 		_tourBundleService = tourBundleService;
 	}
 
@@ -124,7 +122,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
     {
         try
         {
-			var product = _internalShoppingCartService.GetById(item.ProductId);
+			var product = _internalTourService.Get((int)item.ProductId).Value;
 
 			return new PopulatedItemDto
 			{
@@ -156,7 +154,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
                 AuthorId = bundle.Value.AuthorId
             };
 
-            foreach (var tourId in bundle.Value.TourIds) product.Tours.Add(_internalShoppingCartService.GetById(tourId));
+            foreach (var tourId in bundle.Value.TourIds) product.Tours.Add(_internalTourService.Get(tourId).Value);
 
             return new PopulatedItemDto
             {
