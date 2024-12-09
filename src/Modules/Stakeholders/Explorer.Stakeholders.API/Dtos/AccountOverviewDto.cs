@@ -11,6 +11,8 @@ namespace Explorer.Stakeholders.API.Dtos
 
         public bool IsActive { get; set; }
 
+        public DateTime LastLogin { get; set; }
+        public DateTime LastLogout { get; set; }
     }
 
     public enum UserRole

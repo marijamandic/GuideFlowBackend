@@ -53,7 +53,9 @@ namespace Explorer.Stakeholders.Core.UseCases
                     Password =  user.Password,
                     Email = person.Email,
                     Role = (Explorer.Stakeholders.API.Dtos.UserRole)user.Role,
-                    IsActive = user.IsActive
+                    IsActive = user.IsActive,
+                    LastLogin = user.LastLogin,
+                    LastLogout = user.LastLogout
                     
                 };
                 return account;
@@ -86,7 +88,9 @@ namespace Explorer.Stakeholders.Core.UseCases
                     Password = user.Password,
                     Email = person.Email,
                     Role = (Explorer.Stakeholders.API.Dtos.UserRole)user.Role,
-                    IsActive = user.IsActive
+                    IsActive = user.IsActive,
+                    LastLogout = user.LastLogout,
+                    LastLogin = user.LastLogin
                 };
 
                 accountDtos.Add(account);
@@ -95,5 +99,6 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return Result.Ok(accountDtos);
         }
+
     }
 }

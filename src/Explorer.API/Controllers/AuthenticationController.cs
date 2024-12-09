@@ -27,4 +27,11 @@ public class AuthenticationController : BaseApiController
         var result = _authenticationService.Login(credentials);
         return CreateResponse(result);
     }
+
+    [HttpPatch("logout")]
+    public ActionResult HandleLogout([FromBody] UserDto userDto)
+    {
+        var result = _authenticationService.HandleLogout(userDto);
+        return CreateResponse(result);
+    }
 }
