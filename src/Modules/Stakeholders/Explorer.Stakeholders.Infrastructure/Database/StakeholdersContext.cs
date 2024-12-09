@@ -49,6 +49,7 @@ public class StakeholdersContext : DbContext
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<User>().HasMany(u => u.Followers).WithOne().OnDelete(DeleteBehavior.Cascade).HasForeignKey(f => f.UserId);
         modelBuilder.Entity<Person>()
             .HasOne<User>()
             .WithOne()

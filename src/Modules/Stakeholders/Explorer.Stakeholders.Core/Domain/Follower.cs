@@ -9,7 +9,7 @@ namespace Explorer.Stakeholders.Core.Domain
 {
     public class Follower : Entity
     {
-        public int UserId { get; set; }
+        public long UserId { get; set; }
         public int FollowerId { get; private set; }
         public string FollowerUsername { get; private set; }
         public Follower() { }
