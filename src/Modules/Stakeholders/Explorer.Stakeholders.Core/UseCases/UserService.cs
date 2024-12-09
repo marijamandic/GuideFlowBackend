@@ -83,7 +83,16 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
         }
-
+        public Result<PagedResult<TouristDto>> GetTouristsPaged(int page, int pageSize)
+        {
+            var tourists = userRepository.GetTouristsPaged(page, pageSize);
+            if (tourists == null)
+            {
+                return Result.Fail("Tourist not found.");
+            }
+            var touristsDto = new PagedResult<TouristDto>(tourists.Results.Select(mapper.Map<TouristDto>).ToList(), tourists.TotalCount);
+            return Result.Ok(touristsDto);
+        }
       /*  public Result<TouristDto> CreateTourist(UserDto userDto)
         {
             // Kreirajte novog turistu

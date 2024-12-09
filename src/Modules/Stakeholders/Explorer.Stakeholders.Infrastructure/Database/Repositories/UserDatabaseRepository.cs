@@ -4,6 +4,8 @@ using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Explorer.Stakeholders.Infrastructure.Database;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Explorer.Stakeholders.API.Dtos;
 
 public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersContext>, IUserRepository
 {
@@ -87,5 +89,11 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         DbContext.Tourists.Add(tourist);
         DbContext.SaveChanges();
         return tourist;
+    }
+    public PagedResult<Tourist> GetTouristsPaged(int page, int pageSize)
+    {
+        var task = DbContext.Users.OfType<Tourist>().GetPagedById(page, pageSize);
+        task.Wait();
+        return task.Result;
     }
 }
