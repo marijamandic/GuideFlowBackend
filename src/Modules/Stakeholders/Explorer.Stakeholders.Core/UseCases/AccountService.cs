@@ -25,7 +25,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             try
             {
-                var user = _userRepository.GetById(account.UserId);
+                var user = _userRepository.GetById(account.id);
                 account.IsActive = account.IsActive ? false : true;
                 user.IsActive = account.IsActive;
                 _userRepository.Update(user);
@@ -48,7 +48,7 @@ namespace Explorer.Stakeholders.Core.UseCases
                 var person = _personRepository.Get(personId);
                 var account = new AccountOverviewDto
                 {
-                    UserId = user.Id,
+                    id = user.Id,
                     Username = user.Username,
                     Password =  user.Password,
                     Email = person.Email,
@@ -83,7 +83,7 @@ namespace Explorer.Stakeholders.Core.UseCases
                 catch(KeyNotFoundException ) { continue; }
                 var account = new AccountOverviewDto
                 {
-                    UserId = user.Id,
+                    id = user.Id,
                     Username = user.Username,
                     Password = user.Password,
                     Email = person.Email,
