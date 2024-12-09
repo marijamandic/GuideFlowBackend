@@ -54,6 +54,7 @@ public static class ToursStartup
         services.AddScoped<IInternalProblemService, InternalProblemService>();
         services.AddScoped<IPublicPointService, PublicPointService>();
         services.AddScoped<IInternalSalesService, InternalSalesService>();
+        services.AddScoped<IInternalTourService, TourService>();
 
     }
 
