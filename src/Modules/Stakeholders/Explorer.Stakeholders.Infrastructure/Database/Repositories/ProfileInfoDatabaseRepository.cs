@@ -44,10 +44,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
                 .Any(p => p.FirstName == username || p.LastName == username);  // Pretpostavljamo da se username odnosi na FirstName ili LastName
         }
 
-        public ProfileInfo GetById(long id)
+        public ProfileInfo GetByUserId(long id)
         {
             var profileInfo = DbContext.Profiles
-                .FirstOrDefault(u => u.Id == id);
+                .FirstOrDefault(u => u.UserId == id);
 
             if (profileInfo == null) throw new KeyNotFoundException("Profile not found: " + id);
             return profileInfo;

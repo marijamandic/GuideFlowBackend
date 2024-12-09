@@ -24,7 +24,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Result<ProfileInfoDto> GetByUserId(int id)
         {
-            ProfileInfo profileInfo = profileInfoRepository.GetById(id);
+            ProfileInfo profileInfo = profileInfoRepository.GetByUserId(id);
             return MapToDto(profileInfo);
         }
 
