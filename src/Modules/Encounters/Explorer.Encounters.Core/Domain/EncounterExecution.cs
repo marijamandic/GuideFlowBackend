@@ -63,21 +63,27 @@ namespace Explorer.Encounters.Core.Domain
         //da li turista moze da aktivira izazov ( za sva tri)
         public bool IsTouristNear( Encounter encounter)
         {
-            double tolerance;// Tolerancija za blizinu
+           // double tolerance;// Tolerancija za blizinu
+            double latTolerance;
+            double lonTolerance;
             double longitude  = UserLongitude;
             double latitude  = UserLatitude;
 
             if (encounter.EncounterType == EncounterType.Location && encounter is HiddenLocationEncounter hiddenLocationEncounter)
-                tolerance = hiddenLocationEncounter.ActivationRange / 111000.0;
+            {
+                latTolerance = hiddenLocationEncounter.ActivationRange / 111320.0;
+                lonTolerance = hiddenLocationEncounter.ActivationRange / (111320.0 * Math.Cos(latitude));
+            }
             //else if (encounter.EncounterType == EncounterType.Social && encounter is SocialEncounter socialEncounter)
-                //tolerance = socialEncounter.EncounterRange / 111000;
+            //tolerance = socialEncounter.EncounterRange / 111000;
             else
-                tolerance = 2000.0 / 111000.0;   // 20 metara
+            {
+                latTolerance = 20.0 / 111320.0;   // 20 metara
+                lonTolerance = 20.0 / (111320.0 * Math.Cos(latitude));
+            }
 
-            double lonTolerance = tolerance / Math.Cos(latitude* Math.PI / 180.0);
-
-            bool isNearLatitude = Math.Abs((double)(encounter.EncounterLocation.Latitude - latitude)) <= tolerance;
-            bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= tolerance;
+            bool isNearLatitude = Math.Abs((double)(encounter.EncounterLocation.Latitude - latitude)) <= latTolerance;
+            bool isNearLongitude = Math.Abs((double)(encounter.EncounterLocation.Longitude - longitude)) <= lonTolerance;
 
             return isNearLatitude && isNearLongitude;
         }
