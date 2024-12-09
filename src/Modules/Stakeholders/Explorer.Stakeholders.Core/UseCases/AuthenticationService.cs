@@ -37,12 +37,13 @@ public class AuthenticationService : IAuthenticationService
         try
         {
             personId = _userRepository.GetPersonId(user.Id);
-            user.SetLastLoginTime();
         }
         catch (KeyNotFoundException)
         {
             personId = 0;
         }
+        user.SetLastLoginTime();
+        _userRepository.Update(user);
         return _tokenGenerator.GenerateAccessToken(user, personId);
     }
 
@@ -54,6 +55,7 @@ public class AuthenticationService : IAuthenticationService
         {
             var user = _userRepository.Create(_mapper.Map<User>(account));
             user.SetLastLoginTime();
+            _userRepository.Update(user);
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
             var profileInfo = _profileInfoRepository.Create(new ProfileInfo(user.Id, account.Name, account.Surname, "images/profileInfo/1c0f2ce0-b565-49d1-8455-02efdaae83a2.png", "bio", "moto"));
             if(account.Role == API.Dtos.UserRole.Tourist)
@@ -68,11 +70,11 @@ public class AuthenticationService : IAuthenticationService
         }
     }
 
-    public Result HandleLogout(UserDto userDto)
+    public Result HandleLogout(long id)
     {
         try
         {
-            var user = _userRepository.GetById(userDto.Id);
+            var user = _userRepository.GetById(id);
             user.SetLastLogoutTime();
             _userRepository.Update(user);
             return Result.Ok();

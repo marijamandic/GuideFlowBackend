@@ -8,5 +8,5 @@ public interface IAuthenticationService
     Result<AuthenticationTokensDto> Login(CredentialsDto credentials);
     Result<AuthenticationTokensDto> RegisterTourist(UserDto account);
 
-    Result HandleLogout(UserDto userDto);
+    Result HandleLogout(long id);
 }

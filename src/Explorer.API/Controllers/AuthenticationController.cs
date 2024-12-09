@@ -28,10 +28,10 @@ public class AuthenticationController : BaseApiController
         return CreateResponse(result);
     }
 
-    [HttpPatch("logout")]
-    public ActionResult HandleLogout([FromBody] UserDto userDto)
+    [HttpPatch("logout/{id:long}")]
+    public ActionResult HandleLogout(long id)
     {
-        var result = _authenticationService.HandleLogout(userDto);
+        var result = _authenticationService.HandleLogout(id);
         return CreateResponse(result);
     }
 }
