@@ -9,7 +9,6 @@ public class User : Entity
     public UserRole Role { get; private set; }
     public bool IsActive { get; set; }
     public  Location Location { get; private set; }
-    public ICollection<Follower> Followers { get; private set; } = new List<Follower>();
 
     protected User()
     {

@@ -50,7 +50,12 @@ namespace Explorer.API.Controllers.ProfileInfo
             var result = _profileInfoService.Create(profileInfo);
             return CreateResponse(result);
         }
-
+        [HttpPut("follower/{userId:long}")]
+        public ActionResult<ProfileInfoDto> UpdateFollower(long userId, [FromBody] FollowerDto followerDto) {
+            followerDto.UserId = userId;
+            var result = _profileInfoService.UpdateFollowers(followerDto);
+            return CreateResponse(result);
+        }
         // PUT: api/administration/profileInfo/{id}/{userId}
         [HttpPut("{id:long}/{userId:long}")]
         public ActionResult<ProfileInfoDto> Update(long id, long userId, [FromBody] ProfileInfoDto profileInfo)
@@ -86,7 +91,11 @@ namespace Explorer.API.Controllers.ProfileInfo
             var result = _profileInfoService.Delete(id);
             return CreateResponse(result);
         }
-
+        [HttpGet("followers/{userId:int}")]
+        public ActionResult<List<int>> GetFollowersByUserId(int userId) {
+            var result = _profileInfoService.GetFollowers(userId);
+            return CreateResponse(result);
+        }
         [HttpGet("{userId:long}")]
         public ActionResult<ProfileInfoDto> GetByUserId(int userId)
         {

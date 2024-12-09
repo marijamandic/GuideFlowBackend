@@ -16,5 +16,6 @@ namespace Explorer.Stakeholders.API.Dtos
         public string? ImageBase64 { get; set; }
         public string Biography { get; set; }
         public string Moto { get; set; }
+        public ICollection<FollowerDto> Followers { get; set; }
     }
 }

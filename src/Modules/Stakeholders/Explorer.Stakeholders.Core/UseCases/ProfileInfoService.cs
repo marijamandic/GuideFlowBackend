@@ -17,9 +17,11 @@ namespace Explorer.Stakeholders.Core.UseCases
     public class ProfileInfoService : CrudService<ProfileInfoDto, ProfileInfo>, IProfileInfoService
     {
         private readonly IProfileInfoRepository profileInfoRepository;
+        private readonly IMapper _mapper;
         public ProfileInfoService(IProfileInfoRepository profileInfoRepository, IMapper mapper) : base(profileInfoRepository, mapper)
         {
             this.profileInfoRepository = profileInfoRepository;
+            _mapper = mapper;
         }
 
         public Result<ProfileInfoDto> GetByUserId(int id)
@@ -33,6 +35,18 @@ namespace Explorer.Stakeholders.Core.UseCases
             var profiles = profileInfoRepository.GetAll();
             var profileInfoDtos = profiles.Select(MapToDto).ToList();
             return Result.Ok(profileInfoDtos);
+        }
+        public Result<ProfileInfoDto> UpdateFollowers(FollowerDto follower) {
+            var profile = profileInfoRepository.GetByUserId(follower.UserId);
+            profile.UpdateFollower(_mapper.Map<Follower>(follower));
+            profileInfoRepository.Update(profile);
+            return MapToDto(profile);
+        }
+
+        public Result<List<int>> GetFollowers(int userId)
+        {
+            var ids = profileInfoRepository.GetFollowerIdsByUserId(userId);
+            return ids;
         }
 
 

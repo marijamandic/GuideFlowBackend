@@ -45,8 +45,8 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
         }
 
         public ProfileInfo GetByUserId(long id)
-        {
-            var profileInfo = DbContext.Profiles
+        {   
+            var profileInfo = DbContext.Profiles.Include(p => p.Followers)
                 .FirstOrDefault(u => u.UserId == id);
 
             if (profileInfo == null) throw new KeyNotFoundException("Profile not found: " + id);
@@ -67,6 +67,15 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
             // Assuming there's a property "PersonId" that you intend to return
             return profileInfo.Id; // Adjust this if there's a specific PersonId to return
+        }
+
+        public List<int> GetFollowerIdsByUserId(int userId)
+        {
+            return DbContext.Profiles
+        .Where(profile => profile.UserId == userId) 
+        .SelectMany(profile => profile.Followers)  
+        .Select(follower => follower.FollowerId)    
+        .ToList();
         }
     }
 }
