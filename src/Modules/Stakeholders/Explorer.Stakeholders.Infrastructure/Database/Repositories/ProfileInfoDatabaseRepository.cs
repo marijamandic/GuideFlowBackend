@@ -44,10 +44,10 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
                 .Any(p => p.FirstName == username || p.LastName == username);  // Pretpostavljamo da se username odnosi na FirstName ili LastName
         }
 
-        public ProfileInfo GetById(long id)
-        {
-            var profileInfo = DbContext.Profiles
-                .FirstOrDefault(u => u.Id == id);
+        public ProfileInfo GetByUserId(long id)
+        {   
+            var profileInfo = DbContext.Profiles.Include(p => p.Followers)
+                .FirstOrDefault(u => u.UserId == id);
 
             if (profileInfo == null) throw new KeyNotFoundException("Profile not found: " + id);
             return profileInfo;
@@ -67,6 +67,15 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
             // Assuming there's a property "PersonId" that you intend to return
             return profileInfo.Id; // Adjust this if there's a specific PersonId to return
+        }
+
+        public List<int> GetFollowerIdsByUserId(int userId)
+        {
+            return DbContext.Profiles
+        .Where(profile => profile.UserId == userId) 
+        .SelectMany(profile => profile.Followers)  
+        .Select(follower => follower.FollowerId)    
+        .ToList();
         }
     }
 }
