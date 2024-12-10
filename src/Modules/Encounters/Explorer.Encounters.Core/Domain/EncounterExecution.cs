@@ -61,21 +61,24 @@ namespace Explorer.Encounters.Core.Domain
         }
 
         //da li turista moze da aktivira izazov ( za sva tri)
-        public bool IsTouristNear( Encounter encounter)
+        public bool IsTouristNear(Encounter encounter)
         {
-           // double tolerance;// Tolerancija za blizinu
+            // double tolerance;// Tolerancija za blizinu
             double latTolerance;
             double lonTolerance;
-            double longitude  = UserLongitude;
-            double latitude  = UserLatitude;
+            double longitude = UserLongitude;
+            double latitude = UserLatitude;
 
             if (encounter.EncounterType == EncounterType.Location && encounter is HiddenLocationEncounter hiddenLocationEncounter)
             {
                 latTolerance = hiddenLocationEncounter.ActivationRange / 111320.0;
                 lonTolerance = hiddenLocationEncounter.ActivationRange / (111320.0 * Math.Cos(latitude));
             }
-            //else if (encounter.EncounterType == EncounterType.Social && encounter is SocialEncounter socialEncounter)
-            //tolerance = socialEncounter.EncounterRange / 111000;
+            else if (encounter.EncounterType == EncounterType.Social && encounter is SocialEncounter socialEncounter)
+            {
+                latTolerance = socialEncounter.EncounterRange / 111320.0;
+                lonTolerance = socialEncounter.EncounterRange / (111320.0 * Math.Cos(latitude));
+            }
             else
             {
                 latTolerance = 20.0 / 111320.0;   // 20 metara
