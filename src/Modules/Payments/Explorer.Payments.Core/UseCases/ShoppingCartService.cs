@@ -90,18 +90,23 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
     }
 
-	public Result<PopulatedShoppingCartDto> GetPopulatedByTouristId(int touristId)
+	public Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId)
 	{
         try
         {
             var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
 
-            return new PopulatedShoppingCartDto
+            var shoppingCartDto = new ShoppingCartDto
             {
                 Id = (int)shoppingCart.Id,
                 TouristId = (int)shoppingCart.TouristId,
-                Items = GetPopulatedItemsByIds(shoppingCart.Items.ToList())
+                Items = shoppingCart.Items.Select(i => _mapper.Map<ItemDto>(i)).ToList()
             };
+
+			foreach (var item in shoppingCartDto.Items)
+				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTour(item.ProductId) : GetBundle(item.ProductId);
+
+			return Result.Ok(shoppingCartDto);
         }
         catch (Exception e)
         {
@@ -109,31 +114,18 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         }
 	}
 
-    private List<PopulatedItemDto> GetPopulatedItemsByIds(List<Item> items)
-    {
-        List<PopulatedItemDto> populatedItems = new();
-
-        foreach (var item in items)
-            populatedItems.Add(item.Type == Domain.ShoppingCarts.ProductType.Tour ? GetTour(item) : GetBundle(item));
-
-        return populatedItems;
-    }
-
-    private PopulatedItemDto GetTour(Item item)
+    private TourDetailsDto GetTour(int productId)
     {
         try
         {
-			var product = _internalTourService.Get((int)item.ProductId).Value;
-
-			return new PopulatedItemDto
-			{
-				Id = (int)item.Id,
-				ShoppingCartId = (int)item.ShoppingCartId,
-				Type = (API.Dtos.ShoppingCarts.ProductType)item.Type,
-				Product = product,
-				ProductName = item.ProductName,
-				AdventureCoin = item.AdventureCoin
-			};
+			var product = _internalTourService.Get(productId).Value;
+            return new TourDetailsDto
+            {
+                Id = (int)product.Id,
+                Description = product.Description,
+                Level = (TourLevel)product.Level,
+                Tags = new List<string>(product.Taggs)
+            };
 		}
         catch (Exception)
         {
@@ -141,31 +133,26 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         }
     }
 
-    private PopulatedItemDto GetBundle(Item item)
+    private TourBundleDto GetBundle(int bundleId)
     {
         try
         {
-            var bundle = _tourBundleService.Get((int)item.ProductId);
-            var product = new PopulatedTourBundleDto
+            var bundle = _tourBundleService.Get(bundleId);
+            if (bundle.IsFailed) throw new KeyNotFoundException("Product ID mismatch.");
+
+            var product = new TourBundleDto
             {
                 Id = (int)bundle.Value.Id,
                 Name = bundle.Value.Name,
                 Price = bundle.Value.Price,
                 Status = bundle.Value.Status,
-                AuthorId = bundle.Value.AuthorId
+                AuthorId = bundle.Value.AuthorId,
+                TourIds = bundle.Value.TourIds,
             };
 
-            foreach (var tourId in bundle.Value.TourIds) product.Tours.Add(_internalTourService.Get(tourId).Value);
+            foreach (var tourId in product.TourIds) product.Tours!.Add(GetTour(tourId));
 
-            return new PopulatedItemDto
-            {
-                Id = (int)item.Id,
-                ShoppingCartId = (int)item.ShoppingCartId,
-                Type = (API.Dtos.ShoppingCarts.ProductType)item.Type,
-                Product = product,
-                ProductName = item.ProductName,
-                AdventureCoin = item.AdventureCoin,
-            };
+            return product;
         }
         catch (Exception)
         {

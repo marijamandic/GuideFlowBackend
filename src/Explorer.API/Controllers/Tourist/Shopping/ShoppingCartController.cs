@@ -42,7 +42,7 @@ public class ShoppingCartController : BaseApiController
     }
 
     [HttpGet("populated")]
-    public ActionResult<PopulatedShoppingCartDto> GetPopulatedByTouristId()
+    public ActionResult<ShoppingCartDto> GetPopulatedByTouristId()
     {
         int touristId = int.Parse(User.FindFirst("id")!.Value);
         var result = _shoppingCartService.GetPopulatedByTouristId(touristId);
