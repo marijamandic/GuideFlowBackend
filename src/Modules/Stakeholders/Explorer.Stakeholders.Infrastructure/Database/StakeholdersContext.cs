@@ -9,6 +9,7 @@ public class StakeholdersContext : DbContext
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Person> People { get; set; }
+    public DbSet<Follower> Followers { get; set; }
     public DbSet<Problem> Problems { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Club> Clubs { get; set; }
@@ -48,6 +49,7 @@ public class StakeholdersContext : DbContext
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ProfileInfo>().HasMany(u => u.Followers).WithOne().OnDelete(DeleteBehavior.Cascade).HasForeignKey(f => f.UserId);
         modelBuilder.Entity<Person>()
             .HasOne<User>()
             .WithOne()

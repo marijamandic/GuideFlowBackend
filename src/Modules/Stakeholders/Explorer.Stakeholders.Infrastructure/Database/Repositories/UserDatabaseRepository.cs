@@ -4,6 +4,7 @@ using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Stakeholders.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 using Explorer.Stakeholders.Infrastructure.Database;
+using System.Linq;
 
 public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersContext>, IUserRepository
 {
@@ -87,5 +88,15 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         DbContext.Tourists.Add(tourist);
         DbContext.SaveChanges();
         return tourist;
+    }
+
+    public List<User> GetAllByIds(List<long> ids)
+    {
+        if (ids == null || !ids.Any())
+            return new List<User>();
+
+        return DbContext.Users
+            .Where(u => ids.Contains(u.Id))
+            .ToList();
     }
 }
