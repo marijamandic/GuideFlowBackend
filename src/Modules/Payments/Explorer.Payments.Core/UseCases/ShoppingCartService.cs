@@ -122,6 +122,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             return new TourDetailsDto
             {
                 Id = (int)product.Id,
+                Name = product.Name,
                 Description = product.Description,
                 Level = (TourLevel)product.Level,
                 Tags = new List<string>(product.Taggs)
