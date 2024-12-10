@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Internal;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
@@ -9,7 +11,7 @@ using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
-	public class TourService : BaseService<TourDto, Tour>, ITourService, API.Internal.IInternalTourService
+	public class TourService : BaseService<TourDto, Tour>, ITourService, IInternalTourService
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
