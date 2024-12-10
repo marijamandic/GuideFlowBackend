@@ -22,7 +22,7 @@ public class SalesCommandTests : BasePaymentsIntegrationTests
 	//	{
 	//		EndsAt = DateTime.UtcNow.AddDays(7),
 	//		Discount = 99,
-	//		TourIds = new List<int> { 1, 2 }
+	//		TourIds = new List<int> { -1 }
 	//	};
 
 	//	// Act
@@ -37,7 +37,7 @@ public class SalesCommandTests : BasePaymentsIntegrationTests
 	//{
 	//	return new SalesController(scope.ServiceProvider.GetRequiredService<ISalesService>())
 	//	{
-	//		ControllerContext = BuildContext("2")
+	//		ControllerContext = BuildContext("101")
 	//	};
 	//}
 }

@@ -22,13 +22,15 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var controller = CreateController(scope);
-        var account = new AccountRegistrationDto
+        var account = new UserDto
         {
             Username = "turistaA@gmail.com",
             Email = "turistaA@gmail.com",
             Password = "turistaA",
             Name = "Žika",
-            Surname = "Žikić"
+            Surname = "Žikić",
+            Location = new LocationDto { Latitude = 45.245 , Longitude = 19.245},
+            Role = API.Dtos.UserRole.Tourist
         };
 
         // Act

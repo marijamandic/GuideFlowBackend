@@ -6,4 +6,5 @@ public interface IShoppingCartRepository
 {
     ShoppingCart GetByTouristId(int touristId);
     void Save(ShoppingCart shoppingCart);
+    ShoppingCart Create(ShoppingCart shoppingCart);
 }
