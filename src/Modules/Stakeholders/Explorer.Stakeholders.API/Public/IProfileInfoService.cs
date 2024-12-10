@@ -15,7 +15,9 @@ namespace Explorer.Stakeholders.API.Public
         Result<ProfileInfoDto> GetByUserId(int id);
         Result<ProfileInfoDto> Create(ProfileInfoDto profileInfoDto);
         Result<ProfileInfoDto> Update(ProfileInfoDto profileInfoDto);
+        Result<ProfileInfoDto> UpdateFollowers(FollowerDto follower);
         public Result<List<ProfileInfoDto>> GetAllUsers();
+        Result<List<int>> GetFollowers(int userId);
         Result Delete(int id);
     }
 }
