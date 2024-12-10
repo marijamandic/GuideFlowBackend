@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class UserService : CrudService<UserDto, User>, IUserService, IInternalTouristService
+    public class UserService : CrudService<UserDto, User>, IUserService, IInternalTouristService, IInternalUserService
     {
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
@@ -112,5 +112,26 @@ namespace Explorer.Stakeholders.Core.UseCases
             return Result.Ok(touristDto);
         }
 
+        public Result<string> GetUsername(long id)
+        {
+            try
+            {
+                var user = userRepository.Get(id);
+                return Result.Ok(user.Username);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
+        public Result<Dictionary<long, string>> GetUsernamesByIds(List<long> ids)
+        {
+            if (ids == null || !ids.Any())
+                return new Dictionary<long, string>();
+
+            var users = userRepository.GetAllByIds(ids);
+            return Result.Ok(users.ToDictionary(user => user.Id, user => user.Username));
+        }
     }
 }

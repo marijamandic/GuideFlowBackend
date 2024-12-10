@@ -4,6 +4,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
+using Explorer.Stakeholders.API.Internal;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Shopping;
@@ -25,12 +26,14 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IMapper mapper;
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService) : base(mapper) 
+        private readonly IInternalUserService _userService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
             _purchaseTokenService = purchaseTokenService;
             _tourBundleService = tourBundleService;
+            _userService = userService;
         }
 
         public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
@@ -43,12 +46,32 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         {
             try
             {
-                var result = tourRepository.Get(id);
-                return MapToDto(result);
+                var tour = tourRepository.Get(id);
+                var tourDto = MapToDto(tour);
+                tourDto.AuthorName = _userService.GetUsername(tourDto.AuthorId).Value;
+                GetReviewsUsernames(tourDto.Reviews);
+                return tourDto;
             }
             catch (KeyNotFoundException e)
             {
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+
+        private void GetReviewsUsernames(List<TourReviewDto> reviews)
+        {
+            if (reviews == null || !reviews.Any())
+                return;
+
+            var touristIds = reviews.Select(r => (long)r.TouristId).Distinct().ToList();
+            var usernames = _userService.GetUsernamesByIds(touristIds).Value;
+
+            foreach (var review in reviews)
+            {
+                if (usernames.ContainsKey(review.TouristId))
+                {
+                    review.Username = usernames[review.TouristId];
+                }
             }
         }
 

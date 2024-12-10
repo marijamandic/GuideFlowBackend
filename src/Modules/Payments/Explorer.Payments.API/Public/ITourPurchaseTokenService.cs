@@ -13,5 +13,6 @@ namespace Explorer.Payments.API.Public
     public interface ITourPurchaseTokenService
     {
         Result<PagedResult<TourPurchaseTokenDto>> Create(PaymentDto payment);
+        Result<TourPurchaseTokenDto> GetTokenByTouristAndTourId(int touristId, int tourId);
     }
 }
