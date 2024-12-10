@@ -32,12 +32,12 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult<UserDto> CreateTourist([FromBody] UserDto userDto)
         {
             var result = _userService.CreateTourist(userDto);
             return CreateResponse(result);
-        }
+        }*/
 
         [HttpPut("{id:int}")]
         public ActionResult<UserDto> UpdateTourist(int id, [FromBody] UserDto userDto)

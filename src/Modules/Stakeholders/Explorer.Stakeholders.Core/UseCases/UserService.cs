@@ -84,7 +84,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
         }
 
-        public Result<TouristDto> CreateTourist(UserDto userDto)
+      /*  public Result<TouristDto> CreateTourist(UserDto userDto)
         {
             // Kreirajte novog turistu
             Location location = new Location(userDto.Location.Longitude, userDto.Location.Latitude);
@@ -110,7 +110,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             };
 
             return Result.Ok(touristDto);
-        }
+        }*/
 
         public Result<string> GetUsername(long id)
         {
