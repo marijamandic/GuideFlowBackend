@@ -97,7 +97,7 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
         task.Wait();
         return task.Result;
 
-
+    }
     public List<User> GetAllByIds(List<long> ids)
     {
         if (ids == null || !ids.Any())
