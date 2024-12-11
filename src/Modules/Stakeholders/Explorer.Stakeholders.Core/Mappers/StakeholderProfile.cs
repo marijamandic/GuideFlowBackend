@@ -5,6 +5,7 @@ using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.API.Dtos.Problems;
+using Explorer.Stakeholders.API.Dtos.Explorer.Stakeholders.Core.DTO;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -16,7 +17,8 @@ public class StakeholderProfile : Profile
         CreateMap<ClubInvitationDto, ClubInvitation>().ReverseMap();
         CreateMap<ClubRequestDto, ClubRequest>().ReverseMap();
         CreateMap<ClubMemberDto, ClubMember>().ReverseMap();
-        CreateMap<Location, LocationDto>().ReverseMap(); 
+        CreateMap<Location, LocationDto>().ReverseMap();
+        CreateMap<Follower, FollowerDto>().ReverseMap();
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location));
         CreateMap<UserDto, User>()
@@ -45,6 +47,7 @@ public class StakeholderProfile : Profile
                 new MessageDto { Id = (int)m.Id, ProblemId = (int)m.ProblemId, UserId = (int)m.UserId, Content = m.Content, PostedAt = m.PostedAt })));
 
         CreateMap<MessageDto, Message>().ReverseMap();
+        CreateMap<MessageNotificationDto,MessageNotification>().ReverseMap();
         CreateMap<ProblemNotificationDto, ProblemNotification>().ReverseMap();
         CreateMap<NotificationDto, Notification>().ReverseMap();
         CreateMap<ClubPostDto, ClubPost>().ReverseMap();
