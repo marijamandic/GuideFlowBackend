@@ -12,5 +12,6 @@ public interface IUserRepository : ICrudRepository<User>
     Tourist GetTouristById(long id);
     Tourist UpdateTourist(Tourist tourist);
     Tourist CreateTourist(Tourist tourist);
+    PagedResult<Tourist> GetTouristsPaged(int page, int pageSize);
     List<User> GetAllByIds(List<long> ids);
 }
