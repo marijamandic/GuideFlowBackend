@@ -75,11 +75,19 @@ public class AuthenticationService : IAuthenticationService
         try
         {
             var user = _userRepository.GetById(id);
+            if (user == null) // Explicitly check for null
+            {
+                return Result.Fail(FailureCode.NotFound).WithError($"User with ID {id} not found.");
+            }
+
             user.SetLastLogoutTime();
             _userRepository.Update(user);
             return Result.Ok();
         }
-        catch (KeyNotFoundException e) { return Result.Fail(FailureCode.NotFound).WithError(e.Message); }
-
+        catch (Exception e) // Catch other unexpected exceptions
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
     }
+
 }
