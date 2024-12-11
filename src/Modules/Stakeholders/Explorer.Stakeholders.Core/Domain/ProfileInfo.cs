@@ -15,6 +15,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public string ImageUrl { get; private set; }
         public string Biography { get; private set; }
         public string Moto { get; private set; }
+        public ICollection<Follower> Followers { get; private set; } = new List<Follower>();
 
         public ProfileInfo(long userId, string firstName, string lastName, string imageUrl, string biography, string moto)
         {
@@ -35,6 +36,17 @@ namespace Explorer.Stakeholders.Core.Domain
             if (string.IsNullOrWhiteSpace(imageUrl)) throw new ArgumentException("ImageUrl cannot be empty.", nameof(imageUrl));
             if (string.IsNullOrWhiteSpace(biography)) throw new ArgumentException("Biography cannot be empty.", nameof(biography));
             if (string.IsNullOrWhiteSpace(moto)) throw new ArgumentException("Moto cannot be empty.", nameof(moto));
+        }
+        public void UpdateFollower(Follower follower) {
+            var existingFollower = Followers.FirstOrDefault(f => f.UserId == follower.UserId && f.FollowerId == follower.FollowerId); 
+            if (existingFollower != null)
+            {
+                Followers.Remove(existingFollower);
+            }
+            else
+            {
+                Followers.Add(follower);
+            }
         }
     }
 }

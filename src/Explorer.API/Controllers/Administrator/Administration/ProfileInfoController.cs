@@ -50,7 +50,12 @@ namespace Explorer.API.Controllers.ProfileInfo
             var result = _profileInfoService.Create(profileInfo);
             return CreateResponse(result);
         }
-
+        [HttpPut("follower/{userId:long}")]
+        public ActionResult<ProfileInfoDto> UpdateFollower(long userId, [FromBody] FollowerDto followerDto) {
+            followerDto.UserId = userId;
+            var result = _profileInfoService.UpdateFollowers(followerDto);
+            return CreateResponse(result);
+        }
         // PUT: api/administration/profileInfo/{id}/{userId}
         [HttpPut("{id:long}/{userId:long}")]
         public ActionResult<ProfileInfoDto> Update(long id, long userId, [FromBody] ProfileInfoDto profileInfo)
@@ -74,6 +79,7 @@ namespace Explorer.API.Controllers.ProfileInfo
                 System.IO.File.WriteAllBytes(filePath, imageData);
                 profileInfo.ImageUrl = $"images/profileInfo/{fileName}";
             }
+       
 
             var result = _profileInfoService.Update(profileInfo);
             return CreateResponse(result);
@@ -86,7 +92,11 @@ namespace Explorer.API.Controllers.ProfileInfo
             var result = _profileInfoService.Delete(id);
             return CreateResponse(result);
         }
-
+        [HttpGet("followers/{userId:int}")]
+        public ActionResult<List<int>> GetFollowersByUserId(int userId) {
+            var result = _profileInfoService.GetFollowers(userId);
+            return CreateResponse(result);
+        }
         [HttpGet("{userId:long}")]
         public ActionResult<ProfileInfoDto> GetByUserId(int userId)
         {
@@ -99,6 +109,12 @@ namespace Explorer.API.Controllers.ProfileInfo
             }
             Console.WriteLine("Profile not found or an error occurred for userId: " + userId);
             return NotFound(result.Errors);
+        }
+        [HttpGet("followed/{userId:int}")]
+        public ActionResult<List<int>> GetFollowedIdsByUserId(int userId)
+        {
+            var result = _profileInfoService.GetFollowed(userId);
+            return CreateResponse(result);
         }
     }
 }

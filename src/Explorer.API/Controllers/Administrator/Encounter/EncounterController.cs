@@ -39,6 +39,11 @@ namespace Explorer.API.Controllers.Administrator.Encounter
             var result = _encounterService.Update(encounterDto);
             return CreateResponse(result);
         }
-
+        [HttpGet("search")]
+        public ActionResult<PagedResult<EncounterDto>> SearchAndFilter([FromQuery] SearchAndFilterParamsDto search)
+        {
+            var result = _encounterService.SearchAndFilter(search.Name, search.Type,search.UserLatitude,search.UserLongitude);
+            return CreateResponse(result);
+        }
     }
 }

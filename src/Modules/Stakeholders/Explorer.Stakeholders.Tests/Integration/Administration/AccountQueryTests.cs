@@ -48,7 +48,6 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
             };
 
 
-
             var result = ((ObjectResult)controller.GetAccount(newAccount.UserId).Result)?.Value as AccountOverviewDto;
 
 

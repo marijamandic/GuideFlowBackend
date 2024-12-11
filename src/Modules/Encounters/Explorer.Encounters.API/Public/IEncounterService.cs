@@ -16,5 +16,6 @@ namespace Explorer.Encounters.API.Public
         public Result Delete(int  id);
         public Result<EncounterDto> Get( long id);
         public Result<PagedResult<EncounterDto>> GetPaged(int page, int pageSize);
+        public Result<PagedResult<EncounterDto>> SearchAndFilter(string? name, int? type, double? latitude, double? longitude);
     }
 }

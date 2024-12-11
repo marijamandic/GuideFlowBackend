@@ -19,8 +19,6 @@ namespace Explorer.Tours.API.Dtos
             Rating = rating;
         }
     }
-}
-
 public enum TransportMode
 {
     Walk,
@@ -28,3 +26,5 @@ public enum TransportMode
     Car,
     Boat
 }
+}
+

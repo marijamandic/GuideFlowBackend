@@ -46,4 +46,9 @@ public class Tourist : User
         Xp += amount;
         UpdateLevel();
     }
+    public void AddMoney(double amount)
+    {
+        Wallet += amount;
+        UpdateWallet(Wallet);
+    }
 }

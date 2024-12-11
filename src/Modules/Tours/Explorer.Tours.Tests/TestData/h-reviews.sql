@@ -2,7 +2,7 @@
 INSERT INTO tours."TourReviews"(
     "Id", "Rating", "Comment", "TourDate", "CreationDate", "PercentageCompleted", "TouristId", "TourId")
 VALUES 
-    (-1, 5, 'Great tour!', '2024-10-20', '2024-10-20', 100, 1, -1);
+    (-1, 5, 'Great tour!', '2024-10-20', '2024-10-20', 100,-21, -1);
 
 -- Insert another tour review
 INSERT INTO tours."TourReviews"(
@@ -14,4 +14,4 @@ VALUES
 INSERT INTO tours."TourReviews"(
     "Id", "Rating", "Comment", "TourDate", "CreationDate", "PercentageCompleted", "TouristId", "TourId")
 VALUES 
-    (-3, 3, 'The tour was okay, but some of the stops were too short.', '2024-10-22', '2024-10-22', 75, -23, -2);
+    (-3, 3, 'The tour was okay, but some of the stops were too short.', '2024-10-22', '2024-10-22', 75, -21, -2);

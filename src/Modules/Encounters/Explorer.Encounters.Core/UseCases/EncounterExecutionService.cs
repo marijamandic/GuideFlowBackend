@@ -41,7 +41,7 @@ namespace Explorer.Encounters.Core.UseCases
                    //var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
                     _encounterExecutionRepository.Create(execution);
 
-                    CompleteSocialEncounter(socialEncounter);
+                    
                     
                     return MapToDto(execution);
 
@@ -58,19 +58,34 @@ namespace Explorer.Encounters.Core.UseCases
         }
 
 
-        public void CompleteSocialEncounter(SocialEncounter socialEncounter)
+        public Result<EncounterExecutionDto> CompleteSocialEncounter(EncounterExecutionDto encounterExecutionDto)
         {
-            var activeExecutions = _encounterExecutionRepository
-                .GetByEncounterId(socialEncounter.Id)
-                .Where(e => e.IsTouristNear(e.Encounter))
-                .ToList();
-
-            foreach (var execution in activeExecutions)
+            var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
+            //ako je social enc napravi ga i proveri da l ima dovoljno ljudi, ako ima zavrsi ga
+            if (encounter is SocialEncounter socialEncounter)
             {
-                execution.CountParticipants(activeExecutions.Count);
-                execution.CompleteSocialEncounter();
-                Update(MapToDto(execution));
+                var executions = _encounterExecutionRepository.GetByEncounterId(socialEncounter.Id);
+                var activeExecutions = executions.Where(e => e.IsTouristNear(e.Encounter)).ToList();
+
+                foreach (var execution in executions)
+                {
+                    execution.CountParticipants(activeExecutions.Count);
+                    if (activeExecutions.Contains(execution))
+                    {
+                        execution.CompleteSocialEncounter();
+                        if (execution.IsComplete)
+                        {
+                            _internalTouristService.AddTouristXp(encounterExecutionDto.UserId, encounter.ExperiencePoints);
+                        }
+                    }
+                    _encounterExecutionRepository.Update(execution);
+                }
+
+                
             }
+
+            return encounterExecutionDto;
+
         }
 
        /* public Result CheckActiveParticipants(int executionId,int longitude,int latitude)
@@ -81,10 +96,11 @@ namespace Explorer.Encounters.Core.UseCases
         }*/
 
         public Result<EncounterExecutionDto> Update(EncounterExecutionDto encounterExecutionDto)
-        {
-            var encounterExecution = _encounterExecutionRepository.Get(encounterExecutionDto.Id);
+            {
+            var encounterExecution = MapToDomain(encounterExecutionDto);
+            //var encounterExecution = _encounterExecutionRepository.Get(encounterExecutionDto.Id);
             var encounter = _encounterRepository.Get(encounterExecutionDto.EncounterId);
-            if(encounterExecution.Encounter.EncounterType == Domain.EncounterType.Location)
+            if(encounter.EncounterType == Domain.EncounterType.Location)
             {
                 if (encounterExecution.IsHiddenLocationFound(encounterExecutionDto.UserLatitude, encounterExecutionDto.UserLongitude, encounter))
                     encounterExecution.Complete(MapToDomain(encounterExecutionDto));
@@ -92,7 +108,7 @@ namespace Explorer.Encounters.Core.UseCases
                 else
                     return Result.Fail("Hidden Location not found");
             }
-            else if (encounterExecution.Encounter.EncounterType == Domain.EncounterType.Misc)
+            else if (encounter.EncounterType == Domain.EncounterType.Misc)
             {
                 encounterExecution.Complete(MapToDomain(encounterExecutionDto));
             }

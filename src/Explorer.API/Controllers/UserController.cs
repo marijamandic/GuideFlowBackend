@@ -47,5 +47,18 @@ namespace Explorer.API.Controllers
             }
             return Ok(result.Value);
         }
+
+        [HttpPut("updateMoney/{touristId}")]
+        public ActionResult<TouristDto> UpdateTouristMoney(int touristId, [FromBody] int amount)
+        {
+            var result = _userService.AddTouristMoney(touristId, amount);
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors.FirstOrDefault()?.Message ?? "Failed to update tourist money.");
+            }
+            return Ok(result.Value);
+        }
+
+
     }
 }

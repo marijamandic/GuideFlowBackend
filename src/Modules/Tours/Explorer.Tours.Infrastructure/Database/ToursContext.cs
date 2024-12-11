@@ -21,7 +21,6 @@ public class ToursContext : DbContext
     public DbSet<PublicPoint> PublicPoints { get; set; }
     public DbSet<TourExecution> TourExecutions { get; set; }
     public DbSet<CheckpointStatus> CheckpointStatuses { get; set; }
-    public DbSet<ShoppingCart> ShoppingCarts { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<PurchaseToken> PurchaseTokens { get; set; }
     public DbSet<PublicPointNotification> PublicPointNotifications { get; set; }

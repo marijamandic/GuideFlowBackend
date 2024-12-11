@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Explorer.Tours.API.Dtos;
 using Explorer.Tours.Core.Domain;
 using System.Collections.Generic;
 using FluentResults;
@@ -7,6 +6,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.Core.Domain.Tours;
+using Explorer.Tours.API.Dtos;
 
 namespace Explorer.Tours.Core.UseCases.Administration
 {
@@ -27,13 +27,13 @@ namespace Explorer.Tours.Core.UseCases.Administration
         {
             var tourSpecification = new TourSpecification(
                 tourSpecificationDto.UserId,
-                tourSpecificationDto.Level,
+                (Domain.Tours.Level)tourSpecificationDto.Level,
                 tourSpecificationDto.Taggs
             );
 
             _tourSpecificationRepository.Create(tourSpecification);
 
-            var transportRatings = tourSpecificationDto.TransportRatings.Select(dto => new TransportRating(tourSpecification.Id, dto.Rating, dto.TransportMode)).ToList();
+            var transportRatings = tourSpecificationDto.TransportRatings.Select(dto => new TransportRating(tourSpecification.Id, dto.Rating, (Domain.TransportMode)dto.TransportMode)).ToList();
 
             _tourSpecificationRepository.AddTransportRatings(tourSpecification.Id, transportRatings);
 
@@ -41,9 +41,9 @@ namespace Explorer.Tours.Core.UseCases.Administration
             {
                 Id = tourSpecification.Id,
                 UserId = tourSpecification.UserId,
-                Level = tourSpecification.Level,
+                Level = (API.Dtos.Level)tourSpecification.Level,
                 Taggs = tourSpecification.Taggs,
-                TransportRatings = transportRatings.Select(rating => new TransportRatingDto(rating.TransportationMode, rating.Rating)).ToList()
+                TransportRatings = transportRatings.Select(rating => new TransportRatingDto((API.Dtos.TransportMode)rating.TransportationMode, rating.Rating)).ToList()
             };
 
             return Result.Ok(tourSpecificationDtoResult);
@@ -60,9 +60,9 @@ namespace Explorer.Tours.Core.UseCases.Administration
             {
                 Id = tourSpecification.Id,
                 UserId = tourSpecification.UserId,
-                Level = tourSpecification.Level,
+                Level = (API.Dtos.Level)tourSpecification.Level,
                 Taggs = tourSpecification.Taggs,
-                TransportRatings = tourSpecification.TransportRatings.Select(rating => new TransportRatingDto(rating.TransportationMode, rating.Rating)).ToList()
+                TransportRatings = tourSpecification.TransportRatings.Select(rating => new TransportRatingDto((API.Dtos.TransportMode)rating.TransportationMode, rating.Rating)).ToList()
             };
 
             return Result.Ok(tourSpecificationDtoResult);
@@ -70,7 +70,7 @@ namespace Explorer.Tours.Core.UseCases.Administration
 
         public Result AddTransportRating(long tourSpecificationId, IEnumerable<TransportRatingDto> transportRatingsDto)
         {
-            var transportRatings = transportRatingsDto.Select(dto => new TransportRating(tourSpecificationId, dto.Rating, dto.TransportMode)).ToList();
+            var transportRatings = transportRatingsDto.Select(dto => new TransportRating(tourSpecificationId, dto.Rating, (Domain.TransportMode)dto.TransportMode)).ToList();
 
             _tourSpecificationRepository.AddTransportRatings(tourSpecificationId, transportRatings);
             return Result.Ok();

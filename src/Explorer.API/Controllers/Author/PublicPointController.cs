@@ -83,6 +83,13 @@ namespace Explorer.API.Controllers.Author
             return CreateResponse(result);
         }
 
+        [HttpGet("accepted")]
+        public ActionResult<IEnumerable<PublicPointDto>> GetAllAccpeted([FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var result = _publicPointService.GetAllAccepted();
+            return CreateResponse(result);
+        }
+
         [HttpGet("pending")]
         public ActionResult<IEnumerable<PublicPointDto>> GetPendingPublicPoints()
         {

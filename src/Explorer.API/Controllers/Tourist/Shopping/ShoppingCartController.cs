@@ -43,4 +43,11 @@ public class ShoppingCartController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpGet("populated")]
+    public ActionResult<ShoppingCartDto> GetPopulatedByTouristId()
+    {
+        int touristId = int.Parse(User.FindFirst("id")!.Value);
+        var result = _shoppingCartService.GetPopulatedByTouristId(touristId);
+        return CreateResponse(result);
+    }
 }

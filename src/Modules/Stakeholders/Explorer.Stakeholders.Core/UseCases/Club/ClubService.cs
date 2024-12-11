@@ -3,6 +3,7 @@ using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Stakeholders.API.Dtos.Club;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Stakeholders.Core.Domain.Club;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,45 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
 {
     public class ClubService : CrudService<ClubDto, Explorer.Stakeholders.Core.Domain.Club.Club>, IClubService
     {
-        public ClubService(ICrudRepository<Explorer.Stakeholders.Core.Domain.Club.Club> crudRepository, IMapper mapper) : base(crudRepository, mapper)
+        private readonly IClubMemberService _clubMemberService;
+
+        public ClubService(ICrudRepository<Explorer.Stakeholders.Core.Domain.Club.Club> crudRepository, IMapper mapper, IClubMemberService clubMemberService) : base(crudRepository, mapper)
         {
+            _clubMemberService = clubMemberService;
+        }
+
+        public Result<List<ClubDto>> GetTopClubsByMembers(int topCount = 5)
+        {
+            try
+            {
+                var clubsResult = GetPaged(1, int.MaxValue); // Fetch all clubs using GetPaged
+
+                if (!clubsResult.IsSuccess)
+                {
+                    return Result.Fail<List<ClubDto>>("An error occurred while fetching clubs.");
+                }
+
+                var clubsWithMemberCounts = clubsResult.Value.Results // Access Results from PagedResult
+                    .Select(club => new ClubDto
+                    {
+                        Id = club.Id,
+                        OwnerId = club.OwnerId,
+                        Name = club.Name,
+                        Description = club.Description,
+                        ImageUrl = club.ImageUrl,
+                        MemberCount = _clubMemberService.GetMembersByClub(club.Id).Value.Count() // Count members using ClubMemberService
+                    })
+                    .OrderByDescending(c => c.MemberCount)
+                    .Take(topCount)
+                    .ToList();
+
+                return Result.Ok(clubsWithMemberCounts);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception for debugging
+                return Result.Fail<List<ClubDto>>("An error occurred while fetching top clubs.");
+            }
         }
     }
 }

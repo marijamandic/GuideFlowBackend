@@ -19,9 +19,9 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UserDto>> GetAllTourists(int page, int pageSize)
+        public ActionResult<IEnumerable<TouristDto>> GetAllTourists(int page, int pageSize)
         {
-            var result = _userService.GetPaged(page, pageSize);
+            var result = _userService.GetTouristsPaged(page, pageSize);
             return CreateResponse(result);
         }
 
@@ -32,12 +32,12 @@ namespace Explorer.API.Controllers
             return CreateResponse(result);
         }
 
-        [HttpPost]
+        /*[HttpPost]
         public ActionResult<UserDto> CreateTourist([FromBody] UserDto userDto)
         {
-            var result = _userService.Create(userDto);
+            var result = _userService.CreateTourist(userDto);
             return CreateResponse(result);
-        }
+        }*/
 
         [HttpPut("{id:int}")]
         public ActionResult<UserDto> UpdateTourist(int id, [FromBody] UserDto userDto)

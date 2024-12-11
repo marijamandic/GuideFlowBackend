@@ -40,19 +40,22 @@ public static class StakeholdersStartup
         services.AddScoped<IClubRequestService, ClubRequestService>();
         services.AddScoped<IClubMemberService, ClubMemberService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IInternalUserService, UserService>();
         services.AddScoped<IInternalTouristService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IClubPostService, ClubPostService>();
+        services.AddScoped<IMessageNotificationService, MessageNotificationService>();
+        services.AddScoped<NotificationMoneyExchangeService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
         services.AddScoped(typeof(ICrudRepository<Person>), typeof(CrudDatabaseRepository<Person, StakeholdersContext>));      
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
-        services.AddScoped(typeof(ICrudRepository<ProfileInfo>), typeof(CrudDatabaseRepository<ProfileInfo, StakeholdersContext>)); 
+        services.AddScoped<IProfileInfoRepository, ProfileInfoDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Club>), typeof(CrudDatabaseRepository<Club, StakeholdersContext>)); 
         services.AddScoped<IClubInvitationRepository, ClubInvitationDatabaseRepository>();
         services.AddScoped<IClubRequestRepository, ClubRequestDatabaseRepository>();
@@ -62,6 +65,7 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<AppRating>), typeof(CrudDatabaseRepository<AppRating, StakeholdersContext>));
         services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();
         services.AddScoped<INotificationRepository, NotificationDatabaseRepository>();
+        services.AddScoped<IMessageNotificationRepository, MessageNotificationRepository>();
         //services.AddScoped<IAppRatingRepository, AppRatingDatabaseRepository>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
