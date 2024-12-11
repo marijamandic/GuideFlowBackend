@@ -19,9 +19,9 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<UserDto>> GetAllTourists(int page, int pageSize)
+        public ActionResult<IEnumerable<TouristDto>> GetAllTourists(int page, int pageSize)
         {
-            var result = _userService.GetPaged(page, pageSize);
+            var result = _userService.GetTouristsPaged(page, pageSize);
             return CreateResponse(result);
         }
 
