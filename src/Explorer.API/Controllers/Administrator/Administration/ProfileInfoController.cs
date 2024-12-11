@@ -79,6 +79,7 @@ namespace Explorer.API.Controllers.ProfileInfo
                 System.IO.File.WriteAllBytes(filePath, imageData);
                 profileInfo.ImageUrl = $"images/profileInfo/{fileName}";
             }
+       
 
             var result = _profileInfoService.Update(profileInfo);
             return CreateResponse(result);
