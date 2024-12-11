@@ -77,5 +77,14 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
         .Select(follower => follower.FollowerId)    
         .ToList();
         }
+
+        public List<int> GetUserIdsByFollowerId(int followerId)
+        {
+            return DbContext.Followers
+                .Where(follower => follower.FollowerId == followerId) 
+                .Select(follower => (int)follower.UserId)             
+                .ToList();                                            
+        }
+
     }
 }
