@@ -1,6 +1,7 @@
 ﻿    using Explorer.BuildingBlocks.Core.Domain;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,14 +17,16 @@ namespace Explorer.Tours.Core.Domain.Tours
         public TourStatus Status { get; private set; }
         public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
-        public Price Price { get; private set; }
+       // public Price Price { get; private set; }
+        public int Price { get; private set; }
+
         public double AverageGrade { get; private set; }  
         public List<string> Taggs { get; private set; }
         public List<Checkpoint> Checkpoints { get; private set; }
         public List<TransportDuration> TransportDurations { get; private set; }
         public List<TourReview> Reviews { get; private set; }
 
-        public Tour(string name,long authorId, string description, Level level,double lengthInKm,Price price,double averageGrade, TourStatus status = TourStatus.Draft)
+        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price,double averageGrade, TourStatus status = TourStatus.Draft)
         {
             Name = name;
             AuthorId = authorId;
