@@ -109,6 +109,12 @@ namespace Explorer.API.Controllers.ProfileInfo
             Console.WriteLine("Profile not found or an error occurred for userId: " + userId);
             return NotFound(result.Errors);
         }
+        [HttpGet("followed/{userId:int}")]
+        public ActionResult<List<int>> GetFollowedIdsByUserId(int userId)
+        {
+            var result = _profileInfoService.GetFollowed(userId);
+            return CreateResponse(result);
+        }
     }
 }
 

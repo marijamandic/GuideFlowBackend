@@ -19,5 +19,6 @@ namespace Explorer.Stakeholders.API.Public
         public Result<List<ProfileInfoDto>> GetAllUsers();
         Result<List<int>> GetFollowers(int userId);
         Result Delete(int id);
+        Result<List<int>> GetFollowed(int userId);
     }
 }
