@@ -47,6 +47,7 @@ public static class StakeholdersStartup
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IClubPostService, ClubPostService>();
+        services.AddScoped<IMessageNotificationService, MessageNotificationService>();
         services.AddScoped<NotificationMoneyExchangeService>();
     }
 
@@ -64,6 +65,7 @@ public static class StakeholdersStartup
         services.AddScoped(typeof(ICrudRepository<AppRating>), typeof(CrudDatabaseRepository<AppRating, StakeholdersContext>));
         services.AddScoped<IProblemRepository, ProblemDatabaseRepository>();
         services.AddScoped<INotificationRepository, NotificationDatabaseRepository>();
+        services.AddScoped<IMessageNotificationRepository, MessageNotificationRepository>();
         //services.AddScoped<IAppRatingRepository, AppRatingDatabaseRepository>();
 
         services.AddDbContext<StakeholdersContext>(opt =>
