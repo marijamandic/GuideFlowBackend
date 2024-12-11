@@ -7,8 +7,8 @@ public class Problem : Entity
     private List<Message> _messages = new();
 
     public long UserId { get; init; }
-    public long TourId { get; init; }
     public Details Details { get; private set; }
+    public long TourId { get; init; }
     public Resolution Resolution { get; private set; }
     public IReadOnlyList<Message> Messages => new List<Message>(_messages);
 
