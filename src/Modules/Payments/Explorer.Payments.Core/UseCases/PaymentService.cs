@@ -38,6 +38,16 @@ namespace Explorer.Payments.Core.UseCases
                 if (!shoppingCartResult.IsSuccess)
                     return Result.Fail(FailureCode.InvalidArgument).WithError("Shopping cart retrieval failed.");
 
+                var result = _userService.GetTouristById(touristId);
+                TouristDto tourist = result.Value;
+
+                int cartSum = shoppingCartResult.Value.Items.Sum(item => item.AdventureCoin);
+
+                if(cartSum > tourist.Wallet)
+                {
+                    return Result.Fail("Nema novca");
+                }
+
                 var paymentDto = new PaymentDto
                 {
                     TouristId = touristId,
@@ -45,8 +55,6 @@ namespace Explorer.Payments.Core.UseCases
                 };
 
                 var payment = _paymentRepository.Create(MapToDomain(paymentDto));
-
-                var shoppingCartCostSum = 0;
 
                 foreach (var item in shoppingCartResult.Value.Items)
                 {
@@ -59,10 +67,9 @@ namespace Explorer.Payments.Core.UseCases
                         AdventureCoin = item.AdventureCoin
                     });
                     payment.AddToPayment(paymentItem);
-                    shoppingCartCostSum += item.AdventureCoin;
                 }
 
-                _userService.TakeTouristAdventureCoins(touristId, shoppingCartCostSum);
+                _userService.TakeTouristAdventureCoins(touristId, cartSum);
 
                 _shoppingCartService.ClearCart(touristId);
 
@@ -91,26 +98,5 @@ namespace Explorer.Payments.Core.UseCases
             }
         }
 
-        public Result Checkout(int touristId)
-        {
-            var result = _userService.GetTouristById(touristId);
-            TouristDto tourist = result.Value;
-            //ShoppingCart touristsCart = _shoppingCartRepository.GetByTouristId(touristId);
-            var touristsCart = _shoppingCartService.GetByTouristId(touristId);
-
-            int shoppingCartSum = 0;
-
-            foreach (var item in touristsCart.Value.Items)
-            {
-                shoppingCartSum += item.AdventureCoin;
-            }
-
-            if (shoppingCartSum <= tourist.Wallet)
-            {
-                Create(touristId);
-                return Result.Ok();
-            }
-            return Result.Fail("Nema novaca");
-        }
     }
 }

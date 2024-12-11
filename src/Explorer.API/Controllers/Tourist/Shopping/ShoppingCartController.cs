@@ -43,11 +43,4 @@ public class ShoppingCartController : BaseApiController
         return CreateResponse(result);
     }
 
-    [HttpPost("checkout/{touristId:int}")]
-    public ActionResult Checkout([FromRoute] int touristId)
-    {
-        var success = _paymentService.Checkout(touristId);
-
-        return CreateResponse(success);
-    }
 }
