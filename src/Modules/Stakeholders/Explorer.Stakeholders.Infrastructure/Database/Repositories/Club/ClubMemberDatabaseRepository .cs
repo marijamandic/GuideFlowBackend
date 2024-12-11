@@ -58,5 +58,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
                 _dbContext.SaveChanges();
             }
         }
+
+        public List<ClubMember> GetByUserId(long userId)
+        {
+            return _dbContext.ClubMembers
+                .Where(cm => cm.UserId == userId)
+                .ToList();
+        }
     }
 }

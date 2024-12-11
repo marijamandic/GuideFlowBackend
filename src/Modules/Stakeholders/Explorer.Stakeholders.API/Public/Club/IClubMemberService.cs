@@ -13,5 +13,7 @@ namespace Explorer.Stakeholders.API.Public.Club
         Result<ClubMemberDto> AddMember(long clubId, long userId);
         Result<List<ClubMemberDto>> GetMembersByClub(long clubId);
         Result RemoveMember(long clubId, long userId);
+
+        Result<List<ClubMemberDto>> GetMembersByUserId(long userId);
     }
 }

@@ -16,5 +16,7 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces.Club
         ClubMember Create(ClubMember clubMember);
         void Update(ClubMember clubMember);
         void Delete(long clubId, long userId);
+
+        List<ClubMember> GetByUserId(long userId);
     }
 }

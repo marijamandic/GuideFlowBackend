@@ -1,5 +1,6 @@
 ﻿using Explorer.Stakeholders.API.Dtos.Club;
 using Explorer.Stakeholders.API.Public.Club;
+using Explorer.Stakeholders.Core.Domain.Club;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,14 @@ namespace Explorer.API.Controllers.Tourist
         public ActionResult RemoveMember(long clubId, long userId)
         {
             var result = _clubMemberService.RemoveMember(clubId, userId);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("{userId:long}/allMembers")]
+
+        public ActionResult<IEnumerable<ClubMemberDto>> GetAllByUserId(long userId)
+        {
+            var result = _clubMemberService.GetMembersByUserId(userId);
             return CreateResponse(result);
         }
     }
