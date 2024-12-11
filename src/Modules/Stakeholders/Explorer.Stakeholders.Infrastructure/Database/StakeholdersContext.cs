@@ -20,6 +20,7 @@ public class StakeholdersContext : DbContext
     public DbSet<ClubPost> ClubPosts { get; set; }
     public DbSet<AppRating> Ratings { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<MessageNotification> MessageNotifications { get; set; }
     public DbSet<ProblemNotification> ProblemNotifications { get; set; }
     public DbSet<Tourist> Tourists {  get; set; }
 

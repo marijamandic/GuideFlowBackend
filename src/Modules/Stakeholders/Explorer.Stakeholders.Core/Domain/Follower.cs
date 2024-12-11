@@ -12,7 +12,7 @@ namespace Explorer.Stakeholders.Core.Domain
         public long UserId { get; set; }
         public int FollowerId { get; private set; }
         public string FollowerUsername { get; private set; }
-        public string ImageUrl { get; private set; }
+        public string ImageUrl { get; set; }
         public Follower() { }
         public Follower(int userId, int followerId, string followerUsername)
         {

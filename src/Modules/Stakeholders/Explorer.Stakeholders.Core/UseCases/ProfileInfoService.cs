@@ -49,6 +49,12 @@ namespace Explorer.Stakeholders.Core.UseCases
             return ids;
         }
 
+        public Result<List<int>> GetFollowed(int userId)
+        {
+            var ids = profileInfoRepository.GetUserIdsByFollowerId(userId);
+            return ids;
+        }
+
 
         /* public ProfileInfoService(ICrudRepository<ProfileInfo> crudRepository, IMapper mapper) : base(crudRepository, mapper)
             {
