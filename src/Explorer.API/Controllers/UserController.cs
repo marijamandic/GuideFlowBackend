@@ -48,6 +48,17 @@ namespace Explorer.API.Controllers
             return Ok(result.Value);
         }
 
+        [HttpGet("getUser/{userId}")]
+        public ActionResult<TouristDto> GetUserById(int userId)
+        {
+            var result = _userService.GetById(userId);
+            if (result.IsFailed)
+            {
+                return BadRequest("Failed to fetch users");
+            }
+            return Ok(result.Value);
+        }
+
         [HttpPut("updateMoney/{touristId}")]
         public ActionResult<TouristDto> UpdateTouristMoney(int touristId, [FromBody] int amount)
         {
