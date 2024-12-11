@@ -17,6 +17,7 @@ public enum NotificationType
 {
     ProblemNotification,
     MoneyExchange,
+    ClubNotification,
     MessageNotification
 }
 
