@@ -389,8 +389,8 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 var checkpoints = tour.Checkpoints;
                 foreach(var checkpoint in checkpoints)
                 {
-                    bool isNearLatitude = Math.Abs((double)(checkpoint.Latitude - latitude)) <= 1000.0 / 111320.0;   // 1km
-                    bool isNearLongitude = Math.Abs((double)(checkpoint.Longitude - longitude)) <= 1000.0 / (111320.0 * Math.Cos(latitude));
+                    bool isNearLatitude = Math.Abs((double)(checkpoint.Latitude - latitude)) <= 500.0 / 111320.0;
+                    bool isNearLongitude = Math.Abs((double)(checkpoint.Longitude - longitude)) <= 500.0 / (111320.0 * Math.Cos(latitude));
                     if (isNearLatitude && isNearLongitude)
                     {
                         nearTours.Add(tour.Id);
