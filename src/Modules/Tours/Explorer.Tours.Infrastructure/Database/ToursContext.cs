@@ -37,7 +37,7 @@ public class ToursContext : DbContext
     private static void ConfigureTour(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Tour>().Property(tour => tour.TransportDurations).HasColumnType("jsonb");
-        modelBuilder.Entity<Tour>().Property(tour => tour.Price).HasColumnType("jsonb");
+       // modelBuilder.Entity<Tour>().Property(tour => tour.Price).HasColumnType("jsonb");
         modelBuilder.Entity<TourExecution>().HasMany(te => te.CheckpointsStatus).WithOne().OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<CheckpointStatus>()
             .HasOne(cs => cs.Checkpoint)
