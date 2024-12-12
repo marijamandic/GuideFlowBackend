@@ -27,4 +27,11 @@ public class AuthenticationController : BaseApiController
         var result = _authenticationService.Login(credentials);
         return CreateResponse(result);
     }
+
+    [HttpPatch("logout/{id:long}")]
+    public ActionResult HandleLogout(long id)
+    {
+        var result = _authenticationService.HandleLogout(id);
+        return CreateResponse(result);
+    }
 }

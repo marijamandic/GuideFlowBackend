@@ -10,6 +10,8 @@ public class User : Entity
     public bool IsActive { get; set; }
     public  Location Location { get; private set; }
 
+    public DateTime LastLogin { get; private set; }
+    public DateTime LastLogout { get; private set; }
     protected User()
     {
     }
@@ -37,6 +39,15 @@ public class User : Entity
     public string GetPrimaryRoleName()
     {
         return Role.ToString().ToLower();
+    }
+
+    public void SetLastLoginTime()
+    {
+        LastLogin = DateTime.UtcNow;
+    }
+    public void SetLastLogoutTime()
+    {
+        LastLogout = DateTime.UtcNow;
     }
 }
 
