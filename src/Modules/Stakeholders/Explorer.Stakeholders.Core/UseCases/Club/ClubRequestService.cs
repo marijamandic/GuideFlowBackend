@@ -140,7 +140,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
         public Result<List<ClubRequestDto>> GetRequestByOwner(long ownerId)
         {
             var requests = _clubRequestRepository.GetRequestsByOwner(ownerId);
-            if (requests == null || !requests.Any())
+            if (requests == null)
             {
                 return Result.Fail<List<ClubRequestDto>>("No club requests found for the given club ID.");
             }

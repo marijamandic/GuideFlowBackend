@@ -153,7 +153,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
         public Result<List<ClubInvitationDto>> GetByOwner(long ownerId)
         {
             var clubInvitations = _clubInvitationRepository.GetByOwner(ownerId);
-            if (clubInvitations == null || !clubInvitations.Any())
+            if (clubInvitations == null)
             {
                 return Result.Fail<List<ClubInvitationDto>>("No invitations found for this club.");
             }
