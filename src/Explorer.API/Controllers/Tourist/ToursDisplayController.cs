@@ -52,5 +52,12 @@ namespace Explorer.API.Controllers.Tourist
             var result = _tourService.GetToursByBundleId(id);
             return CreateResponse(result);
         }
+
+        [HttpGet("suggested/{longitude:double}/{latitude:double}")]
+        public ActionResult<List<TourDto>> GetSuggestedTours(double longitude, double latitude)
+        {
+            var result = _tourService.GetSuggestedTours(longitude, latitude);
+            return CreateResponse(result);
+        }
     }
 }
