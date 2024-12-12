@@ -33,11 +33,12 @@ public class TourCommandTests : BaseToursIntegrationTest
             Level = Level.Advanced,
             Status = Explorer.Tours.API.Dtos.TourStatus.Published,
             LengthInKm = 15.0,
-            Price = new PriceDto
+            /*Price = new PriceDto
             {
                 Cost = 120.50,
                 Currency = 0
-            },
+            },*/
+            Price = 120,
             AverageGrade = 4.5,
             Taggs = new List<string> { "Adventure", "Mountain", "Hiking" }
         };
@@ -92,11 +93,12 @@ public class TourCommandTests : BaseToursIntegrationTest
             Level = Level.Advanced,
             Status = Explorer.Tours.API.Dtos.TourStatus.Published,
             LengthInKm = 15.0,
-            Price = new PriceDto
+            /*Price = new PriceDto
             {
                 Cost = 120.50,
                 Currency = 0
-            },
+            },*/
+            Price = 120,
             AverageGrade = 4.5,
             Taggs = new List<string> { "Adventure", "Mountain", "Hiking" }
         };

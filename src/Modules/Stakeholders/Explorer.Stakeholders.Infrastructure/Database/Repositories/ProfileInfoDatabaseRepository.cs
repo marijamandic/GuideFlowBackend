@@ -32,10 +32,28 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
 
         public override ProfileInfo Update(ProfileInfo profileInfo)
         {
+            // Ažuriranje ProfileInfo zapisa
             DbContext.Entry(profileInfo).State = EntityState.Modified;
             DbContext.SaveChanges();
+
+            // Ažuriranje svih followera gde je FollowerId jednak ID-ju korisnika koji je ažuriran
+            var followersToUpdate = DbContext.Followers
+                .Where(follower => follower.FollowerId == profileInfo.Id) // Pronađi sve relevantne followere
+                .ToList();
+
+            if (profileInfo.ImageUrl != null)
+            {
+                foreach (var follower in followersToUpdate)
+                {
+                    follower.ImageUrl = profileInfo.ImageUrl; // Ažuriranje imageUrl
+                }
+            }
+
+            DbContext.SaveChanges(); // Sačuvaj promene za followere
+
             return profileInfo;
         }
+
 
         // Implementacija dodatne metode Exists
         public bool Exists(string username)
@@ -43,15 +61,27 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
             return DbContext.Profiles
                 .Any(p => p.FirstName == username || p.LastName == username);  // Pretpostavljamo da se username odnosi na FirstName ili LastName
         }
-
         public ProfileInfo GetByUserId(long id)
-        {   
-            var profileInfo = DbContext.Profiles.Include(p => p.Followers)
-                .FirstOrDefault(u => u.UserId == id);
+        {
+            try
+            {
+                var profileInfo = DbContext.Profiles.Include(p => p.Followers)
+                    .FirstOrDefault(u => u.UserId == id);
 
-            if (profileInfo == null) throw new KeyNotFoundException("Profile not found: " + id);
-            return profileInfo;
+                if (profileInfo == null)
+                    throw new KeyNotFoundException("Profile not found: " + id);
+
+                return profileInfo;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                // Logovanje greške (ako koristiš logger)
+                Console.WriteLine(ex.Message); // Ovde možeš koristiti logger umesto Console.WriteLine
+                                               // Možeš vratiti null ili neki podrazumevani objekat, zavisno od potreba
+                return null;
+            }
         }
+
 
         public List<ProfileInfo> GetAll()
         {
@@ -77,5 +107,14 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
         .Select(follower => follower.FollowerId)    
         .ToList();
         }
+
+        public List<int> GetUserIdsByFollowerId(int followerId)
+        {
+            return DbContext.Followers
+                .Where(follower => follower.FollowerId == followerId) 
+                .Select(follower => (int)follower.UserId)             
+                .ToList();                                            
+        }
+
     }
 }
