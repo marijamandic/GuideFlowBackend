@@ -1,12 +1,12 @@
 ﻿INSERT INTO stakeholders."ClubInvitations"(
-	"Id", "ClubId", "TouristID", "Status")
-VALUES (-1, 19, 2, 0);
+	"Id", "ClubId", "TouristID", "Status", "IsOpened", "OwnerId", "ClubName", "TouristName", "CreatedAt")
+VALUES (-1, 21, 5, 0, true, 1, 'Troy', 'Marko', NOW());
 INSERT INTO stakeholders."ClubInvitations"(
-	"Id", "ClubId", "TouristID", "Status")
-VALUES (-2, 10, 4, 0);
+	"Id", "ClubId", "TouristID", "Status", "IsOpened", "OwnerId", "ClubName", "TouristName", "CreatedAt")
+VALUES (-2, 21, 5, 0, true, 1, 'Troy', 'Marko', NOW());
 INSERT INTO stakeholders."ClubInvitations"(
-	"Id", "ClubId", "TouristID", "Status")
-VALUES (-3, 20, 8, 0);
+	"Id", "ClubId", "TouristID", "Status", "IsOpened", "OwnerId", "ClubName", "TouristName", "CreatedAt")
+VALUES (-3, 21, 5, 0, true, 1, 'Troy', 'Marko', NOW());
 INSERT INTO stakeholders."ClubInvitations"(
-	"Id", "ClubId", "TouristID", "Status")
-VALUES (-4, 21, 5, 0);
+	"Id", "ClubId", "TouristID", "Status", "IsOpened", "OwnerId", "ClubName", "TouristName", "CreatedAt")
+VALUES (-4, 21, 5, 0, true, 1, 'Troy', 'Marko', NOW());
