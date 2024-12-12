@@ -83,5 +83,12 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubRequestService.GetRequestByTouristId(touristId);
             return CreateResponse(result);
         }
+
+        [HttpGet("for-owner/{ownerId:long}")]
+        public ActionResult<IEnumerable<ClubRequestDto>> GetRequestByOwner(long ownerId)
+        {
+            var result = _clubRequestService.GetRequestByOwner(ownerId);
+            return CreateResponse(result);
+        }
     }
 }

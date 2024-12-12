@@ -32,6 +32,13 @@ namespace Explorer.API.Controllers.Tourist
             return CreateResponse(result);
         }
 
+        [HttpGet("owner/{ownerId:long}")]
+        public ActionResult<List<ClubInvitationDto>> GetByOwner(long ownerId)
+        {
+            var result = _clubInvitationService.GetByOwner(ownerId);
+            return CreateResponse(result);
+        }
+
 
         [HttpGet("{invitationId:int}")]
         public ActionResult<ClubInvitationDto> GetInvitation(int invitationId)

@@ -97,7 +97,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
 
         public Result<ClubRequestDto> SubmitMembershipRequest(ClubRequestDto requestDto)
         {
-            var clubRequest = new ClubRequest(requestDto.TouristId, requestDto.ClubId);
+            var clubRequest = new ClubRequest(requestDto.TouristId, requestDto.ClubId, requestDto.CreatedAt, requestDto.IsOpened, requestDto.OwnerId, requestDto.ClubName, requestDto.TouristName);
             var createdRequest = _clubRequestRepository.Create(clubRequest);
 
             return Result.Ok(MapToDto(createdRequest));
@@ -128,6 +128,18 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
         public Result<List<ClubRequestDto>> GetRequestByClubId(long clubId)
         {
             var requests = _clubRequestRepository.GetRequestsByClubId(clubId);
+            if (requests == null || !requests.Any())
+            {
+                return Result.Fail<List<ClubRequestDto>>("No club requests found for the given club ID.");
+            }
+
+            var mappedRequests = MapToDto(requests);
+            return mappedRequests;
+        }
+
+        public Result<List<ClubRequestDto>> GetRequestByOwner(long ownerId)
+        {
+            var requests = _clubRequestRepository.GetRequestsByOwner(ownerId);
             if (requests == null || !requests.Any())
             {
                 return Result.Fail<List<ClubRequestDto>>("No club requests found for the given club ID.");

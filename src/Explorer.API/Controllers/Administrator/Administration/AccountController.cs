@@ -37,5 +37,6 @@ namespace Explorer.API.Controllers.Administrator.Administration
             var result = _accountService.ToggleAccountActivity(account);
             return CreateResponse(result);
         }
+
     }
 }
