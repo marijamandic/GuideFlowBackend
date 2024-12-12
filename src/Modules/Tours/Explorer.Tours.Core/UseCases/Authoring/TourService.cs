@@ -378,5 +378,31 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
-	}
+
+        public Result<List<TourDto>> GetSuggestedTours(double longitude, double latitude)
+        {
+            HashSet<long> nearTours = new HashSet<long>();
+            List<TourDto> tours = new List<TourDto>();
+            var publishedTours = tourRepository.GetPaged(0, 0).Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
+            foreach(var tour in publishedTours)
+            {
+                var checkpoints = tour.Checkpoints;
+                foreach(var checkpoint in checkpoints)
+                {
+                    bool isNearLatitude = Math.Abs((double)(checkpoint.Latitude - latitude)) <= 500.0 / 111320.0;
+                    bool isNearLongitude = Math.Abs((double)(checkpoint.Longitude - longitude)) <= 500.0 / (111320.0 * Math.Cos(latitude));
+                    if (isNearLatitude && isNearLongitude)
+                    {
+                        nearTours.Add(tour.Id);
+                    }
+                }
+            }
+            foreach(var tour in nearTours)
+            {
+                tours.Add(MapToDto(tourRepository.Get(tour)));
+            }
+
+            return tours;
+        }
+    }
 }
