@@ -66,5 +66,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
         {
             return _dbContext.ClubInvitations.ToList();
         }
+
+        public List<ClubInvitation> GetByOwner(long ownerId)
+        {
+            return _dbContext.ClubInvitations
+                .Where(invitation => invitation.TouristID == ownerId)
+                .ToList();
+        }
     }
 }

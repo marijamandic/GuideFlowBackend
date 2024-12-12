@@ -9,7 +9,7 @@ using System.ComponentModel.Design;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "touristPolicy")]
+    //[Authorize(Policy = "touristPolicy")]
     [Route("api/tourist/tourSpecifications")]
     public class TourSpecificationController : BaseApiController
     {

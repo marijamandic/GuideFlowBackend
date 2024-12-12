@@ -1,5 +1,6 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
+using Explorer.Stakeholders.API.Dtos;
 using FluentResults;
 
 namespace Explorer.Payments.API.Public;

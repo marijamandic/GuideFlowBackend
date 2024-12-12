@@ -1,20 +1,22 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos.ShoppingCarts;
 using Explorer.Payments.API.Public;
+using Explorer.Stakeholders.API.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.Shopping;
 
-[Authorize(Policy = "touristPolicy")]
+//[Authorize(Policy = "touristPolicy")]
 [Route("api/shopping-cart")]
 public class ShoppingCartController : BaseApiController
 {
     private readonly IShoppingCartService _shoppingCartService;
-
-    public ShoppingCartController(IShoppingCartService shoppingCartService)
+    private readonly IPaymentService _paymentService;
+    public ShoppingCartController(IShoppingCartService shoppingCartService, IPaymentService paymentService)
     {
         _shoppingCartService = shoppingCartService;
+        _paymentService = paymentService;
     }
 
     [HttpPost("items")]

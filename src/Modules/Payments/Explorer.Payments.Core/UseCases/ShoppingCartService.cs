@@ -6,8 +6,13 @@ using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Stakeholders.API.Dtos;
+using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Internal;
 using FluentResults;
+using System.Reflection.Metadata;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Explorer.Payments.Core.UseCases;
 
@@ -89,7 +94,6 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
     {
         return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
     }
-
 	public Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId)
 	{
         try
