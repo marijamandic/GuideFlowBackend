@@ -28,7 +28,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
             var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
             var accountNum1 = new AccountOverviewDto
             {
-                UserId = -12,
+                Id = -12,
                 Username = "autor2@gmail.com",
                 Email = "autor2@gmail.com ",
                 Role = UserRole.Author,
@@ -37,7 +37,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
             };
             var accountNum2 = new AccountOverviewDto
             {
-                UserId = -13,
+                Id = -13,
                 Username = "autor3@gmail.com",
                 Email = "autor3@gmail.com ",
                 Role = UserRole.Author,
@@ -51,16 +51,16 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
 
 
 
-            var storedEntity = dbContext.Users.FirstOrDefault(user => user.Id == accountNum1.UserId);
+            var storedEntity = dbContext.Users.FirstOrDefault(user => user.Id == accountNum1.Id);
             storedEntity.ShouldNotBeNull();
-            storedEntity.Id.ShouldBe(accountNum1.UserId);
+            storedEntity.Id.ShouldBe(accountNum1.Id);
             storedEntity.IsActive.ShouldBeFalse();
             result.ShouldNotBeNull();
             result.IsActive.ShouldBeFalse();
 
-            var storedEntity2 = dbContext.Users.FirstOrDefault(user => user.Id == accountNum2.UserId);
+            var storedEntity2 = dbContext.Users.FirstOrDefault(user => user.Id == accountNum2.Id);
             storedEntity2.ShouldNotBeNull();
-            storedEntity2.Id.ShouldBe(accountNum2.UserId);
+            storedEntity2.Id.ShouldBe(accountNum2.Id);
             storedEntity2.IsActive.ShouldBeTrue();
             result2.ShouldNotBeNull();
             result2.IsActive.ShouldBeTrue();

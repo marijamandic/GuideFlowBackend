@@ -18,13 +18,23 @@ public class ClubRequest : Entity
     public long TouristId { get; private set; }
     public long ClubId { get; private set; }
     public ClubRequestStatus Status { get; private set; }
+    public DateTime CreatedAt { get; private set; }
+    public bool IsOpened { get; private set; }
+    public long OwnerId { get; private set; }
+    public string ClubName { get; private set; }
+    public string TouristName { get; private set; }
 
-    public ClubRequest(long touristId, long clubId)
+    public ClubRequest(long touristId, long clubId, DateTime createdAt, bool isOpened, long ownerId, string clubName, string touristName)
     {
 
         TouristId = touristId;
         ClubId = clubId;
         Status = ClubRequestStatus.PENDING;
+        CreatedAt = createdAt;
+        IsOpened = isOpened;
+        OwnerId = ownerId;
+        ClubName = clubName;
+        TouristName = touristName;
     }
 
     public void AcceptRequest()

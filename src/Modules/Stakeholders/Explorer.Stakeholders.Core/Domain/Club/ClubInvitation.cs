@@ -26,10 +26,15 @@ namespace Explorer.Stakeholders.Core.Domain.Club
 
         [Column("Status")]
         public ClubInvitationStatus Status { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public bool IsOpened { get; private set; }
+        public long OwnerId { get; private set; }
+        public string ClubName { get; private set; }
+        public string TouristName { get; private set; }
 
         protected ClubInvitation() { }
 
-        public ClubInvitation(long clubId, long touristID, ClubInvitationStatus status)
+        public ClubInvitation(long clubId, long touristID, ClubInvitationStatus status, DateTime createdAt, bool isOpened, long ownerId, string clubName, string touristName)
         {
             if (clubId <= 0)
             {
@@ -44,6 +49,11 @@ namespace Explorer.Stakeholders.Core.Domain.Club
             ClubId = clubId;
             TouristID = touristID;
             Status = status;
+            CreatedAt = createdAt;
+            IsOpened = IsOpened;
+            OwnerId = ownerId;
+            ClubName = clubName;
+            TouristName = touristName;
         }
 
         public void AcceptInvitation()
@@ -72,11 +82,16 @@ namespace Explorer.Stakeholders.Core.Domain.Club
             Status = newStatus;
         }
 
-        public void UpdateDetails(long clubId, long touristId, ClubInvitationStatus status)
+        public void UpdateDetails(long clubId, long touristId, ClubInvitationStatus status, DateTime createdAt, bool isOpened, long ownerId, string clubName, string touristName)
         {
             ClubId = clubId;
             TouristID = touristId;
             Status = status;
+            CreatedAt = createdAt;
+            IsOpened = IsOpened;
+            OwnerId = ownerId;
+            ClubName = clubName;
+            TouristName = touristName;
         }
     }
 }

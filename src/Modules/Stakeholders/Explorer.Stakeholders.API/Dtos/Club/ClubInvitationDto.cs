@@ -20,6 +20,11 @@ namespace Explorer.Stakeholders.API.Dtos.Club
         public long ClubId { get; set; }
         public long TouristId { get; set; }
         public ClubInvitationStatus Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsOpened { get; set; }
+        public long OwnerId { get; set; }
+        public string ClubName { get; set; }
+        public string TouristName { get; set; }
     }
 
 }

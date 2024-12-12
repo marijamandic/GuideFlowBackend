@@ -14,4 +14,5 @@ public interface IClubRequestService
 
     Result<List<ClubRequestDto>> GetAll();
     public Result<List<ClubRequestDto>> GetRequestByClubId(long clubId);
+    public Result<List<ClubRequestDto>> GetRequestByOwner(long ownerId);
 }
