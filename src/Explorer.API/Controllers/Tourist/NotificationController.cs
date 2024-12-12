@@ -67,4 +67,11 @@ public class NotificationController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpPost("notification")]
+    public ActionResult CreateNotification([FromBody] NotificationDto notificationDto)
+    {
+        var result = _moneyExchangeService.CreateNotification(notificationDto);
+        return CreateResponse(result);
+    }
+
 }
