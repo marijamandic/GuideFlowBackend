@@ -17,7 +17,6 @@ namespace Explorer.Tours.Core.Domain.Tours
         public TourStatus Status { get; private set; }
         public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
-       // public Price Price { get; private set; }
         public int Price { get; private set; }
 
         public double AverageGrade { get; private set; }  
