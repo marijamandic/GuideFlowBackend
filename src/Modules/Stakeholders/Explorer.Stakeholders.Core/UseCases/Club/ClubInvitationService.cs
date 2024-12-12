@@ -113,7 +113,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             }
 
             var domainStatus = MapStatus(invitationDto.Status);
-            clubInvitation.UpdateDetails(invitationDto.ClubId, invitationDto.TouristId, domainStatus);
+            clubInvitation.UpdateDetails(invitationDto.ClubId, invitationDto.TouristId, domainStatus, invitationDto.CreatedAt, invitationDto.IsOpened, invitationDto.OwnerId, invitationDto.ClubName, invitationDto.TouristName);
             _clubInvitationRepository.Update(clubInvitation);
             return Result.Ok(MapToDto(clubInvitation));
         }
@@ -130,7 +130,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
 
         public Result<ClubInvitationDto> SubmitInvitation(ClubInvitationDto invitationDto)
         {
-            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristId, Domain.Club.ClubInvitationStatus.PENDING);    // jer imam enum u dto-u
+            var clubInvitation = new ClubInvitation(invitationDto.ClubId, invitationDto.TouristId, Domain.Club.ClubInvitationStatus.PENDING, invitationDto.CreatedAt, invitationDto.IsOpened, invitationDto.OwnerId, invitationDto.ClubName, invitationDto.TouristName);    // jer imam enum u dto-u
             var createdInvitation = _clubInvitationRepository.Create(clubInvitation);
             return Result.Ok(MapToDto(createdInvitation));
         }
@@ -141,6 +141,21 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             if (clubInvitations == null || !clubInvitations.Any())
             {
                 return Result.Fail<List<ClubInvitationDto>>("No invitations found.");
+            }
+
+            var clubInvitationDtos = clubInvitations
+                .Select(ci => MapToDto(ci))
+                .ToList();
+
+            return Result.Ok(clubInvitationDtos);
+        }
+
+        public Result<List<ClubInvitationDto>> GetByOwner(long ownerId)
+        {
+            var clubInvitations = _clubInvitationRepository.GetByOwner(ownerId);
+            if (clubInvitations == null || !clubInvitations.Any())
+            {
+                return Result.Fail<List<ClubInvitationDto>>("No invitations found for this club.");
             }
 
             var clubInvitationDtos = clubInvitations

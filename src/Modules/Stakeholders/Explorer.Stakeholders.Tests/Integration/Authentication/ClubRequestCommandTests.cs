@@ -30,7 +30,13 @@ namespace Explorer.Stakeholders.Tests.Integration.Authentication
             {
                 TouristId = 1,
                 ClubId = 1,
-                Status = 0
+                Status = 0,
+                CreatedAt = DateTime.UtcNow,
+                IsOpened = true,
+                OwnerId = 1,
+                ClubName = "Troy",
+                TouristName = "Marko",
+
             };
 
             var result = ((ObjectResult)controller.Create(newEntity).Result)?.Value as ClubRequestDto;

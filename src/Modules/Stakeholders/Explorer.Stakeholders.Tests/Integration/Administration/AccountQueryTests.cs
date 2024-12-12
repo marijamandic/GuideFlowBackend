@@ -39,7 +39,7 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
             var controller = CreateController(scope);
             var newAccount = new AccountOverviewDto
             {
-                UserId = -12,
+                Id = -12,
                 Username = "autor2@gmail.com",
                 Email = "autor2@gmail.com ",
                 Role = UserRole.Author,
@@ -48,12 +48,12 @@ namespace Explorer.Stakeholders.Tests.Integration.Administration
             };
 
 
-            var result = ((ObjectResult)controller.GetAccount(newAccount.UserId).Result)?.Value as AccountOverviewDto;
+            var result = ((ObjectResult)controller.GetAccount(newAccount.Id).Result)?.Value as AccountOverviewDto;
 
 
             result.ShouldNotBeNull();
             result.IsActive.ShouldBeTrue();
-            result.UserId.ShouldBe(newAccount.UserId);
+            result.Id.ShouldBe(newAccount.Id);
 
         }
 

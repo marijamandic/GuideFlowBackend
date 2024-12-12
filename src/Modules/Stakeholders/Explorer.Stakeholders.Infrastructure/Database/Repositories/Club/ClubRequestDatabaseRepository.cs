@@ -68,5 +68,12 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories.Club
                 .ToList();
         }
 
+        public List<ClubRequest> GetRequestsByOwner(long ownerId)
+        {
+            return _dbContext.ClubRequests
+                .Where(cr => cr.OwnerId == ownerId)
+                .ToList();
+        }
+
     }
 }

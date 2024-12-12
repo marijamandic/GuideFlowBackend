@@ -25,7 +25,7 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             try
             {
-                var user = _userRepository.GetById(account.UserId);
+                var user = _userRepository.GetById(account.Id);
                 account.IsActive = account.IsActive ? false : true;
                 user.IsActive = account.IsActive;
                 _userRepository.Update(user);
@@ -48,12 +48,14 @@ namespace Explorer.Stakeholders.Core.UseCases
                 var person = _personRepository.Get(personId);
                 var account = new AccountOverviewDto
                 {
-                    UserId = user.Id,
+                    Id = user.Id,
                     Username = user.Username,
                     Password =  user.Password,
                     Email = person.Email,
                     Role = (Explorer.Stakeholders.API.Dtos.UserRole)user.Role,
-                    IsActive = user.IsActive
+                    IsActive = user.IsActive,
+                    LastLogin = user.LastLogin,
+                    LastLogout = user.LastLogout
                     
                 };
                 return account;
@@ -81,12 +83,14 @@ namespace Explorer.Stakeholders.Core.UseCases
                 catch(KeyNotFoundException ) { continue; }
                 var account = new AccountOverviewDto
                 {
-                    UserId = user.Id,
+                    Id = user.Id,
                     Username = user.Username,
                     Password = user.Password,
                     Email = person.Email,
                     Role = (Explorer.Stakeholders.API.Dtos.UserRole)user.Role,
-                    IsActive = user.IsActive
+                    IsActive = user.IsActive,
+                    LastLogout = user.LastLogout,
+                    LastLogin = user.LastLogin
                 };
 
                 accountDtos.Add(account);
@@ -95,5 +99,6 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             return Result.Ok(accountDtos);
         }
+
     }
 }
