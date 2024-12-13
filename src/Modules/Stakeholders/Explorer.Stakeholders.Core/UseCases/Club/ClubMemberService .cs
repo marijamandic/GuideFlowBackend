@@ -45,5 +45,12 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             _clubMemberRepository.Delete(clubId, userId);
             return Result.Ok();
         }
+
+        public Result<List<ClubMemberDto>> GetMembersByUserId(long userId)
+        {
+            var members = _clubMemberRepository.GetByUserId(userId);
+            var memberDtos = members.Select(m => new ClubMemberDto { ClubId = m.ClubId, UserId = m.UserId }).ToList();
+            return Result.Ok(memberDtos);
+        }
     }
 }
