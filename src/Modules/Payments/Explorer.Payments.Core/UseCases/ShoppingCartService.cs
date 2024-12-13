@@ -6,13 +6,9 @@ using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
-using Explorer.Stakeholders.API.Dtos;
-using Explorer.Stakeholders.API.Public;
-using Explorer.Stakeholders.Core.Domain;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal;
 using FluentResults;
-using System.Reflection.Metadata;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Explorer.Payments.Core.UseCases;
 
@@ -38,6 +34,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         try
         {
             var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+            var imageUrl = GetImageUrl(itemInput.Type, itemInput.ProductId);
 
             var item = new ItemDto
             {
@@ -45,6 +42,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
                 Type = itemInput.Type,
                 ProductId = itemInput.ProductId,
                 ProductName = itemInput.ProductName,
+                ImageUrl = imageUrl,
                 AdventureCoin = itemInput.AdventureCoin
             };
 
@@ -54,13 +52,46 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             var items = shoppingCart.Items.Select(i => _mapper.Map<ItemDto>(i)).ToList();
             return new PagedResult<ItemDto>(items, items.Count);
         }
+        catch(KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
         catch (Exception e)
         {
-            return Result.Fail($"Error: {e.Message}");
+            return Result.Fail(e.Message);
         }
     }
 
-    public Result RemoveFromCart(int touristId, int itemId)
+	private string GetImageUrl(API.Dtos.ShoppingCarts.ProductType type, int productId)
+	{
+        TourDto tour = type == API.Dtos.ShoppingCarts.ProductType.Tour ?
+            GetTour(productId) :
+            GetFirstTourFromBundle(productId);
+
+        return tour.Checkpoints[0].ImageUrl!;
+	}
+
+    private TourDto GetTour(int id)
+    {
+        var result = _internalTourService.Get(id);
+        if (result.IsFailed) throw new KeyNotFoundException("Tour ID mismatch");
+        return result.Value;
+    }
+
+    private TourBundleDto GetBundle(int id)
+    {
+        var result = _tourBundleService.Get(id);
+        if (result.IsFailed) throw new KeyNotFoundException("Bundle ID mismatch");
+        return result.Value;
+    }
+
+    private TourDto GetFirstTourFromBundle(int bundleId)
+    {
+        var bundle = GetBundle(bundleId);
+        return GetTour(bundle.TourIds[0]);
+    }
+
+	public Result RemoveFromCart(int touristId, int itemId)
     {
         try
         {
@@ -108,7 +139,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             };
 
 			foreach (var item in shoppingCartDto.Items)
-				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTour(item.ProductId) : GetBundle(item.ProductId);
+				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTourDetails(item.ProductId) : GetPopulatedBundle(item.ProductId);
 
 			return Result.Ok(shoppingCartDto);
         }
@@ -118,46 +149,37 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         }
 	}
 
-    private TourDetailsDto GetTour(int productId)
+    private TourDetailsDto GetTourDetails(int productId)
     {
+        TourDto tour;
+
         try
         {
-			var product = _internalTourService.Get(productId).Value;
-            return new TourDetailsDto
-            {
-                Id = (int)product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Level = (TourLevel)product.Level,
-                Tags = new List<string>(product.Taggs)
-            };
-		}
-        catch (Exception)
+            tour = GetTour(productId);
+        }
+        catch (KeyNotFoundException)
         {
             throw;
         }
+
+        return new TourDetailsDto
+        {
+            Id = tour.Id,
+            Name = tour.Name,
+            Description = tour.Description,
+            Level = (TourLevel)tour.Level,
+            Tags = new List<string>(tour.Taggs)
+        };
     }
 
-    private TourBundleDto GetBundle(int bundleId)
+    private TourBundleDto GetPopulatedBundle(int bundleId)
     {
         try
         {
-            var bundle = _tourBundleService.Get(bundleId);
-            if (bundle.IsFailed) throw new KeyNotFoundException("Product ID mismatch.");
+            var bundle = GetBundle(bundleId);
+            foreach (var tourId in bundle.TourIds) bundle.Tours.Add(GetTourDetails(tourId));
 
-            var product = new TourBundleDto
-            {
-                Id = (int)bundle.Value.Id,
-                Name = bundle.Value.Name,
-                Price = bundle.Value.Price,
-                Status = bundle.Value.Status,
-                AuthorId = bundle.Value.AuthorId,
-                TourIds = bundle.Value.TourIds,
-            };
-
-            foreach (var tourId in product.TourIds) product.Tours!.Add(GetTour(tourId));
-
-            return product;
+            return bundle;
         }
         catch (Exception)
         {

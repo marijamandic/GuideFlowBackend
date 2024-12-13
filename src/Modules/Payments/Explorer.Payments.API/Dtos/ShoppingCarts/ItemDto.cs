@@ -7,6 +7,7 @@ public class ItemDto
     public ProductType Type { get; set; }
     public int ProductId { get; set; }
     public required string ProductName { get; set; }
+    public required string ImageUrl { get; set; }
     public object? Product { get; set; }
     public int AdventureCoin { get; set; }
 }

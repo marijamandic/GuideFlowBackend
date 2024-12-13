@@ -18,6 +18,6 @@ public class ToursTestFactory : BaseTestFactory<ToursContext>
         services.Remove(stakeholderDescriptor!);
         services.AddDbContext<StakeholdersContext>(SetupTestContext());
 
-        return services;
+		return services;
     }
 }

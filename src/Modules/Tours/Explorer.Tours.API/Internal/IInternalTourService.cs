@@ -6,4 +6,5 @@ namespace Explorer.Tours.API.Internal;
 public interface IInternalTourService
 {
 	Result<TourDto> Get(int id);
+	Result<string> GetImageUrlByProductId(int productType, int productId);
 }

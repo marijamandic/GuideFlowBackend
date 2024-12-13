@@ -12,11 +12,9 @@ namespace Explorer.API.Controllers.Tourist.Shopping;
 public class ShoppingCartController : BaseApiController
 {
     private readonly IShoppingCartService _shoppingCartService;
-    private readonly IPaymentService _paymentService;
-    public ShoppingCartController(IShoppingCartService shoppingCartService, IPaymentService paymentService)
+    public ShoppingCartController(IShoppingCartService shoppingCartService)
     {
         _shoppingCartService = shoppingCartService;
-        _paymentService = paymentService;
     }
 
     [HttpPost("items")]

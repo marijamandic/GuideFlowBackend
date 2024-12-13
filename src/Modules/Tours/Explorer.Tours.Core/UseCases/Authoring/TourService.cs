@@ -404,5 +404,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 
             return tours;
         }
-    }
+
+		public Result<string> GetImageUrlByProductId(int productType, int productId)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }
