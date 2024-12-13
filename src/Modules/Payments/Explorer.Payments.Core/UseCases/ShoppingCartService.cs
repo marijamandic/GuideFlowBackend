@@ -125,6 +125,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
     {
         return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
     }
+
 	public Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId)
 	{
         try
@@ -174,17 +175,19 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 
     private TourBundleDto GetPopulatedBundle(int bundleId)
     {
+        TourBundleDto bundle;
+
         try
         {
-            var bundle = GetBundle(bundleId);
+            bundle = GetBundle(bundleId);
             foreach (var tourId in bundle.TourIds) bundle.Tours.Add(GetTourDetails(tourId));
-
-            return bundle;
         }
         catch (Exception)
         {
             throw;
         }
+
+        return bundle;
     }
 
     public Result<ShoppingCartDto> Create(int touristId)
