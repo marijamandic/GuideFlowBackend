@@ -8,7 +8,7 @@ public class TourBundleDto
     public BundleStatus Status { get; set; }
     public int AuthorId { get; set; }
     public List<int> TourIds { get; set; } = new();
-    public List<TourDetailsDto>? Tours { get; set; } = new();
+    public List<TourDetailsDto> Tours { get; set; } = new();
 }
 public enum BundleStatus
 {
