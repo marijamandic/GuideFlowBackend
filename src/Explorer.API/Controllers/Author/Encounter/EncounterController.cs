@@ -36,7 +36,7 @@ namespace Explorer.API.Controllers.Author.Encounter
 
                     var filePath = Path.Combine(folderPath, fileName);
                     System.IO.File.WriteAllBytes(filePath, imageData);
-                    hiddenLocationEncounterDto.ImageUrl = $"images/checkpoints/{fileName}";
+                    hiddenLocationEncounterDto.ImageUrl = $"images/encounters/{fileName}";
                     var resultHidden = _encounterService.Create(hiddenLocationEncounterDto);
                     return CreateResponse(resultHidden);
                 }
