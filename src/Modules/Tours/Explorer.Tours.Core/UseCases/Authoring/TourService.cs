@@ -8,6 +8,7 @@ using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using FluentResults;
+using System.Text;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
@@ -410,9 +411,5 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 			throw new NotImplementedException();
 		}
 
-        public Result<string> GetDatabaseSummary()
-        {
-            var tours = tourRepository.Get();
-        }
 	}
 }
