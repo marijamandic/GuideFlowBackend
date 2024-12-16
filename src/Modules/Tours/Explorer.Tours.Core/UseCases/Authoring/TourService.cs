@@ -409,5 +409,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 		{
 			throw new NotImplementedException();
 		}
+
+        public Result<string> GetDatabaseSummary()
+        {
+            var tours = tourRepository.Get();
+        }
 	}
 }
