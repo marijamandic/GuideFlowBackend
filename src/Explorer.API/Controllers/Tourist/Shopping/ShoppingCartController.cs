@@ -36,16 +36,24 @@ public class ShoppingCartController : BaseApiController
     [HttpGet]
     public ActionResult<ShoppingCartDto> GetByTouristId()
     {
-        int touristId = int.Parse(User.FindFirst("id")!.Value);
-        var result = _shoppingCartService.GetByTouristId(touristId);
-        return CreateResponse(result);
+        if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
+        {
+            var result = _shoppingCartService.GetByTouristId(touristId);
+            return CreateResponse(result);
+        }
+
+        return Unauthorized();
     }
 
-    [HttpGet("populated")]
+	[HttpGet("populated")]
     public ActionResult<ShoppingCartDto> GetPopulatedByTouristId()
     {
-        int touristId = int.Parse(User.FindFirst("id")!.Value);
-        var result = _shoppingCartService.GetPopulatedByTouristId(touristId);
-        return CreateResponse(result);
+		if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
+		{
+			var result = _shoppingCartService.GetPopulatedByTouristId(touristId);
+			return CreateResponse(result);
+		}
+
+		return Unauthorized();
     }
 }
