@@ -7,6 +7,7 @@ using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.API.Internal;
 using FluentResults;
+using Microsoft.VisualBasic;
 
 namespace Explorer.Stakeholders.Core.UseCases;
 public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
@@ -55,6 +56,11 @@ public class ProblemService : BaseService<ProblemDto, Problem>, IProblemService
     {
         var problems = _problemRepository.GetAll();
         return MapToDto(problems);
+    }
+    public Result<ProblemDto> GetProblemById(int id)
+    {
+        var problem = _problemRepository.GetById(id);
+        return MapToDto(problem);
     }
 
     public Result<PagedResult<ProblemDto>> GetByAuthorId(int authorId)
