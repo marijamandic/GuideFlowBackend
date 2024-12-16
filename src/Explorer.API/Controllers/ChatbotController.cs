@@ -17,6 +17,25 @@ namespace Explorer.API.Controllers
             _tourService = tourService;
         }
 
+
+        [HttpGet("databaseSummary")]
+        public ActionResult<string> GetDatabaseSummary()
+        {
+            try
+            {
+                // Call the service to get the database summary
+                string databaseSummary = _tourService.GetDatabaseSummary();
+
+                // Return the summary as an ActionResult
+                return Ok(databaseSummary);
+            }
+            catch (Exception ex)
+            {
+                // Log the error and return a 500 status code
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
         public ActionResult<string> GenerateResponse(string userMessage) 
         {
            /* string prompt = $"""

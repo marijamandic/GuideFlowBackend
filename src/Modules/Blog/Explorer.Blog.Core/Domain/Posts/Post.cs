@@ -170,6 +170,28 @@ namespace Explorer.Blog.Core.Domain.Posts
             }
         }
 
+        public override string ToString()
+        {
+            var commentsSummary = Comments != null && Comments.Any()
+                ? string.Join("; ", Comments.Select(c => c.ToString()))
+                : "No comments";
+
+            var ratingsSummary = Ratings != null && Ratings.Any()
+                ? string.Join("; ", Ratings.Select(r => r.ToString()))
+                : "No ratings";
+
+            return $@"
+                Post: {Title}
+                IdOfUserWhoMadeThePost: {UserId}
+                Description: {Description}
+                PublishDate: {PublishDate:g}
+                Status: {Status}
+                EngagementStatus: {EngagementStatus}
+                Comments: {commentsSummary}
+                Ratings: {ratingsSummary}
+            ";
+        }
+
     }
 
     public enum PostStatus

@@ -18,7 +18,6 @@ namespace Explorer.Tours.Core.Domain.Tours
         public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
         public int Price { get; private set; }
-
         public double AverageGrade { get; private set; }  
         public List<string> Taggs { get; private set; }
         public List<Checkpoint> Checkpoints { get; private set; }
@@ -124,6 +123,42 @@ namespace Explorer.Tours.Core.Domain.Tours
             }
             Checkpoints.Remove(checkpoint);
         }
+
+        public override string ToString()
+        {
+            var checkpointsSummary = Checkpoints != null && Checkpoints.Any()
+                ? string.Join("; ", Checkpoints.Select(ch => ch.ToString()))
+                : "No checkpoints";
+
+            var transportSummary = TransportDurations != null && TransportDurations.Any()
+                ? string.Join("; ", TransportDurations.Select(td => td.ToString()))
+                : "No transport durations";
+
+            var reviewsSummary = Reviews != null && Reviews.Any()
+                ? string.Join("; ", Reviews.Select(r => r.ToString()))
+                : "No reviews";
+
+            var tagsSummary = Taggs != null && Taggs.Any()
+                ? string.Join(", ", Taggs)
+                : "No tags";
+
+            return $@"
+                        Tour: {Name}
+                        AuthorId: {AuthorId}
+                        Description: {Description}
+                        Level: {Level}
+                        Status: {Status}
+                        StatusChangeDate: {StatusChangeDate?.ToString("g") ?? "Not changed"}
+                        Length (km): {LengthInKm}
+                        Price: {Price}
+                        Average Grade: {AverageGrade}
+                        Tags: {tagsSummary}
+                        Checkpoints: {checkpointsSummary}
+                        Transport Durations: {transportSummary}
+                        Reviews: {reviewsSummary}
+            ";
+        }
+
     }
 
     public enum TourStatus

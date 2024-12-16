@@ -45,6 +45,32 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             return MapToDto(result);
         }
 
+        public string GetDatabaseSummary()
+        {
+            const int pageSize = 100; // Process tours in batches of 100
+            int currentPage = 1;
+            var allTours = new List<string>();
+
+            while (true)
+            {
+                var pagedResult = tourRepository.GetPaged(currentPage, pageSize);
+
+                if (pagedResult.Results == null || !pagedResult.Results.Any())
+                    break;
+
+                allTours.AddRange(pagedResult.Results.Select(tour => tour.ToString()));
+
+                // If fewer results were returned than pageSize, it means we reached the last page
+                if (pagedResult.Results.Count < pageSize)
+                    break;
+
+                currentPage++;
+            }
+
+            return string.Join(Environment.NewLine, allTours);
+        }
+
+
         public Result<TourDto> Get(int id)
         {
             try
@@ -410,9 +436,9 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 			throw new NotImplementedException();
 		}
 
-        public Result<string> GetDatabaseSummary()
-        {
-            var tours = tourRepository.Get();
-        }
+        //public Result<string> GetDatabaseSummary()
+        //{
+        //    var tours = tourRepository.Get();
+        //}
 	}
 }
