@@ -256,20 +256,29 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) 
+        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
         {
-            var tokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
-            var purchased = new List<TourDto>();
-
-            foreach (var token in tokens)
+            var tokenResult = _purchaseTokenService.GetTokensByTouristId(userId);
+            if (!tokenResult.IsSuccess)
             {
-                var tour = Get(token.TourId).Value;
-                if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
-                    purchased.Add(tour);
+                return Result.Fail(tokenResult.Errors);
             }
 
+            var tokens = tokenResult.Value.Results;
+            var purchased = new List<TourDto>();
+            foreach (var token in tokens)
+            {
+                var tourResult = Get(token.TourId);
+                if (tourResult.IsSuccess)
+                {
+                    var tour = tourResult.Value;
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                        purchased.Add(tour);
+                }
+            }
             return purchased;
         }
+
         public Result<List<long>> GetTourIdsByAuthorId(int authorId)
         {
             try
