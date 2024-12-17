@@ -18,7 +18,7 @@ namespace Explorer.API.Controllers
         }
 
         [HttpGet("/prompt")]
-        public async Task<string> GenerateResponse(string userMessage) 
+        public async Task<String> GenerateResponse(string userMessage) 
         {
 
             var databaseSummary = "BLAH";
@@ -31,12 +31,11 @@ namespace Explorer.API.Controllers
                 Based on the data, provide a relevant suggestion with an explanation why or explain why no match was found.
                 """;*/
 
-            var prompt = "How Are you doing today?";
+            var prompt = "Hey?";
 
             var response = await _openAIClient.GetChatClient("gpt-3.5-turbo").CompleteChatAsync(prompt);
-            
 
-            return response.Value.Content.ToString() ?? "I couldn't generate a response. Please try again.";
+            return response.Value.Content[0].Text;
         }
     }
 }
