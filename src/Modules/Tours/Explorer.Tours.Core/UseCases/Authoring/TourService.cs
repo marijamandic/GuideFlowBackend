@@ -256,20 +256,56 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) 
+        /*public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) 
         {
             var tokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
+            if(tokens.Count > 0)
+            {
+                var purchased = new List<TourDto>();
+
+                foreach (var token in tokens)
+                {
+                    var tour = Get(token.TourId).Value;
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                        purchased.Add(tour);
+                }
+
+                return purchased;
+            }
+            return null;
+        }*/
+
+        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        {
+            var tokenResult = _purchaseTokenService.GetTokensByTouristId(userId);
+
+            // Proverite da li je rezultat uspešan pre nego što pristupite njegovoj vrednosti.
+            if (!tokenResult.IsSuccess)
+            {
+                // Opcionalno: logovanje greške ili vraćanje praznog rezultata.
+                return Result.Fail(tokenResult.Errors);
+            }
+
+            var tokens = tokenResult.Value.Results;
+
             var purchased = new List<TourDto>();
 
             foreach (var token in tokens)
             {
-                var tour = Get(token.TourId).Value;
-                if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
-                    purchased.Add(tour);
+                var tourResult = Get(token.TourId);
+
+                // Proverite da li je rezultat uspešan pre nego što pristupite turama.
+                if (tourResult.IsSuccess)
+                {
+                    var tour = tourResult.Value;
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                        purchased.Add(tour);
+                }
             }
 
             return purchased;
         }
+
         public Result<List<long>> GetTourIdsByAuthorId(int authorId)
         {
             try
