@@ -93,8 +93,8 @@ namespace Explorer.Encounters.Core.Domain
 
         public bool IsHiddenLocationFound(double latitude, double longitude, Encounter encounter)
         {
-            double latTolerance = 10.0 / 111320.0;   // 10 metara
-            double lonTolerance = 10.0 / (111320.0 * Math.Cos(latitude));
+            double latTolerance = 20.0 / 111320.0;   // 10 metara
+            double lonTolerance = 20.0 / (111320.0 * Math.Cos(latitude));
 
             if (encounter is HiddenLocationEncounter hiddenLocationEncounter)
             {
