@@ -1,74 +1,52 @@
 ﻿using Explorer.Blog.API.Public;
+using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Tours.API.Public.Author;
-using Explorer.Tours.Core.UseCases.Authoring;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI;
+using OpenAI.Chat;
 
 namespace Explorer.API.Controllers
 {
     [Route("api/chatbot")]
-    public class ChatbotController: BaseApiController
+    [ApiController]
+    public class ChatbotController : ControllerBase
     {
         private readonly OpenAIClient _openAIClient;
         private readonly ITourService _tourService;
         private readonly IPostService _postService;
+        private readonly IClubService _clubService;
+        private readonly string _apikey = "API_KEY";
 
-        public ChatbotController(ITourService tourService, IPostService postService)
+        public ChatbotController(ITourService tourService, IPostService postService, IClubService clubService)
         {
-            _openAIClient = new OpenAIClient("key");
+            _openAIClient = new OpenAIClient(_apikey);
             _tourService = tourService;
             _postService = postService;
+            _clubService = clubService;
         }
 
-
-        [HttpGet("databaseSummaryTours")]
-        public ActionResult<string> GetDatabaseSummaryTours()
+        [HttpGet("/prompt")]
+        public async Task<string> GenerateResponse(string userMessage)
         {
-            try
-            {
-                // Call the service to get the database summary
-                string databaseSummary = _tourService.GetDatabaseSummary();
+            var databaseSummaryTours = _tourService.GetDatabaseSummary();
+            var databaseSummaryBlogs = _postService.GetDatabaseSummary();
+            var databaseSummaryClubs = _clubService.GetDatabaseSummary();
 
-                // Return the summary as an ActionResult
-                return Ok(databaseSummary);
-            }
-            catch (Exception ex)
-            {
-                // Log the error and return a 500 status code
-                return StatusCode(500, $"An error occurred: {ex.Message}");
-            }
+            string prompt = $"""
+                You are being used as the chat bot support for the tourism application. Your job is to answer a users questions about anything tourism related. 
+                You are a tour recommendation assistant. A user can ask you for a suggestion based on the following database contents:
+                {databaseSummaryTours}
+                {databaseSummaryBlogs}
+                {databaseSummaryClubs}
+                
+                The message from user that you have to answer: "{userMessage}"
+                Based on the data, provide a relevant suggestion with an explanation why or explain why no match was found.
+
+                You can send questions to the user and clarify what he needs help with.
+                """;
+
+            var response = await _openAIClient.GetChatClient("gpt-3.5-turbo").CompleteChatAsync(prompt);
+            return response.Value.Content.ToString() ?? "I couldn't generate a response. Please try again.";
         }
-
-        [HttpGet("databaseSummaryBlogs")]
-        public ActionResult<string> GetDatabaseSummaryBlogs()
-        {
-            try
-            {
-                // Call the service to get the database summary
-                string databaseSummary = _postService.GetDatabaseSummary();
-
-                // Return the summary as an ActionResult
-                return Ok(databaseSummary);
-            }
-            catch (Exception ex)
-            {
-                // Log the error and return a 500 status code
-                return StatusCode(500, $"An error occurred: {ex.Message}");
-            }
-        }
-
-        // Ovo ne sme da stoji bez HttpNESTO anotacije i zato ne pali swagger
-        //public ActionResult<string> GenerateResponse(string userMessage) 
-        //{
-        //   /* string prompt = $"""
-        //    You are a tour recommendation assistant. A user has asked you for a suggestion based on the following database contents:
-        //    {databaseSummary}
-
-        //    The user said: "{userMessage}"
-        //    Based on the data, provide a relevant suggestion with an explanation why or explain why no match was found.
-        //""";*/
-
-        //    return new ActionResult<string>("key");
-        //}
     }
 }
