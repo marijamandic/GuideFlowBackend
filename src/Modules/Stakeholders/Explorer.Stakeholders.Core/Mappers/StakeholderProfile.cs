@@ -6,6 +6,8 @@ using Explorer.Stakeholders.Core.Domain;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Explorer.Stakeholders.API.Dtos.Problems;
 using Explorer.Stakeholders.API.Dtos.Explorer.Stakeholders.Core.DTO;
+using Explorer.Stakeholders.API.Dtos.Chatbot;
+using Explorer.Stakeholders.Core.Domain.Chatbot;
 
 namespace Explorer.Stakeholders.Core.Mappers;
 
@@ -57,6 +59,7 @@ public class StakeholderProfile : Profile
         CreateMap<TouristDto, Tourist>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
         .IncludeAllDerived();
-
+        CreateMap<ChatMessageDto, ChatMessage>();
+        CreateMap<ChatLogDto, ChatLog>();
     }
 }

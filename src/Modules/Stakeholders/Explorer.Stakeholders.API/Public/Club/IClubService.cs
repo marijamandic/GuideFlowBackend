@@ -16,7 +16,8 @@ namespace Explorer.Stakeholders.API.Public.Club
         Result<ClubDto> Create(ClubDto club);
         Result<ClubDto> Update(ClubDto club);
         Result Delete(int id);
-
         public Result<List<ClubDto>> GetTopClubsByMembers(int topCount = 5);
+        public string GetDatabaseSummary();
+
     }
 }

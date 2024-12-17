@@ -54,5 +54,33 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
                 return Result.Fail<List<ClubDto>>("An error occurred while fetching top clubs.");
             }
         }
+
+        public string GetDatabaseSummary()
+        {
+            const int pageSize = 100; // Process clubs in batches of 100
+            int currentPage = 1;
+            var allClubs = new List<string>();
+
+            while (true)
+            {
+                var pagedResult = GetPaged(currentPage, pageSize);
+
+                if (!pagedResult.IsSuccess || pagedResult.Value.Results == null || !pagedResult.Value.Results.Any())
+                    break;
+
+                allClubs.AddRange(pagedResult.Value.Results.Select(club =>
+                    $"ID: {club.Id}, Name: {club.Name}, OwnerID: {club.OwnerId}, Description: {club.Description}, ImageURL: {club.ImageUrl}"
+                ));
+
+                // If fewer results were returned than pageSize, it means we reached the last page
+                if (pagedResult.Value.Results.Count < pageSize)
+                    break;
+
+                currentPage++;
+            }
+
+            return string.Join(Environment.NewLine, allClubs);
+        }
+
     }
 }
