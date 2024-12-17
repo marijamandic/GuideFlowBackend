@@ -13,33 +13,33 @@ public class ShoppingCartCommandTests : BasePaymentsIntegrationTests
 {
     public ShoppingCartCommandTests(PaymentsTestFactory factory) : base(factory) { }
 
-    //[Fact]
-    //public void Adds_To_Cart()
-    //{
-    //    // Arrange
-    //    using var scope = Factory.Services.CreateScope();
-    //    var controller = CreateShoppingCartController(scope);
-    //    var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
-    //    var item = new ItemInputDto
-    //    {
-    //        Type = ProductType.Tour,
-    //        ProductId = -11,
-    //        ProductName = "Mountain Adventure",
-    //        AdventureCoin = 20
-    //    };
+    [Fact]
+    public void Adds_To_Cart()
+    {
+        // Arrange
+        using var scope = Factory.Services.CreateScope();
+        var controller = CreateShoppingCartController(scope);
+        var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
+        var item = new ItemInputDto
+        {
+            Type = ProductType.Tour,
+            ProductId = -11,
+            ProductName = "Mountain Adventure",
+            AdventureCoin = 20
+        };
 
-    //    // Act
-    //    var result = (controller.AddToCart(item).Result as ObjectResult)!.Value as PagedResult<ItemDto>;
+        // Act
+        var result = (controller.AddToCart(item).Result as ObjectResult)!.Value as PagedResult<ItemDto>;
 
-    //    // Assert - Response
-    //    result.ShouldNotBeNull();
-    //    result.Results.Count.ShouldBeGreaterThanOrEqualTo(2);
+        // Assert - Response
+        result.ShouldNotBeNull();
+        result.Results.Count.ShouldBeGreaterThanOrEqualTo(2);
 
-    //    // Assert - Database
-    //    var storedItem = dbContext.ShoppingCartItems.FirstOrDefault(i => i.ProductId == item.ProductId);
-    //    storedItem.ShouldNotBeNull();
-    //    storedItem.ProductName.ShouldBe(item.ProductName);
-    //}
+        // Assert - Database
+        var storedItem = dbContext.ShoppingCartItems.FirstOrDefault(i => i.ProductId == item.ProductId);
+        storedItem.ShouldNotBeNull();
+        storedItem.ProductName.ShouldBe(item.ProductName);
+    }
 
     [Fact]
     public void Removes_From_Cart()
