@@ -39,5 +39,11 @@ namespace Explorer.API.Controllers.Administrator.Administration
             var result = _problemService.UpdateDeadline(id, deadline.Date, jwtUser);
             return CreateResponse(result);
         }
+        [HttpGet("{problemId:int}/problem")]
+        public ActionResult<ProblemDto> GetProblemById(int problemId)
+        {
+            var result = _problemService.GetProblemById(problemId);
+            return CreateResponse(result);
+        }
     }
 }
