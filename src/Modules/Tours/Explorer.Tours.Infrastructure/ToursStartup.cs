@@ -21,6 +21,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Explorer.Tours.Core.UseCases.Shopping;
 using Explorer.Tours.API.Public.Shopping;
+using Explorer.Tours.Core.UseCases.Weather;
+using Explorer.Tours.Infrastructure.Weather;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -79,6 +81,7 @@ public static class ToursStartup
         services.AddScoped<IPurchaseTokenRepository, PurchaseTokenRepository>();
         services.AddScoped<IPublicPointNotificationRepository, PublicPointNotificationRepository>();
         services.AddScoped(typeof(ICrudRepository<PublicPointNotification>), typeof(CrudDatabaseRepository<PublicPointNotification, ToursContext>));
+        services.AddHttpClient<IWeatherConnection, WeatherConnection>();
         
 
         services.AddDbContext<ToursContext>(opt =>
