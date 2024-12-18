@@ -56,6 +56,11 @@ public static class ToursStartup
         services.AddScoped<IInternalSalesService, InternalSalesService>();
         services.AddScoped<IInternalTourService, TourService>();
 
+        // TRENUTNO RESENJE
+
+        services.AddScoped<IInternalTourHelperService, TourHelperService>();
+
+        //
     }
 
     private static void SetupInfrastructure(IServiceCollection services)

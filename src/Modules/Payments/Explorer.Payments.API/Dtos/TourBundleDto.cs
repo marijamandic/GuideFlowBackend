@@ -2,8 +2,10 @@
 
 public class TourBundleDto
 {
-    public long Id { get; set; }    
+    public long Id { get; set; }
     public required string Name { get; set; }
+    public required string Description { get; set; }
+    public required string ImageUrl { get; set; }
     public double Price { get; set; }
     public BundleStatus Status { get; set; }
     public int AuthorId { get; set; }
