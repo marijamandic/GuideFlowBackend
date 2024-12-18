@@ -7,6 +7,7 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
+using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
@@ -18,13 +19,15 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
         private readonly IInternalUserService _userService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService) : base(mapper) 
+        private readonly IWeatherConnection _weatherConnection;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
             _purchaseTokenService = purchaseTokenService;
             _tourBundleService = tourBundleService;
             _userService = userService;
+            _weatherConnection = weatherConnection;
         }
 
 		public TourService(
@@ -418,5 +421,11 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public async Task<bool> GetweatherByCoords(double latitude, double longitude)
+        {
+            var weatherResponse = await _weatherConnection.GetWeatherAsync(latitude, longitude);
+            return weatherResponse == null;
+        }
+    }
 }
