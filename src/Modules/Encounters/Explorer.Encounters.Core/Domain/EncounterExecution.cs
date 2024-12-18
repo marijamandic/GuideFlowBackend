@@ -21,12 +21,14 @@ namespace Explorer.Encounters.Core.Domain
         public double UserLatitude { get; set; }
 
         public int Participants { get; private set; }
-        public EncounterExecution(long encounterId, long userId) 
+        public EncounterExecution(long encounterId, long userId, double userLongitude, double userLatitude) 
         {
             EncounterId = encounterId;
             UserId = userId;
             ExecutionStatus = ExecutionStatus.Active;
             IsComplete = false;
+            UserLongitude = userLongitude;
+            UserLatitude = userLatitude;
         }
 
         public void CompleteSocialEncounter()
@@ -93,12 +95,13 @@ namespace Explorer.Encounters.Core.Domain
 
         public bool IsHiddenLocationFound(double latitude, double longitude, Encounter encounter)
         {
-            const double tolerance = 0.000448;  // 5 metara
+            double latTolerance = 20.0 / 111320.0;   // 10 metara
+            double lonTolerance = 20.0 / (111320.0 * Math.Cos(latitude));
 
             if (encounter is HiddenLocationEncounter hiddenLocationEncounter)
             {
-                bool isNearLatitude = Math.Abs(hiddenLocationEncounter.ImageLatitude - latitude) <= tolerance;
-                bool isNearLongitude = Math.Abs(hiddenLocationEncounter.ImageLongitude - longitude) <= tolerance;
+                bool isNearLatitude = Math.Abs(hiddenLocationEncounter.ImageLatitude - latitude) <= latTolerance;
+                bool isNearLongitude = Math.Abs(hiddenLocationEncounter.ImageLongitude - longitude) <= lonTolerance;
 
                 return isNearLatitude && isNearLongitude;
             }
