@@ -47,7 +47,7 @@ namespace Explorer.Encounters.Core.UseCases
 
                 }else if (!allExecutions.Contains(execution)) // ako ne postoji onda se pravi nova ex
                 {
-                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId);
+                    var encounterExecution = new EncounterExecution(encounterExecutionDto.EncounterId, encounterExecutionDto.UserId, encounterExecutionDto.UserLongitude, encounterExecutionDto.UserLatitude);
                     _encounterExecutionRepository.Create(encounterExecution);
                     return MapToDto(encounterExecution);
                 }

@@ -33,8 +33,12 @@ namespace Explorer.API.Controllers.Tourist.Encounter
         }
 
         [HttpPut("{id:int}")]
-        public ActionResult<EncounterExecutionDto> Update([FromBody] EncounterExecutionDto encounterExecutionDto)
+        public ActionResult<EncounterExecutionDto> Update(int id, [FromBody] EncounterExecutionDto encounterExecutionDto)
         {
+            if (id != encounterExecutionDto.Id)
+            {
+                return BadRequest("ID in the URL does not match ID in the body.");
+            }
             var result = _encounterExecutionService.Update(encounterExecutionDto);
             return CreateResponse(result);
         }

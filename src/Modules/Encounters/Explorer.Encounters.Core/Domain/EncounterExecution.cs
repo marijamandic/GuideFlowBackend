@@ -21,12 +21,14 @@ namespace Explorer.Encounters.Core.Domain
         public double UserLatitude { get; set; }
 
         public int Participants { get; private set; }
-        public EncounterExecution(long encounterId, long userId) 
+        public EncounterExecution(long encounterId, long userId, double userLongitude, double userLatitude) 
         {
             EncounterId = encounterId;
             UserId = userId;
             ExecutionStatus = ExecutionStatus.Active;
             IsComplete = false;
+            UserLongitude = userLongitude;
+            UserLatitude = userLatitude;
         }
 
         public void CompleteSocialEncounter()
