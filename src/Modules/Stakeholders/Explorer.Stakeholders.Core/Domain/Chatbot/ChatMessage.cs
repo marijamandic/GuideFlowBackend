@@ -9,7 +9,7 @@ namespace Explorer.Stakeholders.Core.Domain.Chatbot
 {
     public class ChatMessage
     {
-       public string Content { get; set; }
-       public Sender Sender { get; set; }
+       public string Content { get; private set; }
+       public Sender Sender { get; private set; }
     }
 }

@@ -12,5 +12,11 @@ namespace Explorer.Stakeholders.Core.Domain.Chatbot
         public long UserId { get; private set; }
         public List<ChatMessage> Messages { get; private set; }
         public DateTime CreatedAt { get; private set; }
+
+        public ChatLog(long userId)
+        { 
+            UserId = userId;
+            Messages = new List<ChatMessage>();
+        }
     }
 }

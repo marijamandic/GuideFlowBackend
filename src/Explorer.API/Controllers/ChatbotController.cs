@@ -1,4 +1,6 @@
 ﻿using Explorer.Blog.API.Public;
+using Explorer.Stakeholders.API.Dtos.Chatbot;
+using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Tours.API.Public.Author;
 using Microsoft.AspNetCore.Mvc;
@@ -11,20 +13,22 @@ namespace Explorer.API.Controllers
     public class ChatbotController: BaseApiController
     {
         private readonly OpenAIClient _openAIClient;
+        private readonly IChatLogService _chatLogService;
         private readonly ITourService _tourService;
         private readonly IPostService _postService;
         private readonly IClubService _clubService;
         private readonly string _apikey = "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";
 
-        public ChatbotController(ITourService tourService, IPostService postService, IClubService clubService)
+        public ChatbotController(IChatLogService chatLogService,ITourService tourService, IPostService postService, IClubService clubService)
         {
             _openAIClient = new OpenAIClient(_apikey);
+            _chatLogService = chatLogService;
             _tourService = tourService;
             _postService = postService;
             _clubService = clubService;
         }
 
-        [HttpGet("/prompt")]
+        [HttpGet("prompt")]
         public async Task<string> GenerateResponse(string userMessage)
         {
             var databaseSummaryTours = _tourService.GetDatabaseSummary();
@@ -32,8 +36,8 @@ namespace Explorer.API.Controllers
             var databaseSummaryClubs = _clubService.GetDatabaseSummary();
 
             string prompt = $"""
-                You are being used as a chat bot support for a tourism website. Your job is to answer a users questions about anything tourism related. 
-                You are a tour recommendation assistant. A user can ask you for a suggestion based on the following database contents:
+                 You are a tour recommendation assistant. 
+                 A user can ask you for a suggestion based on the following database contents:
                 {databaseSummaryTours}
                 
                 The message from user that you have to answer: "{userMessage}"
@@ -50,6 +54,27 @@ namespace Explorer.API.Controllers
             }catch (IndexOutOfRangeException ex) {
                 return ex.Message;
             }
+        }
+
+        [HttpPost("ChatLog/create")]
+        public ActionResult<ChatLogDto> Create(long userId)
+        {
+            var result = _chatLogService.Create(userId);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("ChatLog/{userId:long}")]
+        public ActionResult<ChatLogDto> GetByUSer(long userId)
+        {
+            var result = _chatLogService.GetByUser(userId);
+            return CreateResponse(result);
+        }
+
+        [HttpPut("ChatLog/update")]
+        public ActionResult<ChatLogDto> Update([FromBody] ChatLogDto chatLogDto)
+        {
+            var result = _chatLogService.Update(chatLogDto);
+            return CreateResponse(result);
         }
     }
 }
