@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.Shopping;
 
-//[Authorize(Policy = "touristPolicy")]
+[Authorize(Policy = "touristPolicy")]
 [Route("api/shopping-cart")]
 public class ShoppingCartController : BaseApiController
 {
