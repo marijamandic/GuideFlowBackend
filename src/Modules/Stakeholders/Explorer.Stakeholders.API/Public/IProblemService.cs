@@ -28,4 +28,5 @@ public interface IProblemService
     Result<ProblemDto> Update(ProbStatusChangeDto status,int id);
     Result<ProblemDto> UpdateDeadline(int id, DateTime deadline, UserDto jwtUser);
     Result<PagedResult<ProblemDto>> GetUserProblems(int userId);
+    Result<ProblemDto> GetProblemById(int id);
 }
