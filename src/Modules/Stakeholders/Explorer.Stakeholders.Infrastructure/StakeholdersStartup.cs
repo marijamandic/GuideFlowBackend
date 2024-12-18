@@ -48,6 +48,7 @@ public static class StakeholdersStartup
         services.AddScoped<INotificationService, NotificationService>();
         services.AddScoped<IClubPostService, ClubPostService>();
         services.AddScoped<IMessageNotificationService, MessageNotificationService>();
+        services.AddScoped<IAuthorDashboardService, AuthorDashboardService>();
         services.AddScoped<NotificationMoneyExchangeService>();
     }
 

@@ -1,31 +1,32 @@
-﻿using Explorer.Stakeholders.Core.UseCases;
+﻿using Explorer.Stakeholders.API.Public;
+using Explorer.Stakeholders.API.Public.Club;
+using Explorer.Stakeholders.Core.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Administrator.Administration
 {
-    [ApiController]
-    [Route("api/author-dashboard")]
-    public class AuthorDashboardController : ControllerBase
+    [Route("api/manageauthor/dashboard")]
+    public class AuthorDashboardController : BaseApiController
     {
-        private readonly AuthorDashboardService _authorDashboardService;
+        private readonly IAuthorDashboardService _authorDashboardService;
 
-        public AuthorDashboardController(AuthorDashboardService authorDashboardService)
+        public AuthorDashboardController(IAuthorDashboardService authorDashboardService)
         {
             _authorDashboardService = authorDashboardService;
         }
 
         [HttpGet("{authorId}/average-grade")]
-        public IActionResult GetAverageGrade(long authorId)
+        public ActionResult<double> GetAverageGrade(long authorId)
         {
-            var averageGrade = _authorDashboardService.GetAverageGradeForAuthor(authorId);
-            return Ok(new { AverageGrade = averageGrade });
+            var result = _authorDashboardService.GetAverageGradeForAuthor(authorId);
+            return Ok(result);
         }
 
         [HttpGet("{authorId}/reviews-partition")]
-        public IActionResult GetReviewsPartitioned(long authorId)
+        public ActionResult<Dictionary<int, int>> GetReviewsPartitioned(long authorId)
         {
-            var partitionedReviews = _authorDashboardService.GetReviewsPartitionedByGrade(authorId);
-            return Ok(partitionedReviews);
+            var result = _authorDashboardService.GetReviewsPartitionedByGrade(authorId);
+            return Ok(result);
         }
     }
 }

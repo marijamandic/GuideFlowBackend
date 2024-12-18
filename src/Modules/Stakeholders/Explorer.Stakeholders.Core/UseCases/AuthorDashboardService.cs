@@ -1,4 +1,5 @@
-﻿using Explorer.Tours.API.Public.Administration;
+﻿using Explorer.Stakeholders.API.Public;
+using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class AuthorDashboardService
+    public class AuthorDashboardService : IAuthorDashboardService
     {
         private readonly ITourReviewService _tourReviewService;
         private readonly ITourService _tourService;
@@ -19,7 +20,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             _tourService = tourService;
         }
 
-        // Method to get the average grade of all reviews for an author
         public double GetAverageGradeForAuthor(long authorId)
         {
             var reviews = _tourReviewService.GetReviewsByAuthorId(authorId, _tourService);
@@ -31,7 +31,6 @@ namespace Explorer.Stakeholders.Core.UseCases
             return reviews.Average(r => r.Rating);
         }
 
-        // Method to partition reviews by grade
         public Dictionary<int, int> GetReviewsPartitionedByGrade(long authorId)
         {
             var reviews = _tourReviewService.GetReviewsByAuthorId(authorId, _tourService);
@@ -40,10 +39,8 @@ namespace Explorer.Stakeholders.Core.UseCases
                 return new Dictionary<int, int>(); // No reviews, return empty dictionary
             }
 
-            // Partition reviews by grade and count each grade
             return reviews.GroupBy(r => r.Rating)
                           .ToDictionary(g => g.Key, g => g.Count());
         }
     }
-
 }
