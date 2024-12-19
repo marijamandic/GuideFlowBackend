@@ -29,12 +29,11 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 		_tourBundleService = tourBundleService;
 	}
 
-	public Result<PagedResult<ItemDto>> AddToCart(int touristId, ItemInputDto itemInput)
+	public Result<ItemDto> AddToCart(int touristId, ItemInputDto itemInput)
     {
         try
         {
             var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
-            var imageUrl = GetImageUrl(itemInput.Type, itemInput.ProductId);
 
             var item = new ItemDto
             {
@@ -42,19 +41,23 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
                 Type = itemInput.Type,
                 ProductId = itemInput.ProductId,
                 ProductName = itemInput.ProductName,
-                ImageUrl = imageUrl,
                 AdventureCoin = itemInput.AdventureCoin
             };
 
             shoppingCart.AddToCart(_mapper.Map<Item>(item));
-            _shoppingCartRepository.Save(shoppingCart);
+            shoppingCart = _shoppingCartRepository.Save(shoppingCart);
 
-            var items = shoppingCart.Items.Select(i => _mapper.Map<ItemDto>(i)).ToList();
-            return new PagedResult<ItemDto>(items, items.Count);
+            item.Id = _mapper.Map<ItemDto>(shoppingCart.Items[shoppingCart.Items.Count - 1]).Id;
+            item.ImageUrl = GetImageUrl(item.Type, item.ProductId);
+            return item;
         }
-        catch(KeyNotFoundException e)
+        catch (KeyNotFoundException e)
         {
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
         catch (Exception e)
         {
@@ -123,7 +126,16 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 
     public Result<ShoppingCartDto> GetByTouristId(int touristId)
     {
-        return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+        try
+        {
+			var shoppingCart = MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+			foreach (var item in shoppingCart.Items) item.ImageUrl = GetImageUrl(item.Type, item.ProductId);
+            return Result.Ok(shoppingCart);
+		}
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 
 	public Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId)
@@ -168,6 +180,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             Id = tour.Id,
             Name = tour.Name,
             Description = tour.Description,
+            ImageUrl = tour.Checkpoints[0].ImageUrl!,
             Level = (TourLevel)tour.Level,
             Tags = new List<string>(tour.Taggs)
         };

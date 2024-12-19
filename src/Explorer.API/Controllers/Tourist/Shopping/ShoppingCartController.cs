@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.Shopping;
 
-//[Authorize(Policy = "touristPolicy")]
+[Authorize(Policy = "touristPolicy")]
 [Route("api/shopping-cart")]
 public class ShoppingCartController : BaseApiController
 {
@@ -18,7 +18,7 @@ public class ShoppingCartController : BaseApiController
     }
 
     [HttpPost("items")]
-    public ActionResult<PagedResult<ItemDto>> AddToCart([FromBody] ItemInputDto item)
+    public ActionResult<ItemDto> AddToCart([FromBody] ItemInputDto item)
     {
         int touristId = int.Parse(User.FindFirst("id")!.Value);
         var result = _shoppingCartService.AddToCart(touristId, item);

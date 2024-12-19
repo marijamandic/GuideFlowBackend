@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Explorer.API.Controllers.Tourist.Shopping
 {
     [Authorize(Policy = "touristPolicy")]
-    [Route("api/shopping/tourBundle")]
+    [Route("api/bundles")]
     public class TourBundleController : BaseApiController
     {
         private readonly ITourBundleService _tourBundleService;
@@ -21,6 +21,13 @@ namespace Explorer.API.Controllers.Tourist.Shopping
         public ActionResult<TourBundleDto> GetById(int id)
         {
             var result = _tourBundleService.Get(id);
+            return CreateResponse(result);
+        }
+
+        [HttpGet]
+        public ActionResult<TourBundleDto> GetAllPublished()
+        {
+            var result = _tourBundleService.GetAllPublished();
             return CreateResponse(result);
         }
     }
