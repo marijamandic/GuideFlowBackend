@@ -73,6 +73,23 @@ namespace Explorer.API.Controllers.Author.BlogManagement
         public ActionResult Update([FromBody] PostDto post, int id)
         {
             post.Id = id;
+
+            if (!string.IsNullOrEmpty(post.ImageBase64))
+            {
+                var imageData = Convert.FromBase64String(post.ImageBase64.Split(',')[1]);
+                var fileName = Guid.NewGuid() + ".png";
+                var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "blogs");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                var filePath = Path.Combine(folderPath, fileName);
+                System.IO.File.WriteAllBytes(filePath, imageData);
+                post.ImageUrl = $"images/blogs/{fileName}";
+            }
+
             var result = _postAggregateService.UpdatePost(post);
             return CreateResponse(result);
         }

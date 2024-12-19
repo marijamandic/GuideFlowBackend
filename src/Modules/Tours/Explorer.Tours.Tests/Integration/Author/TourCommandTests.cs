@@ -33,14 +33,15 @@ public class TourCommandTests : BaseToursIntegrationTest
             Level = Level.Advanced,
             Status = Explorer.Tours.API.Dtos.TourStatus.Published,
             LengthInKm = 15.0,
-            /*Price = new PriceDto
-            {
-                Cost = 120.50,
-                Currency = 0
-            },*/
             Price = 120,
             AverageGrade = 4.5,
-            Taggs = new List<string> { "Adventure", "Mountain", "Hiking" }
+            Taggs = new List<string> { "Adventure", "Mountain", "Hiking" },
+            WeatherRequirements = new WeatherConditionDto
+            {
+                MinTemperature = 10,
+                MaxTemperature = 20,
+                SuitableConditions = new List<API.Dtos.WeatherConditionType> { API.Dtos.WeatherConditionType.CLOUDS, API.Dtos.WeatherConditionType.RAIN }
+            }
         };
 
 
@@ -100,7 +101,13 @@ public class TourCommandTests : BaseToursIntegrationTest
             },*/
             Price = 120,
             AverageGrade = 4.5,
-            Taggs = new List<string> { "Adventure", "Mountain", "Hiking" }
+            Taggs = new List<string> { "Adventure", "Mountain", "Hiking" },
+            WeatherRequirements = new WeatherConditionDto
+            {
+                MinTemperature = 0,
+                MaxTemperature = 10,
+                SuitableConditions = new List<API.Dtos.WeatherConditionType> { API.Dtos.WeatherConditionType.CLEAR, API.Dtos.WeatherConditionType.CLOUDS }
+            }
         };
 
         var result = ((ObjectResult)controller.Update(updatedEntity).Result)?.Value as TourDto;

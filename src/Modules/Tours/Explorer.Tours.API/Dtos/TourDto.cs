@@ -19,7 +19,7 @@ namespace Explorer.Tours.API.Dtos
         public TourStatus Status { get; set; }
         public DateTime? StatusChangeDate {  get; set; }
         public double LengthInKm { get; set; }
-        // public PriceDto Price { get; set; }
+        public WeatherConditionDto WeatherRequirements { get; set; }
         public int Price { get; set; }
         public double AverageGrade { get; set; }
         //Weather
