@@ -21,9 +21,9 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("purchased/{userId:int}")]
-        public ActionResult<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        public async Task<ActionResult<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId)
         {
-            var result = _tourService.GetPurchasedAndArchivedByUser(userId);
+            var result = await _tourService.GetPurchasedAndArchivedByUser(userId);
 
             if (result == null)
             {

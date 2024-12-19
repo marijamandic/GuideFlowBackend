@@ -9,6 +9,7 @@ using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
+using System.Collections;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
@@ -259,7 +260,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        public async Task<Result<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId)
         {
             var tokenResult = _purchaseTokenService.GetTokensByTouristId(userId);
             if (!tokenResult.IsSuccess)
@@ -275,8 +276,45 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 if (tourResult.IsSuccess)
                 {
                     var tour = tourResult.Value;
-                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived) {
+                        //LOGIKA CE VEROVATNO BITI IZDVOJENA U DOMENSKU KLASU KAD SE PROSIRI Tour.cs (Radi se o poslovnoj logici)
+                        var recommendedCounter = 0;
+                        var weatherTags = new List<string>{ "Clear", "Clouds" };
+                        var weather = await _weatherConnection.GetWeatherAsync(tour.Checkpoints[0].Latitude, tour.Checkpoints[0].Longitude);
+                        tour.WeatherDescription = weather.Weather[0].Description;
+                        tour.WeatherIcon = weather.Weather[0].Icon;
+                        tour.Temperature = weather.Main.Temp;
+                        if (weather.Main.Temp < 10 || weather.Main.Temp > 20)
+                            recommendedCounter++;
+                        if (weather.Weather[0].Main == "Thunderstorm" || weather.Weather[0].Main == "Tornado"  || weather.Weather[0].Main == "Fog")
+                            recommendedCounter-=1000;
+                        if (weather.Wind.Speed > 5) { 
+                            recommendedCounter -= 1;
+                            if (weather.Wind.Speed > 10)
+                                 recommendedCounter -= 2;
+                        }
+                        if (weather.Visibility < 5000 || weather.Weather[0].Main == "Mist")
+                            recommendedCounter--;
+                        if (weatherTags.Contains(weather.Weather[0].Main,StringComparer.OrdinalIgnoreCase))
+                            recommendedCounter++;
+                        if (recommendedCounter == 2) {
+                            tour.WeatherRecommend = WeatherRecommend.HighyRecommend;
+                        }else if (recommendedCounter == 1)
+                        {
+                            tour.WeatherRecommend = WeatherRecommend.Recommend;
+                        }else if (recommendedCounter == 0)
+                        {
+                            tour.WeatherRecommend = WeatherRecommend.Neutral;
+                        }else if (recommendedCounter == -1)
+                        {
+                            tour.WeatherRecommend = WeatherRecommend.DontRecommend;
+                        }else
+                        {
+                            tour.WeatherRecommend = WeatherRecommend.HighlyDontRecommend;
+                        }
+                        
                         purchased.Add(tour);
+                    }
                 }
             }
             return purchased;
