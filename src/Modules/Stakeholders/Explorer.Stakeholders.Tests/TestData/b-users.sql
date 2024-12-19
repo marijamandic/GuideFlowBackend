@@ -95,3 +95,17 @@ VALUES (
     NOW(),
     NOW()
 );
+
+INSERT INTO stakeholders."Users"(
+	"Id", "Username", "Password", "Role", "IsActive", "Location", "LastLogin", "LastLogout"
+)
+VALUES (
+    101, 
+    'autor4@gmail.com', 
+    'auth4', 
+    1, 
+    true, 
+    '{{"Latitude": 55.7558, "Longitude": 37.6173}}',
+    NOW(),
+    NOW()
+);
