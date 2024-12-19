@@ -42,5 +42,23 @@ namespace Explorer.Stakeholders.Core.UseCases
             _messageNotificationRepository.Update(message);
             return MapToDto(message);
         }
+        public Result DeleteMessageNotification(int id)
+        {
+            try
+            {
+                var messageNotification = _messageNotificationRepository.GetById(id);
+                if (messageNotification == null)
+                {
+                    return Result.Fail($"MessageNotification with ID {id} not found.");
+                }
+
+                _messageNotificationRepository.Delete(id);
+                return Result.Ok();
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail($"Failed to delete MessageNotification: {ex.Message}");
+            }
+        }
     }
 }

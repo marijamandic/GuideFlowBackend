@@ -77,6 +77,19 @@ namespace Explorer.API.Controllers.Tourist
         }
         */
 
+        [HttpDelete("{id}")]
+        public ActionResult DeleteMembershipRequest(long id)
+        {
+            var result = _clubRequestService.DeleteMembershipRequest(id);
+            if (result.IsSuccess)
+            {
+                return NoContent();
+            }
+
+            return NotFound(result.Errors.First().Message);
+        }
+
+
         [HttpGet("for-tourist/{touristId:long}")]
         public ActionResult<IEnumerable<ClubRequestDto>> GetRequestByTouristId(long touristId)
         {
@@ -90,5 +103,6 @@ namespace Explorer.API.Controllers.Tourist
             var result = _clubRequestService.GetRequestByOwner(ownerId);
             return CreateResponse(result);
         }
+
     }
 }

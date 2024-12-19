@@ -12,5 +12,6 @@ namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces
         MessageNotification Update(MessageNotification message);
         List<MessageNotification> GetAllByUserId(int userId);
         MessageNotification? GetById(int id);
+        void Delete(int id);
     }
 }

@@ -47,5 +47,18 @@ namespace Explorer.Stakeholders.Infrastructure.Database.Repositories
         public MessageNotification? GetById(int id) {
             return _messageNotifications.FirstOrDefault(mn => mn.Id == id)?? null;
         }
+        public void Delete(int id)
+        {
+            var messageNotification = GetById(id);
+            if (messageNotification != null)
+            {
+                _messageNotifications.Remove(messageNotification);
+                _stakeholdersContext.SaveChanges();
+            }
+            else
+            {
+                throw new KeyNotFoundException($"MessageNotification with ID {id} not found.");
+            }
+        }
     }
 }

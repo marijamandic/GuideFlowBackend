@@ -74,4 +74,26 @@ public class NotificationController : BaseApiController
         return CreateResponse(result);
     }
 
+    [HttpDelete("{id}")]
+    public ActionResult DeleteNotification(int id)
+    {
+        var result = _moneyExchangeService.DeleteNotification(id);
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+        return NotFound($"Notification with ID {id} not found.");
+    }
+
+    [HttpDelete("message/{id:int}")]
+    public ActionResult DeleteMessageNotification(int id)
+    {
+        var result = _messageNotificationService.DeleteMessageNotification(id); 
+        if (result.IsSuccess)
+        {
+            return NoContent();
+        }
+
+        return NotFound(result.Errors.First().Message);
+    }
 }

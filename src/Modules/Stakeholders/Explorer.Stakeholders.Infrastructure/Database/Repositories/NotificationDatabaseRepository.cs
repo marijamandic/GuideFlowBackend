@@ -63,7 +63,7 @@ public class NotificationDatabaseRepository : INotificationRepository
         return _notifications
             .OrderByDescending(n => n.CreatedAt)
             .ToList();
-    }
+        }
     public Notification NotificationById(long id)
     {
         var notification = _notifications.FirstOrDefault(n => n.Id == id);
@@ -83,5 +83,12 @@ public class NotificationDatabaseRepository : INotificationRepository
         }
         return notification;
     }
+    public void Delete(Notification notification)
+    {
+        _notifications.Remove(notification); // Uklanja notifikaciju iz DbSet-a
+        _stakeholdersContext.SaveChanges(); // Čuva promene u bazi
+    }
+
+
 }
 

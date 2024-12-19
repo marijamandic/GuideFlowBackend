@@ -13,5 +13,6 @@ namespace Explorer.Stakeholders.API.Public
         Result<MessageNotificationDto> Create(MessageNotificationDto messageNotificationDto);
         Result<MessageNotificationDto> Update(int id,bool isOpened);
         Result<List<MessageNotificationDto>> GetAllByUserId(int userId);
+        Result DeleteMessageNotification(int id);
     }
 }

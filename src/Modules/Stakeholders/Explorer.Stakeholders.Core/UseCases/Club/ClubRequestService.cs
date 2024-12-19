@@ -148,5 +148,26 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
             var mappedRequests = MapToDto(requests);
             return mappedRequests;
         }
+
+        public Result<string> DeleteMembershipRequest(long requestId)
+        {
+            try
+            {
+                var clubRequest = _clubRequestRepository.GetById(requestId);
+                if (clubRequest == null)
+                {
+                    return Result.Fail<string>($"Club request with ID {requestId} not found.");
+                }
+
+                _clubRequestRepository.Delete(requestId);
+
+                return Result.Ok($"Club request with ID {requestId} successfully deleted.");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<string>($"Failed to delete club request: {ex.Message}");
+            }
+        }
+
     }
 }

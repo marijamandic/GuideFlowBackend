@@ -75,5 +75,25 @@ namespace Explorer.Stakeholders.Core.UseCases
             }
         }
 
+        public Result<string> DeleteNotification(long id)
+        {
+            try
+            {
+                var notification = _notificationRepository.NotificationById(id);
+                if (notification == null)
+                {
+                    return Result.Fail<string>($"Notification with ID {id} not found.");
+                }
+
+                _notificationRepository.Delete(notification);
+
+                return Result.Ok($"Notification with ID {id} successfully deleted.");
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<string>($"Failed to delete notification: {ex.Message}");
+            }
+        }
+
     }
 }
