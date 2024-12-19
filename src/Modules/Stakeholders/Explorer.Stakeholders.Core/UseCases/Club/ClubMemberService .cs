@@ -36,7 +36,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
         public Result<List<ClubMemberDto>> GetMembersByClub(long clubId)
         {
             var members = _clubMemberRepository.GetByClubId(clubId);
-            var memberDtos = members.Select(m => new ClubMemberDto { ClubId = m.ClubId, UserId = m.UserId }).ToList();
+            var memberDtos = members.Select(m => new ClubMemberDto { ClubId = m.ClubId, UserId = m.UserId, JoinedDate = m.JoinedDate }).ToList();
             return Result.Ok(memberDtos);
         }
 
@@ -49,7 +49,7 @@ namespace Explorer.Stakeholders.Core.UseCases.Club
         public Result<List<ClubMemberDto>> GetMembersByUserId(long userId)
         {
             var members = _clubMemberRepository.GetByUserId(userId);
-            var memberDtos = members.Select(m => new ClubMemberDto { ClubId = m.ClubId, UserId = m.UserId }).ToList();
+            var memberDtos = members.Select(m => new ClubMemberDto { ClubId = m.ClubId, UserId = m.UserId, JoinedDate = m.JoinedDate }).ToList();
             return Result.Ok(memberDtos);
         }
     }

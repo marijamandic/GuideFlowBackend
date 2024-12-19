@@ -50,4 +50,10 @@ public class ProblemController : BaseApiController
         var result = _problemService.CreateMessage(messageInput, jwtUser);
         return CreateResponse(result);
     }
+    [HttpGet("{problemId:int}/problem")]
+    public ActionResult<ProblemDto> GetProblemById(int problemId)
+    {
+        var result = _problemService.GetProblemById(problemId);
+        return CreateResponse(result);
+    }
 }
