@@ -18,14 +18,14 @@ namespace Explorer.Tours.Core.Domain.Tours
         public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
         public int Price { get; private set; }
-
         public double AverageGrade { get; private set; }  
         public List<string> Taggs { get; private set; }
+        public WeatherCondition WeatherRequirements { get; private set; }
         public List<Checkpoint> Checkpoints { get; private set; }
         public List<TransportDuration> TransportDurations { get; private set; }
         public List<TourReview> Reviews { get; private set; }
 
-        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price,double averageGrade, TourStatus status = TourStatus.Draft)
+        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price,double averageGrade,WeatherCondition weatherRequirements, TourStatus status = TourStatus.Draft)
         {
             Name = name;
             AuthorId = authorId;
@@ -35,6 +35,7 @@ namespace Explorer.Tours.Core.Domain.Tours
             LengthInKm = lengthInKm; 
             Price = price;
             AverageGrade = averageGrade;
+            WeatherRequirements = weatherRequirements;
             Taggs = new List<string>();
             Checkpoints = new List<Checkpoint>();
             TransportDurations = new List<TransportDuration>();
