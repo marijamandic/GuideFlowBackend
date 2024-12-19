@@ -168,6 +168,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             Id = tour.Id,
             Name = tour.Name,
             Description = tour.Description,
+            ImageUrl = tour.Checkpoints[0].ImageUrl!,
             Level = (TourLevel)tour.Level,
             Tags = new List<string>(tour.Taggs)
         };
