@@ -20,7 +20,7 @@ namespace Explorer.Tours.API.Public.Author
         Result<TourDto> AddTransportDurations(int id, List<TransportDurationDto> transportDurations);
         Result<TourDto> Archive(int id);   
         Result<TourDto> Publish(int id);
-        Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId);
+        Task<Result<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId);
         Result<TourDto> UpdateLength(int id, double length);
         Result<TourDto> UpdateCheckpoint(int id, CheckpointDto checkpoint);
         Result DeleteCheckpoint(int id, CheckpointDto checkpoint);
@@ -29,6 +29,7 @@ namespace Explorer.Tours.API.Public.Author
         Result<TourDto> CheckIfPurchased(int userId, int tourId);
         Result<PagedResult<TourDto>> GetToursByBundleId(int id);
         Result<List<TourDto>> GetSuggestedTours(double longitude, double latitude);
+        Task<bool> GetweatherByCoords(double latitude, double longitude);
 
     }
 }

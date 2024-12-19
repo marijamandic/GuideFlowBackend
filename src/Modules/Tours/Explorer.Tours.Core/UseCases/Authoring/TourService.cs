@@ -7,7 +7,9 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
+using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
+using System.Collections;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
@@ -18,13 +20,15 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
         private readonly IInternalUserService _userService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService) : base(mapper) 
+        private readonly IWeatherConnection _weatherConnection;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
             _purchaseTokenService = purchaseTokenService;
             _tourBundleService = tourBundleService;
             _userService = userService;
+            _weatherConnection = weatherConnection;
         }
 
 		public TourService(
@@ -256,7 +260,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        public async Task<Result<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId)
         {
             var tokenResult = _purchaseTokenService.GetTokensByTouristId(userId);
             if (!tokenResult.IsSuccess)
@@ -272,8 +276,11 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 if (tourResult.IsSuccess)
                 {
                     var tour = tourResult.Value;
-                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived) {
+                        //LOGIKA CE VEROVATNO BITI IZDVOJENA U DOMENSKU KLASU KAD SE PROSIRI Tour.cs (Radi se o poslovnoj logici)
+                        await MapWeatherConditionsToTour(tour);
                         purchased.Add(tour);
+                    }
                 }
             }
             return purchased;
@@ -418,5 +425,61 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+        public async Task<bool> GetweatherByCoords(double latitude, double longitude)
+        {
+            var weatherResponse = await _weatherConnection.GetWeatherAsync(latitude, longitude);
+            return weatherResponse == null;
+        }
+    #region HelpperMethods
+
+        private async Task MapWeatherConditionsToTour(TourDto tour) {
+            var recommendedCounter = 0;
+            var weatherTags = tour.WeatherRequirements.SuitableConditions.Select(condition => condition.ToString()).ToList();
+            var weather = await _weatherConnection.GetWeatherAsync(tour.Checkpoints[0].Latitude, tour.Checkpoints[0].Longitude);
+            tour.WeatherDescription = weather.Weather[0].Description;
+            tour.WeatherIcon = weather.Weather[0].Icon;
+            tour.Temperature = weather.Main.Temp;
+            if (weather.Main.Temp > tour.WeatherRequirements.MinTemperature || weather.Main.Temp < tour.WeatherRequirements.MaxTemperature)
+                recommendedCounter++;
+            if (weather.Weather[0].Main == "Thunderstorm" || weather.Weather[0].Main == "Tornado" || weather.Weather[0].Main == "Fog")
+                recommendedCounter -= 1000;
+            if (weather.Wind.Speed > 5)
+            {
+                recommendedCounter -= 1;
+                if (weather.Wind.Speed > 10)
+                    recommendedCounter -= 2;
+            }
+            if (weather.Visibility < 5000 || weather.Weather[0].Main == "Mist")
+                recommendedCounter--;
+            if (weatherTags.Contains(weather.Weather[0].Main, StringComparer.OrdinalIgnoreCase))
+                recommendedCounter++;
+            MapRecommendedWeather(tour, recommendedCounter);
+        }
+        private void MapRecommendedWeather(TourDto tour, int recommendedCounter) {
+            if (recommendedCounter == 2)
+            {
+                tour.WeatherRecommend = WeatherRecommend.HighyRecommend;
+            }
+            else if (recommendedCounter == 1)
+            {
+                tour.WeatherRecommend = WeatherRecommend.Recommend;
+            }
+            else if (recommendedCounter == 0)
+            {
+                tour.WeatherRecommend = WeatherRecommend.Neutral;
+            }
+            else if (recommendedCounter == -1)
+            {
+                tour.WeatherRecommend = WeatherRecommend.DontRecommend;
+            }
+            else
+            {
+                tour.WeatherRecommend = WeatherRecommend.HighlyDontRecommend;
+            }
+        }
+
+    #endregion
+    }
+
 }

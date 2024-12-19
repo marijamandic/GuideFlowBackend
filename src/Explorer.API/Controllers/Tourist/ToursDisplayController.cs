@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist
 {
-    [Authorize(Policy = "touristPolicy")]
+    //[Authorize(Policy = "touristPolicy")]
     [Route("api/execution/tourExecution")]
     public class ToursDisplayController : BaseApiController
     {
@@ -21,9 +21,9 @@ namespace Explorer.API.Controllers.Tourist
         }
 
         [HttpGet("purchased/{userId:int}")]
-        public ActionResult<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId)
+        public async Task<ActionResult<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId)
         {
-            var result = _tourService.GetPurchasedAndArchivedByUser(userId);
+            var result = await _tourService.GetPurchasedAndArchivedByUser(userId);
 
             if (result == null)
             {
@@ -58,6 +58,12 @@ namespace Explorer.API.Controllers.Tourist
         {
             var result = _tourService.GetSuggestedTours(longitude, latitude);
             return CreateResponse(result);
+        }
+        [HttpPost("weather")]
+        public async Task<IActionResult> GetWeather([FromBody] CoordsDto coordsDto)
+        {
+            var result = await _tourService.GetweatherByCoords(coordsDto.Latitude, coordsDto.Longitude);
+            return Ok(new { result });
         }
     }
 }
