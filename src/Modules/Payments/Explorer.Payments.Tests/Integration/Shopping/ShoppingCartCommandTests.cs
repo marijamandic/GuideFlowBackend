@@ -29,11 +29,10 @@ public class ShoppingCartCommandTests : BasePaymentsIntegrationTests
         };
 
         // Act
-        var result = (controller.AddToCart(item).Result as ObjectResult)!.Value as PagedResult<ItemDto>;
+        var result = (controller.AddToCart(item).Result as ObjectResult)!.Value as ItemDto;
 
         // Assert - Response
         result.ShouldNotBeNull();
-        result.Results.Count.ShouldBeGreaterThanOrEqualTo(2);
 
         // Assert - Database
         var storedItem = dbContext.ShoppingCartItems.FirstOrDefault(i => i.ProductId == item.ProductId);
