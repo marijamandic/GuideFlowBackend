@@ -52,5 +52,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             var result = DbContext.Tours.Where(t => t.AuthorId == authorId).ToList();
             return new PagedResult<Tour>(result, result.Count);
         }
-    }
+
+		public PagedResult<Tour> GetByIds(IEnumerable<long> ids)
+		{
+			var tours = DbContext.Tours.Where(t => ids.Contains(t.Id))
+                .Include(t => t.Checkpoints)
+                .Include(t => t.Reviews)
+                .ToList();
+            return new PagedResult<Tour>(tours, tours.Count);
+		}
+	}
 }

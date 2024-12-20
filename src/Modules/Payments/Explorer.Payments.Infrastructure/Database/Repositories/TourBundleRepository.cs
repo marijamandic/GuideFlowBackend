@@ -24,8 +24,8 @@ public class TourBundleRepository: ITourBundleRepository
 
     public TourBundle Get(long id)
     {
-        var entity = _tourBundles.Where(tb => tb.Id == id).FirstOrDefault();
-        if (entity == null) throw new KeyNotFoundException("Not found: " + id);
+        var entity = _tourBundles.FirstOrDefault(b => b.Id == id);
+        if (entity == null) throw new KeyNotFoundException($"Bundle ID mismatch, Bundle ID: {id}");
         return entity;
     }
 

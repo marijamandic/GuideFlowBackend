@@ -152,7 +152,11 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             };
 
 			foreach (var item in shoppingCartDto.Items)
+            {
 				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTourDetails(item.ProductId) : GetPopulatedBundle(item.ProductId);
+                if (item.Product is TourDetailsDto tour) item.ImageUrl = tour.ImageUrl;
+                if (item.Product is TourBundleDto bundle) item.ImageUrl = bundle.ImageUrl;
+			}
 
 			return Result.Ok(shoppingCartDto);
         }
