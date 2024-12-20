@@ -440,7 +440,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             tour.WeatherDescription = weather.Weather[0].Description;
             tour.WeatherIcon = weather.Weather[0].Icon;
             tour.Temperature = weather.Main.Temp;
-            if (weather.Main.Temp > tour.WeatherRequirements.MinTemperature || weather.Main.Temp < tour.WeatherRequirements.MaxTemperature)
+            if (weather.Main.Temp > tour.WeatherRequirements.MinTemperature && weather.Main.Temp < tour.WeatherRequirements.MaxTemperature)
                 recommendedCounter++;
             if (weather.Weather[0].Main == "Thunderstorm" || weather.Weather[0].Main == "Tornado" || weather.Weather[0].Main == "Fog")
                 recommendedCounter -= 1000;
