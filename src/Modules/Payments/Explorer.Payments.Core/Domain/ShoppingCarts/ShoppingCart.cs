@@ -40,4 +40,15 @@ public class ShoppingCart : Entity
         return item;
     }
 
+    public void UpdateItem(long itemId, Item updatedItem)
+    {
+        var existingItem = GetById(itemId);
+        if (existingItem == null)
+            throw new ArgumentException("Item not found in the cart");
+
+        _items.Remove(existingItem);
+        updatedItem.Validate();
+        _items.Add(updatedItem);
+    }
+
 }

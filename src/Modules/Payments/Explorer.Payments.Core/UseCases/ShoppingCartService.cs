@@ -216,4 +216,53 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
+
+    public Result<ItemDto> UpdateShoppingCart(int touristId, int itemId, ItemInputDto itemInput)
+    {
+        try
+        {
+            var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+
+            // Find the existing item in the shopping cart
+            var existingItem = shoppingCart.GetById(itemId);
+            if (existingItem == null)
+            {
+                return Result.Fail<ItemDto>(FailureCode.NotFound).WithError($"Item with ID {itemId} not found in the cart.");
+            }
+
+            // Create a new updated item
+            var updatedItem = new ItemDto
+            {
+                ShoppingCartId = (int)shoppingCart.Id,
+                Type = itemInput.Type,
+                ProductId = itemInput.ProductId,
+                ProductName = itemInput.ProductName,
+                AdventureCoin = itemInput.AdventureCoin
+            };
+
+            // Use the UpdateItem method to update the item in the cart
+            shoppingCart.UpdateItem(itemId, _mapper.Map<Item>(updatedItem));
+
+            // Save the updated cart
+            _shoppingCartRepository.Save(shoppingCart);
+
+            // Return the updated item
+            return Result.Ok(updatedItem);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail<ItemDto>(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail<ItemDto>(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<ItemDto>(e.Message);
+        }
+    }
+
+
+
 }
