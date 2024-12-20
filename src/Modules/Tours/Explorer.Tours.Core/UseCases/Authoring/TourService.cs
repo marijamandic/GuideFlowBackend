@@ -21,7 +21,8 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IInternalTourBundleService _tourBundleService;
         private readonly IInternalUserService _userService;
         private readonly IWeatherConnection _weatherConnection;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection) : base(mapper) 
+        private readonly IInternalAuthorService _authorService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection, IInternalAuthorService authorService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
@@ -29,6 +30,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             _tourBundleService = tourBundleService;
             _userService = userService;
             _weatherConnection = weatherConnection;
+            _authorService = authorService;
         }
 
 		public TourService(
@@ -431,6 +433,23 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             var weatherResponse = await _weatherConnection.GetWeatherAsync(latitude, longitude);
             return weatherResponse == null;
         }
+
+        public Result<TourDto> UpdatePremium(long tourId)
+        {
+            try
+            {
+                var tour = tourRepository.Get(tourId);
+                tour.UpdatePremium(true);
+                _authorService.RemoveAuthorMoney(tour.AuthorId, 10);    // izmeni 10 na cenu placanja premium ture
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+            
     #region HelpperMethods
 
         private async Task MapWeatherConditionsToTour(TourDto tour) {

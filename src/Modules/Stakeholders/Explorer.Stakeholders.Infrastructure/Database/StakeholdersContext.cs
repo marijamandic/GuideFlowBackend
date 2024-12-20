@@ -23,6 +23,7 @@ public class StakeholdersContext : DbContext
     public DbSet<MessageNotification> MessageNotifications { get; set; }
     public DbSet<ProblemNotification> ProblemNotifications { get; set; }
     public DbSet<Tourist> Tourists {  get; set; }
+    public DbSet<Author> Authors {  get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
 
@@ -63,6 +64,10 @@ public class StakeholdersContext : DbContext
 
         modelBuilder.Entity<Tourist>()
             .ToTable("Tourists")
+            .HasBaseType<User>();
+
+        modelBuilder.Entity<Author>()
+            .ToTable("Authors")
             .HasBaseType<User>();
     }
 

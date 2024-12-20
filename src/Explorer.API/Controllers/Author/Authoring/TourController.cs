@@ -159,5 +159,12 @@ namespace Explorer.API.Controllers.Authoring.Tour
             var result = _tourService.SearchTours(latitude, longitude, distance, page, pageSize);
             return CreateResponse(result);
         }
+
+        [HttpPut("setPremium/{tourId:int}")]
+        public ActionResult<TourDto> UpdatePremium(int tourId)
+        {
+            var result = _tourService.UpdatePremium(tourId);
+            return CreateResponse(result);
+        }
     }
 }
