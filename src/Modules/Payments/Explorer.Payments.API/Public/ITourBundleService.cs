@@ -21,4 +21,6 @@ public interface ITourBundleService
     Result<TourBundleDto> Archive(long tourBundleId);
 
     Result<PagedResult<TourBundleDto>> GetAllPublished();
+
+    Result<TourBundleDto> GetPopulated(int id);
 }

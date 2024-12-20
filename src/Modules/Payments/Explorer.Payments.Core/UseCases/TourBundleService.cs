@@ -34,14 +34,45 @@ public class TourBundleService : BaseService<TourBundleDto, TourBundle>, ITourBu
     {
         try
         {
-            var result = _tourBundleRepository.Get(id);
-            return MapToDto(result);
+            return MapToDto(_tourBundleRepository.Get(id));
         }
         catch (KeyNotFoundException e)
         {
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
         }
     }
+
+    public Result<TourBundleDto> GetPopulated(int id)
+    {
+        try
+        {
+            var bundle = MapToDto(_tourBundleRepository.Get(id));
+            PopulateTours(bundle);
+            return bundle;
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(e.Message);
+        }
+    }
+
+    private void PopulateTours(TourBundleDto bundle)
+    {
+        var result = _internalTourService.GetByIds(bundle.TourIds);
+        bundle.Tours = result.Value.Results.Select(t => new TourDetailsDto
+		{
+			Id = t.Id,
+			Name = t.Name,
+			Description = t.Description,
+			ImageUrl = t.Checkpoints[0].ImageUrl!,
+			Level = (TourLevel)t.Level,
+			Tags = t.Taggs
+		}).ToList();
+	}
 
     public Result<TourBundleDto> Create(TourBundleDto tourBundleDto)
     {

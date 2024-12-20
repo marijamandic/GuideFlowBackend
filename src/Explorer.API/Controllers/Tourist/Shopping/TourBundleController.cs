@@ -20,7 +20,7 @@ namespace Explorer.API.Controllers.Tourist.Shopping
         [HttpGet("{id:int}")]
         public ActionResult<TourBundleDto> GetById(int id)
         {
-            var result = _tourBundleService.Get(id);
+            var result = _tourBundleService.GetPopulated(id);
             return CreateResponse(result);
         }
 

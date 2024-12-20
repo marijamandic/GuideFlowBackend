@@ -28,4 +28,9 @@ public class TourHelperService : BaseService<TourDto, Tour>, IInternalTourHelper
 			return Result.Fail(FailureCode.NotFound).WithError(e.Message);
 		}
 	}
+
+	public Result<PagedResult<TourDto>> GetByIds(IEnumerable<int> ids)
+	{
+		return MapToDto(_repository.GetByIds(ids.Select(id => (long)id)));
+	}
 }
