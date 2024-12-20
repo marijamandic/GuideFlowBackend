@@ -34,6 +34,7 @@ public class TourCommandTests : BaseToursIntegrationTest
             Status = Explorer.Tours.API.Dtos.TourStatus.Published,
             LengthInKm = 15.0,
             Price = 120,
+            IsPremium = false,
             AverageGrade = 4.5,
             Taggs = new List<string> { "Adventure", "Mountain", "Hiking" },
             WeatherRequirements = new WeatherConditionDto
@@ -99,6 +100,7 @@ public class TourCommandTests : BaseToursIntegrationTest
                 Cost = 120.50,
                 Currency = 0
             },*/
+            IsPremium = false,
             Price = 120,
             AverageGrade = 4.5,
             Taggs = new List<string> { "Adventure", "Mountain", "Hiking" },

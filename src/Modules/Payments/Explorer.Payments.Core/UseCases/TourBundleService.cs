@@ -131,6 +131,13 @@ public class TourBundleService : BaseService<TourBundleDto, TourBundle>, ITourBu
 
 	public Result<PagedResult<TourBundleDto>> GetAllPublished()
 	{
-        return MapToDto(_tourBundleRepository.GetAllPublished());
+        try
+        {
+            var result = _tourBundleRepository.GetAllPublished();
+            return MapToDto(result);
+        }
+        catch (Exception e) {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
 	}
 }
