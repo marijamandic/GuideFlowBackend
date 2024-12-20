@@ -56,4 +56,26 @@ public class ShoppingCartController : BaseApiController
 
 		return Unauthorized();
     }
+
+    [HttpPut("items/{itemId:int}")]
+    public ActionResult<ItemDto> UpdateShoppingCart(int itemId, [FromBody] ItemInputDto updatedItemDto)
+    {
+        int touristId = int.Parse(User.FindFirst("id")!.Value);
+
+        if (updatedItemDto == null)
+        {
+            return BadRequest("Updated item data is required.");
+        }
+
+        var result = _shoppingCartService.UpdateShoppingCart(touristId, itemId, updatedItemDto);
+
+        if (result.IsFailed)
+        {
+            var errorMessages = string.Join("; ", result.Errors.Select(e => e.Message));
+            return StatusCode(500, new { Message = errorMessages });
+        }
+
+        return Ok(result.Value);
+    }
+
 }
