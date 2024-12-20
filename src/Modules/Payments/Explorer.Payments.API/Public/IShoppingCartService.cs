@@ -12,5 +12,5 @@ public interface IShoppingCartService
     Result ClearCart(int touristId);
     Result<ShoppingCartDto> GetByTouristId(int touristId);
     Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId);
-    Result<ItemDto> UpdateShoppingCart(int itemId, ItemInputDto updatedItemDto);
+    Result<ItemDto> UpdateShoppingCart(int touristId,int itemId, ItemInputDto updatedItemDto);
 }
