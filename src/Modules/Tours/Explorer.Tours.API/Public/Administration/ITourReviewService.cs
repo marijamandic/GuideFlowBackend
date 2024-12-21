@@ -12,4 +12,5 @@ public interface ITourReviewService
     Result<TourReviewDto> Update(TourReviewDto tourReview);
     Result Delete(int id);
     IEnumerable<TourReviewDto> GetReviewsByAuthorId(long authorId, ITourService tourService);
+    double GetAvgGradeByTourId(long tourId);
 }

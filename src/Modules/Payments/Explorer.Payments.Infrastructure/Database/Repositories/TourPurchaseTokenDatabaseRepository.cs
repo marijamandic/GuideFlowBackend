@@ -42,5 +42,18 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
             if (tourPurchaseToken == null) throw new KeyNotFoundException("Not found any token for touristId: " + touristId + " and tourId: " + tourId);
             return tourPurchaseToken;
         }
+
+        public int GetNumOfTokensByTourId(long tourId)
+        {
+            try
+            {
+                return _purchaseTokens.Count(pt => pt.TourId == tourId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error while counting tokens for Tour ID {tourId}: {ex.Message}");
+            }
+        }
+
     }
 }
