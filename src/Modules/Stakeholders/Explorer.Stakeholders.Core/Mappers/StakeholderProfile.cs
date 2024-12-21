@@ -58,5 +58,11 @@ public class StakeholderProfile : Profile
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
         .IncludeAllDerived();
 
+        CreateMap<Author, AuthorDto>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+        .IncludeAllDerived();
+        CreateMap<AuthorDto, Author>()
+        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+        .IncludeAllDerived();
     }
 }

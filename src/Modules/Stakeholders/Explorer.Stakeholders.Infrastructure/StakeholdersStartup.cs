@@ -42,6 +42,7 @@ public static class StakeholdersStartup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IInternalUserService, UserService>();
         services.AddScoped<IInternalTouristService, UserService>();
+        services.AddScoped<IInternalAuthorService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
         services.AddScoped<IAccountService, AccountService>();
