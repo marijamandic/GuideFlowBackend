@@ -61,6 +61,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
+
         private void GetReviewsUsernames(List<TourReviewDto> reviews)
         {
             if (reviews == null || !reviews.Any())
@@ -272,16 +273,28 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         }
         public Result<List<long>> GetTourIdsByAuthorId(int authorId)
         {
+            Console.WriteLine($"Author ID: {authorId}");
             try
             {
-                var result = tourRepository.GetByAuthorId(authorId);
-                return result.Results.Select(t => t.Id).ToList();
+                // Dohvatamo listu ID-jeva direktno iz repozitorijuma
+                var tourIds = tourRepository.GetListByAuthorId(authorId);
+
+                // Proveravamo da li lista nije prazna
+                if (tourIds == null || !tourIds.Any())
+                {
+                    return Result.Fail<List<long>>("No tours found for the given author.");
+                }
+
+                // Vraćamo uspešan rezultat sa listom ID-jeva
+                return Result.Ok(tourIds);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex.Message);
+                // Vraćamo neuspešan rezultat u slučaju greške
+                return Result.Fail<List<long>>($"Error while retrieving tour IDs: {ex.Message}");
             }
         }
+
 
         public Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize)
         {
@@ -409,5 +422,6 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 		{
 			throw new NotImplementedException();
 		}
-	}
+
+    }
 }

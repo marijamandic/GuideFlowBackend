@@ -8,6 +8,8 @@ using Explorer.Payments.Core.Domain.ShoppingCarts;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public.Author;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -23,13 +25,18 @@ namespace Explorer.Payments.Core.UseCases
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ITourPurchaseTokenService _tourPurchaseTokenService;
         private readonly IInternalUserService _internalUserService;
+        private readonly ITourService _tourService;
+
+
+
         //private readonly IUserService _userService;
-        public PaymentService(IMapper mapper, IInternalUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService):base(mapper) 
+        public PaymentService(IMapper mapper, IInternalUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService, ITourService tourService):base(mapper) 
         { 
             _paymentRepository = paymentRepository;
             _shoppingCartService = shoppingCartService;
             _tourPurchaseTokenService = tourPurchaseTokenService;
             _internalUserService = userService;
+            _tourService = tourService;
         }
 
         public Result<PaymentDto> Create(int touristId)
@@ -99,6 +106,5 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
-
     }
 }

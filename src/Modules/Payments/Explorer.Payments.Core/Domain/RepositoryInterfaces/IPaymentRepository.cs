@@ -13,5 +13,6 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
         Payment Create(Payment entity);
         PagedResult<Payment> GetAllByTouristId(long touristId);
         void Save(Payment payment);
+
     }
 }

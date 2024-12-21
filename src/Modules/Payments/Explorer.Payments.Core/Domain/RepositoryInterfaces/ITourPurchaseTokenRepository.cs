@@ -13,5 +13,6 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
         TourPurchaseToken Create(TourPurchaseToken entity);
         PagedResult<TourPurchaseToken> GetTokensByTouristId(long touristId);
         TourPurchaseToken GetTokenByTouristAndTourId(long touristId, long tourId);
+        int GetNumOfTokensByTourId(long tourId);
     }
 }

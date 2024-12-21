@@ -9,6 +9,7 @@ using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain;
 using Explorer.Payments.Core.Domain.Payments;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
+using Explorer.Stakeholders.Core.Domain;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -107,5 +108,21 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
+
+        public int GetNumOfPurchases(long tourId)
+        {
+            try
+            {
+                int number = _purchaseTokenRepository.GetNumOfTokensByTourId(tourId);
+
+                return number;
+            }
+            catch (KeyNotFoundException e)
+            {
+                //return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+                return 0;
+            }
+        }
+
     }
 }

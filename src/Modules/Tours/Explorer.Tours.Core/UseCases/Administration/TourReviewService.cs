@@ -19,6 +19,11 @@ public class TourReviewService : CrudService<TourReviewDto, TourReview>, ITourRe
         _repository = repository;
     }
 
+    public double GetAvgGradeByTourId(long tourId)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<TourReviewDto> GetReviewsByAuthorId(long authorId, ITourService tourService)
     {
         const int pageSize = 100;
