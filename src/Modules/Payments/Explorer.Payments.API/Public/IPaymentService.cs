@@ -13,5 +13,7 @@ namespace Explorer.Payments.API.Public
     {
         Result<PaymentDto> Create(int touristId);
         Result<PagedResult<PaymentDto>> GetAllByTouristId(int touristId);
+        Dictionary<DateTime, int> GetTourPaymentsWithProductIds(int months, List<long> productIds);
+
     }
 }

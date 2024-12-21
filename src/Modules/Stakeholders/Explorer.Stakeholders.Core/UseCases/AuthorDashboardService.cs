@@ -17,12 +17,14 @@ namespace Explorer.Stakeholders.Core.UseCases
         private readonly ITourReviewService _tourReviewService;
         private readonly ITourService _tourService;
         private readonly ITourPurchaseTokenService _tourPurchaseTokenService;
+        private readonly IPaymentService _paymentService;
 
-        public AuthorDashboardService(ITourReviewService tourReviewService, ITourService tourService, ITourPurchaseTokenService tourPurchaseTokenService)
+        public AuthorDashboardService(ITourReviewService tourReviewService, ITourService tourService, ITourPurchaseTokenService tourPurchaseTokenService, IPaymentService paymentService)
         {
             _tourReviewService = tourReviewService;
             _tourService = tourService;
             _tourPurchaseTokenService = tourPurchaseTokenService;
+            _paymentService = paymentService;
         }
 
         public double GetAverageGradeForAuthor(long authorId)
@@ -188,6 +190,26 @@ namespace Explorer.Stakeholders.Core.UseCases
                 return Result.Fail<TourDto>(ex.Message);
             }
         }
+
+        public Dictionary<DateTime, int> GetTourPaymentsForNumOfMonths(int authorId, int months)
+        {
+            try
+            {
+                var toursResult = _tourService.GetTourIdsByAuthorId(authorId);
+
+                if (toursResult.Value == null || !toursResult.Value.Any())
+                {
+                    return null;
+                }
+                Dictionary<DateTime, int> dictionary = _paymentService.GetTourPaymentsWithProductIds(months, toursResult.Value);
+                return dictionary;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
 
     }
 }

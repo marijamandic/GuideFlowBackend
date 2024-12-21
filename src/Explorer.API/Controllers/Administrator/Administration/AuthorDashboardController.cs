@@ -56,5 +56,29 @@ namespace Explorer.API.Controllers.Administrator.Administration
             return CreateResponse(result);
         }
 
+        [HttpGet("paymentsForOneMonth/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForOneMonth(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 1);
+            return result;
+        }
+        [HttpGet("paymentsForThreeMonth/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForThreeMonth(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 3);
+            return result;
+        }
+        [HttpGet("paymentsForSixMonth/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForSixMonth(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 6);
+            return result;
+        }
+        [HttpGet("paymentsForYear/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForYear(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 12);
+            return result;
+        }
     }
 }
