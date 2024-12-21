@@ -56,5 +56,26 @@ namespace Explorer.API.Controllers.Administrator.Administration
             return CreateResponse(result);
         }
 
+        [HttpGet("total-publishes/{id}")]
+        public ActionResult<int> GetTotalPublishedTours(int id)
+        {
+            var result = _authorDashboardService.GetNumberOfPublishedTours(id);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("total-purchased/{id}")]
+        public ActionResult<int> GetTotalPurchasedTours(int id)
+        {
+            var result = _authorDashboardService.GetNumberOfPurchashedTours(id);
+            return CreateResponse(result);
+        }
+        [HttpGet("total-sales/{id}")]
+        public ActionResult<int> GetTotalSales(int id)
+        {
+            var result = _authorDashboardService.GetTotalSales(id);
+            return CreateResponse(result);
+        }
+
+
     }
 }
