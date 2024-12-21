@@ -107,4 +107,20 @@ public class UserDatabaseRepository : CrudDatabaseRepository<User, StakeholdersC
             .Where(u => ids.Contains(u.Id))
             .ToList();
     }
+
+    public Author GetAuthorById(long id)
+    {
+        var user = DbContext.Users.OfType<Author>()
+            .FirstOrDefault(u => u.Id == id);
+
+        // if (user == null) throw new KeyNotFoundException("Tourist not found: " + id);
+        return user;
+    }
+
+    public Author UpdateAuthor(Author author)
+    {
+        DbContext.Entry(author).State = EntityState.Modified;
+        DbContext.SaveChanges();
+        return author;
+    }
 }

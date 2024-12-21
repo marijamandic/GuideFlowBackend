@@ -26,5 +26,8 @@ namespace Explorer.Stakeholders.API.Public
         //Result<TouristDto> CreateTourist(UserDto userDto);
             //Result<TouristDto> CreateTourist(UserDto userDto);
             Result<PagedResult<TouristDto>> GetTouristsPaged(int page, int pageSize);
+            Result<AuthorDto> GetAuthorById(int id);
+
+            Result<AuthorDto> AddAuthorMoney(int id, int amount);
         }
 }
