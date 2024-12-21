@@ -10,6 +10,6 @@ namespace Explorer.Stakeholders.API.Internal
 {
     public interface IInternalAuthorService
     {
-        Result<AuthorDto> RemoveAuthorMoney(long id, int amount);
+        Result<AuthorDto> RemoveAuthorMoney(long id, double amount);
     }
 }

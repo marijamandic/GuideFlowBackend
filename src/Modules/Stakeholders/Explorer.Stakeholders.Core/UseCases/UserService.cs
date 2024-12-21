@@ -172,7 +172,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             return Result.Ok(mapper.Map<AuthorDto>(existingAuthor));
         }
 
-        public Result<AuthorDto> RemoveAuthorMoney(long id, int amount)
+        public Result<AuthorDto> RemoveAuthorMoney(long id, double amount)
         {
             Author existingAuthor = userRepository.GetAuthorById(id);
             if (existingAuthor == null)

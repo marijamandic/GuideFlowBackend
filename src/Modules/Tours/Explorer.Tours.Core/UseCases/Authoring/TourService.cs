@@ -440,7 +440,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             {
                 var tour = tourRepository.Get(tourId);
                 tour.UpdatePremium(true);
-                _authorService.RemoveAuthorMoney(tour.AuthorId, 10);    // izmeni 10 na cenu placanja premium ture
+                _authorService.RemoveAuthorMoney(tour.AuthorId, 159.99);    // izmeni 10 na cenu placanja premium ture
                 var result = tourRepository.Update(tour);
                 return MapToDto(result);
             }
