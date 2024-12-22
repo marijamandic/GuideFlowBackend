@@ -50,5 +50,14 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return task.Result;
         }
 
+        public List<long> GetCompletedToursByTourist(int userId)
+        {
+            var result = _context.TourExecutions
+         .Where(te => te.UserId == userId && te.ExecutionStatus == ExecutionStatus.Completed)
+         .Select(te => te.TourId)
+         .ToList();
+
+         return result;
+        }
     }
 }

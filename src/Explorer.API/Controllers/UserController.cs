@@ -70,6 +70,26 @@ namespace Explorer.API.Controllers
             return Ok(result.Value);
         }
 
+        [HttpGet("getAuthor/{authorId}")]
+        public ActionResult<AuthorDto> GetAuthorById(int authorId)
+        {
+            var result = _userService.GetAuthorById(authorId);
+            if (result.IsFailed)
+            {
+                return BadRequest("Failed to fetch users");
+            }
+            return Ok(result.Value);
+        }
 
+        [HttpPut("updateAuthorMoney/{authorId}")]
+        public ActionResult<AuthorDto> UpdateAuthorMoney(int authorId, [FromBody] int amount)
+        {
+            var result = _userService.AddAuthorMoney(authorId, amount);
+            if (result.IsFailed)
+            {
+                return BadRequest(result.Errors.FirstOrDefault()?.Message ?? "Failed to update author money.");
+            }
+            return Ok(result.Value);
+        }
     }
 }

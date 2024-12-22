@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.API.Dtos
 {
-    [JsonDerivedType(typeof(UserDto), typeDiscriminator: "autor")]
+    [JsonDerivedType(typeof(UserDto), typeDiscriminator: "admin")]
     [JsonDerivedType(typeof(TouristDto), typeDiscriminator: "turista")]
+    [JsonDerivedType(typeof(AuthorDto), typeDiscriminator: "autor")]
     public class UserDto
     {
         public int Id { get; set; }

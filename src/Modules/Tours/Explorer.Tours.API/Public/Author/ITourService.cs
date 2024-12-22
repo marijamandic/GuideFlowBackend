@@ -30,6 +30,6 @@ namespace Explorer.Tours.API.Public.Author
         Result<PagedResult<TourDto>> GetToursByBundleId(int id);
         Result<List<TourDto>> GetSuggestedTours(double longitude, double latitude);
         Task<bool> GetweatherByCoords(double latitude, double longitude);
-
+        Result<TourDto> UpdatePremium(long tourId);
     }
 }
