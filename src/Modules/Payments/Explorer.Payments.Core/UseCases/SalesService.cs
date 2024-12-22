@@ -24,7 +24,7 @@ public class SalesService : BaseService<SalesDto, Sales>, ISalesService
 	{
 		var sales = new SalesDto
 		{
-			EndsAt = inputSales.EndsAt,
+			EndsAt = inputSales.EndsAt.ToUniversalTime(),
 			Discount = inputSales.Discount,
 			TourIds = inputSales.TourIds
 		};

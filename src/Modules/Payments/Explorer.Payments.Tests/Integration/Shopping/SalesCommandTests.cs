@@ -20,7 +20,7 @@ public class SalesCommandTests : BasePaymentsIntegrationTests
 		var dbContext = scope.ServiceProvider.GetRequiredService<PaymentsContext>();
 		var salesInput = new SalesInputDto
 		{
-			EndsAt = DateTime.UtcNow.AddDays(7),
+			EndsAt = DateTime.Now.AddDays(7),
 			Discount = 99,
 			TourIds = new List<int> { -1 }
 		};

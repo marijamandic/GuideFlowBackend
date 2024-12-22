@@ -1,7 +1,7 @@
 INSERT INTO tours."Tours"(
 	"Id", "Name", "AuthorId", "Description", "Level", "Status", "StatusChangeDate", "LengthInKm", "Price", "AverageGrade", "Taggs", "WeatherRequirements", "TransportDurations", "IsPremium")
 VALUES 
-	(-1, 'Mountain Adventure', -12, 'A thrilling mountain adventure tour.', 0, 0, NULL, 15.5, 
+	(-1, 'Mountain Adventure', 101, 'A thrilling mountain adventure tour.', 0, 0, NULL, 15.5, 
     120, 4.5, ARRAY['Adventure', 'Mountain', 'Hiking'],'{{"MinTemperature": 0, "MaxTemperature": 10, "SuitableConditions": [0,1]}}',
     '[{{"Time": 180, "TransportType": 0}}, {{"Time": 60, "TransportType": 1}}]',false);
 INSERT INTO tours."Tours"(
