@@ -50,5 +50,11 @@ namespace Explorer.Blog.Core.Domain.Posts
             /*if (UpVotesNumber < 0) throw new ArgumentException("UpVotesNumber cannot be negative");
             if (DownVotesNumber < 0) throw new ArgumentException("DownVotesNumber cannot be negative");*/
         }
+
+        public override string ToString()
+        {
+            return $"IdOfTheUserWhoLeftTheRating: {UserId}, IdOfThePostWhichWasRated: {PostId}, RatingDate: {RatingDate:g}, RatingStatus: {RatingStatus}";
+        }
+
     }
 }

@@ -50,6 +50,7 @@ public static class StakeholdersStartup
         services.AddScoped<IClubPostService, ClubPostService>();
         services.AddScoped<IMessageNotificationService, MessageNotificationService>();
         services.AddScoped<NotificationMoneyExchangeService>();
+        services.AddScoped<IChatLogService, ChatLogService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -74,6 +75,7 @@ public static class StakeholdersStartup
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
 
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IChatLogRepository, ChatLogRepository>();
 
     }
 }

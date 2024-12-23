@@ -46,5 +46,11 @@ namespace Explorer.Tours.Core.Domain.Tours
             if (PercentageCompleted < 0 || PercentageCompleted > 100)
                 throw new ArgumentException("Percentage completed must be between 0 and 100.");
         }
+
+        public override string ToString()
+        {
+            return $"Rating: {Rating}, Comment: {Comment ?? "None"}, TourDate: {TourDate:g}, " +
+                   $"CreationDate: {CreationDate:g}, PercentageCompleted: {PercentageCompleted}, ";
+        }
     }
 }

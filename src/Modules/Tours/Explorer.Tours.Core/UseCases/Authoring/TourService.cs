@@ -10,6 +10,7 @@ using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
 using System.Collections;
+using TourStatus = Explorer.Tours.Core.Domain.Tours.TourStatus;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
@@ -50,6 +51,33 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             var result = tourRepository.GetPaged(page, pageSize);
             return MapToDto(result);
         }
+
+        public string GetDatabaseSummary()
+        {
+            const int pageSize = 100; // Process tours in batches of 100
+            int currentPage = 1;
+            var allTours = new List<string>();
+
+            while (true)
+            {
+                var pagedResult = tourRepository.GetPaged(currentPage, pageSize);
+
+                if (pagedResult.Results == null || !pagedResult.Results.Any())
+                    break;
+
+                var results = pagedResult.Results.Where(tour => tour.Status == TourStatus.Published);
+                allTours.AddRange(results.Select(tour => tour.ToString()));
+
+                // If fewer results were returned than pageSize, it means we reached the last page
+                if (pagedResult.Results.Count < pageSize)
+                    break;
+
+                currentPage++;
+            }
+
+            return string.Join(Environment.NewLine, allTours);
+        }
+
 
         public Result<TourDto> Get(int id)
         {

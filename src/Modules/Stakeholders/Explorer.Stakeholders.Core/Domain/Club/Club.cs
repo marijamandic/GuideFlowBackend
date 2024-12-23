@@ -23,6 +23,11 @@ namespace Explorer.Stakeholders.Core.Domain.Club
             Description = description;
             ImageUrl = imageUrl;
         }
+
+        public override string ToString()
+        {
+            return $"Club [IdOfTheOwnerOfTheClub={OwnerId}, NameOfTheClub={Name}, Description={Description}]";
+        }
     }
 
 }

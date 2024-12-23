@@ -130,6 +130,40 @@ namespace Explorer.Tours.Core.Domain.Tours
         public void UpdatePremium(bool isPremium) {
             IsPremium = isPremium;
         }
+
+        public override string ToString()
+        {
+            var checkpointsSummary = Checkpoints != null && Checkpoints.Any()
+                ? string.Join("; ", Checkpoints.Select(ch => ch.ToString()))
+                : "No checkpoints";
+
+            var transportSummary = TransportDurations != null && TransportDurations.Any()
+                ? string.Join("; ", TransportDurations.Select(td => td.ToString()))
+                : "No transport durations";
+
+            var reviewsSummary = Reviews != null && Reviews.Any()
+                ? string.Join("; ", Reviews.Select(r => r.ToString()))
+                : "No reviews";
+
+            var tagsSummary = Taggs != null && Taggs.Any()
+                ? string.Join(", ", Taggs)
+                : "No tags";
+
+
+            return $@"
+                        Id: {Id}
+                        Name: {Name}
+                        Description: {Description}
+                        Level: {Level}
+                        Length (km): {LengthInKm}
+                        Price: {Price}
+                        Average Grade: {AverageGrade}
+                        Premium: {IsPremium}
+                        Tags: {tagsSummary}
+                        Transport Durations: {transportSummary}
+            ";
+        }
+
     }
 
     public enum TourStatus
