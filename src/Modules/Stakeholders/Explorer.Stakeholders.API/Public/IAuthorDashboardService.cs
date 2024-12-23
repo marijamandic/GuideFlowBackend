@@ -19,5 +19,7 @@ namespace Explorer.Stakeholders.API.Public
 
         Result<int> GetNumberOfPurchashedTours(int authorId);
         Result<int> GetTotalSales(int authorId);
+        Dictionary<DateTime, int> GetTourPaymentsForNumOfMonths(int authorId, int months);
+
     }
 }

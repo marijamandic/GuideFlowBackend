@@ -38,6 +38,29 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
 
         }
 
+        public List<Payment> GetAllByMonths(int months)
+        {
+            if (months <= 0)
+            {
+                throw new ArgumentException("The number of months must be greater than zero.", nameof(months));
+            }
+
+            DateTime targetDate = DateTime.Now.AddMonths(-months);
+
+            List<Payment> payments = _payments
+                .Where(p => p.PurchaseDate >= targetDate)
+                .Include(p => p.PaymentItems)
+                .ToList();
+
+            if (payments.Count == 0)
+            {
+                throw new KeyNotFoundException($"Not found any payment in the last {months} months.");
+            }
+
+            return payments;
+        }
+
+
         public void Save(Payment payment)
         {
             _paymentsContext.Entry(payment).State = EntityState.Modified;

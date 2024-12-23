@@ -12,6 +12,8 @@ namespace Explorer.Payments.Core.Domain.RepositoryInterfaces
     {
         Payment Create(Payment entity);
         PagedResult<Payment> GetAllByTouristId(long touristId);
+        List<Payment> GetAllByMonths(int months);
+
         void Save(Payment payment);
 
     }
