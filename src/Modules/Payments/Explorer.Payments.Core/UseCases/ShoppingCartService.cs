@@ -29,12 +29,11 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 		_tourBundleService = tourBundleService;
 	}
 
-	public Result<PagedResult<ItemDto>> AddToCart(int touristId, ItemInputDto itemInput)
+	public Result<ItemDto> AddToCart(int touristId, ItemInputDto itemInput)
     {
         try
         {
             var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
-            var imageUrl = GetImageUrl(itemInput.Type, itemInput.ProductId);
 
             var item = new ItemDto
             {
@@ -42,19 +41,23 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
                 Type = itemInput.Type,
                 ProductId = itemInput.ProductId,
                 ProductName = itemInput.ProductName,
-                ImageUrl = imageUrl,
                 AdventureCoin = itemInput.AdventureCoin
             };
 
             shoppingCart.AddToCart(_mapper.Map<Item>(item));
-            _shoppingCartRepository.Save(shoppingCart);
+            shoppingCart = _shoppingCartRepository.Save(shoppingCart);
 
-            var items = shoppingCart.Items.Select(i => _mapper.Map<ItemDto>(i)).ToList();
-            return new PagedResult<ItemDto>(items, items.Count);
+            item.Id = _mapper.Map<ItemDto>(shoppingCart.Items[shoppingCart.Items.Count - 1]).Id;
+            item.ImageUrl = GetImageUrl(item.Type, item.ProductId);
+            return item;
         }
-        catch(KeyNotFoundException e)
+        catch (KeyNotFoundException e)
         {
             return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
         catch (Exception e)
         {
@@ -123,7 +126,16 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 
     public Result<ShoppingCartDto> GetByTouristId(int touristId)
     {
-        return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+        try
+        {
+			var shoppingCart = MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+			foreach (var item in shoppingCart.Items) item.ImageUrl = GetImageUrl(item.Type, item.ProductId);
+            return Result.Ok(shoppingCart);
+		}
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 
 	public Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId)
@@ -140,7 +152,11 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             };
 
 			foreach (var item in shoppingCartDto.Items)
+            {
 				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTourDetails(item.ProductId) : GetPopulatedBundle(item.ProductId);
+                if (item.Product is TourDetailsDto tour) item.ImageUrl = tour.ImageUrl;
+                if (item.Product is TourBundleDto bundle) item.ImageUrl = bundle.ImageUrl;
+			}
 
 			return Result.Ok(shoppingCartDto);
         }
@@ -168,6 +184,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             Id = tour.Id,
             Name = tour.Name,
             Description = tour.Description,
+            ImageUrl = tour.Checkpoints[0].ImageUrl!,
             Level = (TourLevel)tour.Level,
             Tags = new List<string>(tour.Taggs)
         };
@@ -203,4 +220,53 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
+
+    public Result<ItemDto> UpdateShoppingCart(int touristId, int itemId, ItemInputDto itemInput)
+    {
+        try
+        {
+            var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+
+            // Find the existing item in the shopping cart
+            var existingItem = shoppingCart.GetById(itemId);
+            if (existingItem == null)
+            {
+                return Result.Fail<ItemDto>(FailureCode.NotFound).WithError($"Item with ID {itemId} not found in the cart.");
+            }
+
+            // Create a new updated item
+            var updatedItem = new ItemDto
+            {
+                ShoppingCartId = (int)shoppingCart.Id,
+                Type = itemInput.Type,
+                ProductId = itemInput.ProductId,
+                ProductName = itemInput.ProductName,
+                AdventureCoin = itemInput.AdventureCoin
+            };
+
+            // Use the UpdateItem method to update the item in the cart
+            shoppingCart.UpdateItem(itemId, _mapper.Map<Item>(updatedItem));
+
+            // Save the updated cart
+            _shoppingCartRepository.Save(shoppingCart);
+
+            // Return the updated item
+            return Result.Ok(updatedItem);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail<ItemDto>(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail<ItemDto>(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<ItemDto>(e.Message);
+        }
+    }
+
+
+
 }

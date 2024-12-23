@@ -5,7 +5,6 @@ using Explorer.Stakeholders.API.Public.Club;
 using Explorer.Tours.API.Public.Author;
 using Microsoft.AspNetCore.Mvc;
 using OpenAI;
-using OpenAI.Chat;
 
 namespace Explorer.API.Controllers
 {
@@ -15,66 +14,70 @@ namespace Explorer.API.Controllers
         private readonly OpenAIClient _openAIClient;
         private readonly IChatLogService _chatLogService;
         private readonly ITourService _tourService;
-        private readonly IPostService _postService;
-        private readonly IClubService _clubService;
         private readonly string _apikey = "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";
 
-        public ChatbotController(IChatLogService chatLogService,ITourService tourService, IPostService postService, IClubService clubService)
+        public ChatbotController(IChatLogService chatLogService,ITourService tourService)
         {
             _openAIClient = new OpenAIClient(_apikey);
             _chatLogService = chatLogService;
             _tourService = tourService;
-            _postService = postService;
-            _clubService = clubService;
         }
 
-        [HttpGet("prompt")]
-        public async Task<string> GenerateResponse(string userMessage)
+        [HttpPost("prompt")]
+        public async Task<ChatMessageDto> GenerateResponse([FromBody] ChatMessageDto chatMessageDto)
         {
+            var userPrompt = chatMessageDto.Content;
+
             var databaseSummaryTours = _tourService.GetDatabaseSummary();
-            var databaseSummaryBlogs = _postService.GetDatabaseSummary();
-            var databaseSummaryClubs = _clubService.GetDatabaseSummary();
+
 
             string prompt = $"""
-                 You are a tour recommendation assistant. 
-                 A user can ask you for a suggestion based on the following database contents:
-                {databaseSummaryTours}
-                
-                The message from user that you have to answer: "{userMessage}"
-                Based on the data, provide a relevant suggestion with an explanation why or explain why no match was found.
+                You are a tour recommendation assistant. A user may ask for suggestions based on the provided database:
+                {databaseSummaryTours} 
 
-                You can send questions to the user and clarify what he needs help with.
+                User's question: "{userPrompt}"
+
+                Respond with a relevant suggestion, including a brief explanation or state why no match is found
+                If needed, ask clarifying questions to better assist. Refuse to answer non-tour-related queries politely.
+                In your response, always format the tour name and id exactly as (Name,Id).
+                For example, if the tour is called ‘Mountain Adventure’ with Id 1, your response should contain (Mountain Adventure,1).
                 """;
 
-            var response = await _openAIClient.GetChatClient("gpt-3.5-turbo").CompleteChatAsync(userMessage);
-            try
-            {
-                var responseText = response.Value.Content[0].Text;
-                return responseText;
-            }catch (IndexOutOfRangeException ex) {
-                return ex.Message;
-            }
+            var response = await _openAIClient.GetChatClient("gpt-3.5-turbo").CompleteChatAsync(prompt);
+  
+            var responseText = response.Value.Content[0].Text;
+
+            return new ChatMessageDto { Content = responseText, Sender = Sender.Chatbot};
+  
+  
         }
 
-        [HttpPost("ChatLog/create")]
+        [HttpPost("chatLog/create")]
         public ActionResult<ChatLogDto> Create(long userId)
         {
             var result = _chatLogService.Create(userId);
             return CreateResponse(result);
         }
 
-        [HttpGet("ChatLog/{userId:long}")]
-        public ActionResult<ChatLogDto> GetByUSer(long userId)
+        [HttpGet("chatLog/{userId:long}")]
+        public ActionResult<ChatLogDto> GetByUser(long userId)
         {
             var result = _chatLogService.GetByUser(userId);
             return CreateResponse(result);
         }
 
-        [HttpPut("ChatLog/update")]
+        [HttpPatch("chatLog/update")]
         public ActionResult<ChatLogDto> Update([FromBody] ChatLogDto chatLogDto)
         {
             var result = _chatLogService.Update(chatLogDto);
             return CreateResponse(result);
+        }
+
+        [HttpGet("test")]
+        public string TestSummary()
+        {
+            var result = _tourService.GetDatabaseSummary();
+            return result;
         }
     }
 }

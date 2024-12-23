@@ -18,13 +18,15 @@ namespace Explorer.Tours.Core.Domain.Tours
         public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
         public int Price { get; private set; }
-        public double AverageGrade { get; private set; }  
+        public double AverageGrade { get; private set; }
+        public bool IsPremium { get; private set; } = false;
         public List<string> Taggs { get; private set; }
+        public WeatherCondition WeatherRequirements { get; private set; }
         public List<Checkpoint> Checkpoints { get; private set; }
         public List<TransportDuration> TransportDurations { get; private set; }
         public List<TourReview> Reviews { get; private set; }
 
-        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price,double averageGrade, TourStatus status = TourStatus.Draft)
+        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price, bool isPremium, double averageGrade,WeatherCondition weatherRequirements, TourStatus status = TourStatus.Draft)
         {
             Name = name;
             AuthorId = authorId;
@@ -34,6 +36,8 @@ namespace Explorer.Tours.Core.Domain.Tours
             LengthInKm = lengthInKm; 
             Price = price;
             AverageGrade = averageGrade;
+            WeatherRequirements = weatherRequirements;
+            IsPremium = isPremium;
             Taggs = new List<string>();
             Checkpoints = new List<Checkpoint>();
             TransportDurations = new List<TransportDuration>();
@@ -123,6 +127,9 @@ namespace Explorer.Tours.Core.Domain.Tours
             }
             Checkpoints.Remove(checkpoint);
         }
+        public void UpdatePremium(bool isPremium) {
+            IsPremium = isPremium;
+        }
 
         public override string ToString()
         {
@@ -142,20 +149,18 @@ namespace Explorer.Tours.Core.Domain.Tours
                 ? string.Join(", ", Taggs)
                 : "No tags";
 
+
             return $@"
-                        Tour: {Name}
-                        AuthorId: {AuthorId}
+                        Id: {Id}
+                        Name: {Name}
                         Description: {Description}
                         Level: {Level}
-                        Status: {Status}
-                        StatusChangeDate: {StatusChangeDate?.ToString("g") ?? "Not changed"}
                         Length (km): {LengthInKm}
                         Price: {Price}
                         Average Grade: {AverageGrade}
+                        Premium: {IsPremium}
                         Tags: {tagsSummary}
-                        Checkpoints: {checkpointsSummary}
                         Transport Durations: {transportSummary}
-                        Reviews: {reviewsSummary}
             ";
         }
 

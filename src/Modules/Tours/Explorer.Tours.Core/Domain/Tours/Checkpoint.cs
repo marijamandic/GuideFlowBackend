@@ -60,8 +60,7 @@ namespace Explorer.Tours.Core.Domain.Tours
 
         public override string ToString()
         {
-            return $"Name: {Name}, Description: {Description}, Latitude: {Latitude}, Longitude: {Longitude}, " +
-                   $"Secret: {Secret}, EncounterId: {EncounterId}, IsEncounterEssential: {IsEncounterEssential}";
+            return $"{{Name: {Name}, Description: {Description}, Latitude: {Latitude}, Longitude: {Longitude}}}";
         }
 
     }

@@ -47,7 +47,7 @@ namespace Explorer.Payments.Core.UseCases
 
                 if (cartSum > tourist.Wallet)
                 {
-                    return Result.Fail("Nema novca");
+                    return Result.Fail(FailureCode.InvalidArgument).WithError("Not enough ACs");
                 }
 
                 var paymentDto = new PaymentDto

@@ -31,9 +31,10 @@ public class ShoppingCartDatabaseRepository : IShoppingCartRepository
         _paymentsContext.SaveChanges();
         return entity;
     }
-    public void Save(ShoppingCart shoppingCart)
+    public ShoppingCart Save(ShoppingCart shoppingCart)
     {
         _paymentsContext.Entry(shoppingCart).State = EntityState.Modified;
         _paymentsContext.SaveChanges();
+        return shoppingCart;
     }
 }

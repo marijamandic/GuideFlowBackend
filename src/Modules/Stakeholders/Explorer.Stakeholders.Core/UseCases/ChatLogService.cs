@@ -31,12 +31,11 @@ namespace Explorer.Stakeholders.Core.UseCases
         {
             try
             {
-                var chatLog = _chatLogRepository.GetById(chatLogDto.Id);
                 _chatLogRepository.Update(MapToDomain(chatLogDto));
                 return chatLogDto;
             }catch (Exception ex)
             {
-               return Result.Fail(FailureCode.NotFound).WithError(ex.Message);
+               return Result.Fail(FailureCode.Internal).WithError(ex.Message);
             }
         }
 

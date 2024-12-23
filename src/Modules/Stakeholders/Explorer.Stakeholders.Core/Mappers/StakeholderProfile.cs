@@ -59,7 +59,7 @@ public class StakeholderProfile : Profile
         CreateMap<TouristDto, Tourist>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
         .IncludeAllDerived();
-        CreateMap<ChatMessageDto, ChatMessage>();
-        CreateMap<ChatLogDto, ChatLog>();
+        CreateMap<ChatMessageDto, ChatMessage>().ReverseMap();
+        CreateMap<ChatLogDto, ChatLog>().ReverseMap();
     }
 }

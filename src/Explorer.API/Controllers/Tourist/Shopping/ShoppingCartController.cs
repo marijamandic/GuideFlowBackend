@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Explorer.API.Controllers.Tourist.Shopping;
 
-//[Authorize(Policy = "touristPolicy")]
+[Authorize(Policy = "touristPolicy")]
 [Route("api/shopping-cart")]
 public class ShoppingCartController : BaseApiController
 {
@@ -18,7 +18,7 @@ public class ShoppingCartController : BaseApiController
     }
 
     [HttpPost("items")]
-    public ActionResult<PagedResult<ItemDto>> AddToCart([FromBody] ItemInputDto item)
+    public ActionResult<ItemDto> AddToCart([FromBody] ItemInputDto item)
     {
         int touristId = int.Parse(User.FindFirst("id")!.Value);
         var result = _shoppingCartService.AddToCart(touristId, item);
@@ -36,16 +36,46 @@ public class ShoppingCartController : BaseApiController
     [HttpGet]
     public ActionResult<ShoppingCartDto> GetByTouristId()
     {
-        int touristId = int.Parse(User.FindFirst("id")!.Value);
-        var result = _shoppingCartService.GetByTouristId(touristId);
-        return CreateResponse(result);
+        if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
+        {
+            var result = _shoppingCartService.GetByTouristId(touristId);
+            return CreateResponse(result);
+        }
+
+        return Unauthorized();
     }
 
-    [HttpGet("populated")]
+	[HttpGet("populated")]
     public ActionResult<ShoppingCartDto> GetPopulatedByTouristId()
     {
-        int touristId = int.Parse(User.FindFirst("id")!.Value);
-        var result = _shoppingCartService.GetPopulatedByTouristId(touristId);
-        return CreateResponse(result);
+		if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
+		{
+			var result = _shoppingCartService.GetPopulatedByTouristId(touristId);
+			return CreateResponse(result);
+		}
+
+		return Unauthorized();
     }
+
+    [HttpPut("items/{itemId:int}")]
+    public ActionResult<ItemDto> UpdateShoppingCart(int itemId, [FromBody] ItemInputDto updatedItemDto)
+    {
+        int touristId = int.Parse(User.FindFirst("id")!.Value);
+
+        if (updatedItemDto == null)
+        {
+            return BadRequest("Updated item data is required.");
+        }
+
+        var result = _shoppingCartService.UpdateShoppingCart(touristId, itemId, updatedItemDto);
+
+        if (result.IsFailed)
+        {
+            var errorMessages = string.Join("; ", result.Errors.Select(e => e.Message));
+            return StatusCode(500, new { Message = errorMessages });
+        }
+
+        return Ok(result.Value);
+    }
+
 }

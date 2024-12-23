@@ -17,6 +17,7 @@ namespace Explorer.Stakeholders.Core.Domain.Chatbot
         { 
             UserId = userId;
             Messages = new List<ChatMessage>();
+            CreatedAt = DateTime.UtcNow;
         }
     }
 }
