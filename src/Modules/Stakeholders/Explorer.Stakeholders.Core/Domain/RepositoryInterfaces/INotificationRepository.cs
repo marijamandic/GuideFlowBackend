@@ -12,4 +12,5 @@ public interface INotificationRepository
     IEnumerable<Notification> GetAll();    // Dohvat svih Notification
     Notification NotificationById(long id);
     Notification SaveNotification(Notification notification);
+    void Delete(Notification notification);
 }
