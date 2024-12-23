@@ -439,10 +439,14 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             try
             {
                 var tour = tourRepository.Get(tourId);
-                tour.UpdatePremium(true);
-                _authorService.RemoveAuthorMoney(tour.AuthorId, 159.99);    // izmeni 10 na cenu placanja premium ture
-                var result = tourRepository.Update(tour);
-                return MapToDto(result);
+                if (!tour.IsPremium)
+                {
+                    tour.UpdatePremium(true);
+                    _authorService.RemoveAuthorMoney(tour.AuthorId, 159.99);    // izmeni 10 na cenu placanja premium ture
+                    var result = tourRepository.Update(tour);
+                    return MapToDto(result);
+                }
+                return Result.Fail("tura je vec premium");
             }
             catch (KeyNotFoundException e)
             {
