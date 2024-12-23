@@ -6,6 +6,7 @@ using Explorer.Payments.API.Internal;
 using Explorer.Payments.API.Public;
 using Explorer.Payments.Core.Domain.RepositoryInterfaces;
 using Explorer.Payments.Core.Domain.ShoppingCarts;
+using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Internal;
 using FluentResults;
 
@@ -28,7 +29,7 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 		_tourBundleService = tourBundleService;
 	}
 
-	public Result<PagedResult<ItemDto>> AddToCart(int touristId, ItemInputDto itemInput)
+	public Result<ItemDto> AddToCart(int touristId, ItemInputDto itemInput)
     {
         try
         {
@@ -44,18 +45,56 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             };
 
             shoppingCart.AddToCart(_mapper.Map<Item>(item));
-            _shoppingCartRepository.Save(shoppingCart);
+            shoppingCart = _shoppingCartRepository.Save(shoppingCart);
 
-            var items = shoppingCart.Items.Select(i => _mapper.Map<ItemDto>(i)).ToList();
-            return new PagedResult<ItemDto>(items, items.Count);
+            item.Id = _mapper.Map<ItemDto>(shoppingCart.Items[shoppingCart.Items.Count - 1]).Id;
+            item.ImageUrl = GetImageUrl(item.Type, item.ProductId);
+            return item;
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
         catch (Exception e)
         {
-            return Result.Fail($"Error: {e.Message}");
+            return Result.Fail(e.Message);
         }
     }
 
-    public Result RemoveFromCart(int touristId, int itemId)
+	private string GetImageUrl(API.Dtos.ShoppingCarts.ProductType type, int productId)
+	{
+        TourDto tour = type == API.Dtos.ShoppingCarts.ProductType.Tour ?
+            GetTour(productId) :
+            GetFirstTourFromBundle(productId);
+
+        return tour.Checkpoints[0].ImageUrl!;
+	}
+
+    private TourDto GetTour(int id)
+    {
+        var result = _internalTourService.Get(id);
+        if (result.IsFailed) throw new KeyNotFoundException("Tour ID mismatch");
+        return result.Value;
+    }
+
+    private TourBundleDto GetBundle(int id)
+    {
+        var result = _tourBundleService.Get(id);
+        if (result.IsFailed) throw new KeyNotFoundException("Bundle ID mismatch");
+        return result.Value;
+    }
+
+    private TourDto GetFirstTourFromBundle(int bundleId)
+    {
+        var bundle = GetBundle(bundleId);
+        return GetTour(bundle.TourIds[0]);
+    }
+
+	public Result RemoveFromCart(int touristId, int itemId)
     {
         try
         {
@@ -87,7 +126,16 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
 
     public Result<ShoppingCartDto> GetByTouristId(int touristId)
     {
-        return MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+        try
+        {
+			var shoppingCart = MapToDto(_shoppingCartRepository.GetByTouristId(touristId));
+			foreach (var item in shoppingCart.Items) item.ImageUrl = GetImageUrl(item.Type, item.ProductId);
+            return Result.Ok(shoppingCart);
+		}
+        catch (Exception e)
+        {
+            return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
+        }
     }
 
 	public Result<ShoppingCartDto> GetPopulatedByTouristId(int touristId)
@@ -104,7 +152,11 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             };
 
 			foreach (var item in shoppingCartDto.Items)
-				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTour(item.ProductId) : GetBundle(item.ProductId);
+            {
+				item.Product = item.Type == API.Dtos.ShoppingCarts.ProductType.Tour ? GetTourDetails(item.ProductId) : GetPopulatedBundle(item.ProductId);
+                if (item.Product is TourDetailsDto tour) item.ImageUrl = tour.ImageUrl;
+                if (item.Product is TourBundleDto bundle) item.ImageUrl = bundle.ImageUrl;
+			}
 
 			return Result.Ok(shoppingCartDto);
         }
@@ -114,51 +166,45 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
         }
 	}
 
-    private TourDetailsDto GetTour(int productId)
+    private TourDetailsDto GetTourDetails(int productId)
     {
+        TourDto tour;
+
         try
         {
-			var product = _internalTourService.Get(productId).Value;
-            return new TourDetailsDto
-            {
-                Id = (int)product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                Level = (TourLevel)product.Level,
-                Tags = new List<string>(product.Taggs)
-            };
-		}
-        catch (Exception)
+            tour = GetTour(productId);
+        }
+        catch (KeyNotFoundException)
         {
             throw;
         }
+
+        return new TourDetailsDto
+        {
+            Id = tour.Id,
+            Name = tour.Name,
+            Description = tour.Description,
+            ImageUrl = tour.Checkpoints[0].ImageUrl!,
+            Level = (TourLevel)tour.Level,
+            Tags = new List<string>(tour.Taggs)
+        };
     }
 
-    private TourBundleDto GetBundle(int bundleId)
+    private TourBundleDto GetPopulatedBundle(int bundleId)
     {
+        TourBundleDto bundle;
+
         try
         {
-            var bundle = _tourBundleService.Get(bundleId);
-            if (bundle.IsFailed) throw new KeyNotFoundException("Product ID mismatch.");
-
-            var product = new TourBundleDto
-            {
-                Id = (int)bundle.Value.Id,
-                Name = bundle.Value.Name,
-                Price = bundle.Value.Price,
-                Status = bundle.Value.Status,
-                AuthorId = bundle.Value.AuthorId,
-                TourIds = bundle.Value.TourIds,
-            };
-
-            foreach (var tourId in product.TourIds) product.Tours!.Add(GetTour(tourId));
-
-            return product;
+            bundle = GetBundle(bundleId);
+            foreach (var tourId in bundle.TourIds) bundle.Tours.Add(GetTourDetails(tourId));
         }
         catch (Exception)
         {
             throw;
         }
+
+        return bundle;
     }
 
     public Result<ShoppingCartDto> Create(int touristId)
@@ -174,4 +220,53 @@ public class ShoppingCartService : BaseService<ShoppingCartDto, ShoppingCart>, I
             return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
         }
     }
+
+    public Result<ItemDto> UpdateShoppingCart(int touristId, int itemId, ItemInputDto itemInput)
+    {
+        try
+        {
+            var shoppingCart = _shoppingCartRepository.GetByTouristId(touristId);
+
+            // Find the existing item in the shopping cart
+            var existingItem = shoppingCart.GetById(itemId);
+            if (existingItem == null)
+            {
+                return Result.Fail<ItemDto>(FailureCode.NotFound).WithError($"Item with ID {itemId} not found in the cart.");
+            }
+
+            // Create a new updated item
+            var updatedItem = new ItemDto
+            {
+                ShoppingCartId = (int)shoppingCart.Id,
+                Type = itemInput.Type,
+                ProductId = itemInput.ProductId,
+                ProductName = itemInput.ProductName,
+                AdventureCoin = itemInput.AdventureCoin
+            };
+
+            // Use the UpdateItem method to update the item in the cart
+            shoppingCart.UpdateItem(itemId, _mapper.Map<Item>(updatedItem));
+
+            // Save the updated cart
+            _shoppingCartRepository.Save(shoppingCart);
+
+            // Return the updated item
+            return Result.Ok(updatedItem);
+        }
+        catch (KeyNotFoundException e)
+        {
+            return Result.Fail<ItemDto>(FailureCode.NotFound).WithError(e.Message);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Result.Fail<ItemDto>(FailureCode.InvalidArgument).WithError(e.Message);
+        }
+        catch (Exception e)
+        {
+            return Result.Fail<ItemDto>(e.Message);
+        }
+    }
+
+
+
 }

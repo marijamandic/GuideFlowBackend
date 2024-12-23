@@ -7,7 +7,9 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
+using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
+using System.Collections;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
@@ -18,13 +20,17 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IInternalPurchaseTokenService _purchaseTokenService;
         private readonly IInternalTourBundleService _tourBundleService;
         private readonly IInternalUserService _userService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService) : base(mapper) 
+        private readonly IWeatherConnection _weatherConnection;
+        private readonly IInternalAuthorService _authorService;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection, IInternalAuthorService authorService) : base(mapper) 
         { 
             this.tourRepository=tourRepository;
             this.mapper=mapper;
             _purchaseTokenService = purchaseTokenService;
             _tourBundleService = tourBundleService;
             _userService = userService;
+            _weatherConnection = weatherConnection;
+            _authorService = authorService;
         }
 
 		public TourService(
@@ -256,20 +262,32 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public Result<IEnumerable<TourDto>> GetPurchasedAndArchivedByUser(int userId) 
+        public async Task<Result<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId)
         {
-            var tokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
-            var purchased = new List<TourDto>();
-
-            foreach (var token in tokens)
+            var tokenResult = _purchaseTokenService.GetTokensByTouristId(userId);
+            if (!tokenResult.IsSuccess)
             {
-                var tour = Get(token.TourId).Value;
-                if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
-                    purchased.Add(tour);
+                return Result.Fail(tokenResult.Errors);
             }
 
+            var tokens = tokenResult.Value.Results;
+            var purchased = new List<TourDto>();
+            foreach (var token in tokens)
+            {
+                var tourResult = Get(token.TourId);
+                if (tourResult.IsSuccess)
+                {
+                    var tour = tourResult.Value;
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived) {
+                        //LOGIKA CE VEROVATNO BITI IZDVOJENA U DOMENSKU KLASU KAD SE PROSIRI Tour.cs (Radi se o poslovnoj logici)
+                        await MapWeatherConditionsToTour(tour);
+                        purchased.Add(tour);
+                    }
+                }
+            }
             return purchased;
         }
+
         public Result<List<long>> GetTourIdsByAuthorId(int authorId)
         {
             try
@@ -378,5 +396,109 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
-	}
+
+        public Result<List<TourDto>> GetSuggestedTours(double longitude, double latitude)
+        {
+            HashSet<long> nearTours = new HashSet<long>();
+            List<TourDto> tours = new List<TourDto>();
+            var publishedTours = tourRepository.GetPaged(0, 0).Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
+            foreach(var tour in publishedTours)
+            {
+                var checkpoints = tour.Checkpoints;
+                foreach(var checkpoint in checkpoints)
+                {
+                    bool isNearLatitude = Math.Abs((double)(checkpoint.Latitude - latitude)) <= 500.0 / 111320.0;
+                    bool isNearLongitude = Math.Abs((double)(checkpoint.Longitude - longitude)) <= 500.0 / (111320.0 * Math.Cos(latitude));
+                    if (isNearLatitude && isNearLongitude)
+                    {
+                        nearTours.Add(tour.Id);
+                    }
+                }
+            }
+            foreach(var tour in nearTours)
+            {
+                tours.Add(MapToDto(tourRepository.Get(tour)));
+            }
+
+            return tours;
+        }
+
+		public Result<string> GetImageUrlByProductId(int productType, int productId)
+		{
+			throw new NotImplementedException();
+		}
+
+        public async Task<bool> GetweatherByCoords(double latitude, double longitude)
+        {
+            var weatherResponse = await _weatherConnection.GetWeatherAsync(latitude, longitude);
+            return weatherResponse == null;
+        }
+
+        public Result<TourDto> UpdatePremium(long tourId)
+        {
+            try
+            {
+                var tour = tourRepository.Get(tourId);
+                tour.UpdatePremium(true);
+                _authorService.RemoveAuthorMoney(tour.AuthorId, 159.99);    // izmeni 10 na cenu placanja premium ture
+                var result = tourRepository.Update(tour);
+                return MapToDto(result);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+            }
+        }
+            
+    #region HelpperMethods
+
+        private async Task MapWeatherConditionsToTour(TourDto tour) {
+            var recommendedCounter = 0;
+            var weatherTags = tour.WeatherRequirements.SuitableConditions.Select(condition => condition.ToString()).ToList();
+            var weather = await _weatherConnection.GetWeatherAsync(tour.Checkpoints[0].Latitude, tour.Checkpoints[0].Longitude);
+            tour.WeatherDescription = weather.Weather[0].Description;
+            tour.WeatherIcon = weather.Weather[0].Icon;
+            tour.Temperature = weather.Main.Temp;
+            if (weather.Main.Temp > tour.WeatherRequirements.MinTemperature && weather.Main.Temp < tour.WeatherRequirements.MaxTemperature)
+                recommendedCounter++;
+            if (weather.Weather[0].Main == "Thunderstorm" || weather.Weather[0].Main == "Tornado" || weather.Weather[0].Main == "Fog")
+                recommendedCounter -= 1000;
+            if (weather.Wind.Speed > 5)
+            {
+                recommendedCounter -= 1;
+                if (weather.Wind.Speed > 10)
+                    recommendedCounter -= 2;
+            }
+            if (weather.Visibility < 5000 || weather.Weather[0].Main == "Mist")
+                recommendedCounter--;
+            if (weatherTags.Contains(weather.Weather[0].Main, StringComparer.OrdinalIgnoreCase))
+                recommendedCounter++;
+            MapRecommendedWeather(tour, recommendedCounter);
+        }
+        private void MapRecommendedWeather(TourDto tour, int recommendedCounter) {
+            if (recommendedCounter == 2)
+            {
+                tour.WeatherRecommend = WeatherRecommend.HighyRecommend;
+            }
+            else if (recommendedCounter == 1)
+            {
+                tour.WeatherRecommend = WeatherRecommend.Recommend;
+            }
+            else if (recommendedCounter == 0)
+            {
+                tour.WeatherRecommend = WeatherRecommend.Neutral;
+            }
+            else if (recommendedCounter == -1)
+            {
+                tour.WeatherRecommend = WeatherRecommend.DontRecommend;
+            }
+            else
+            {
+                tour.WeatherRecommend = WeatherRecommend.HighlyDontRecommend;
+            }
+        }
+
+    #endregion
+    }
+
 }

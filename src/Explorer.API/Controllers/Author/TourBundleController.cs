@@ -1,6 +1,7 @@
 ﻿using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Payments.API.Dtos;
 using Explorer.Payments.API.Public;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Eventing.Reader;
@@ -24,6 +25,28 @@ namespace Explorer.API.Controllers.Author
             var result = _tourBundleService.GetAll();
             return CreateResponse(result);
         }
+
+        [HttpGet("cheapestFive")]
+        public ActionResult<PagedResult<TourBundleDto>> GetCheapestFive()
+        {
+            var result = _tourBundleService.GetAll();
+
+            if (!result.IsSuccess)
+                return CreateResponse(result);
+
+            // Sort the results by Price in ascending order and take the cheapest five
+            var cheapestFive = result.Value.Results
+                .OrderBy(bundle => bundle.Price)
+                .Take(5)
+                .ToList();
+
+            var pagedResult = new PagedResult<TourBundleDto>(cheapestFive, cheapestFive.Count);
+
+            var cheapestFiveResult = Result.Ok(pagedResult);
+
+            return CreateResponse(cheapestFiveResult);
+        }
+
 
         [HttpPost]
         public ActionResult<TourBundleDto> Create([FromBody] TourBundleDto tourBundleDto)

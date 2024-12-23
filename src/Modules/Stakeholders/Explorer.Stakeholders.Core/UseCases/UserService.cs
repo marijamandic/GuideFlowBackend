@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Explorer.Stakeholders.Core.UseCases
 {
-    public class UserService : CrudService<UserDto, User>, IUserService, IInternalTouristService, IInternalUserService
+    public class UserService : CrudService<UserDto, User>, IUserService, IInternalTouristService, IInternalUserService, IInternalAuthorService
     {
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
@@ -71,6 +71,13 @@ namespace Explorer.Stakeholders.Core.UseCases
             return Result.Ok(mapper.Map<TouristDto>(existingTourist));
         }
 
+        public Result<TouristDto> TakeTouristAdventureCoins(int touristId, int amount)
+        {
+            Tourist existingTourist = userRepository.GetTouristById(touristId);
+            existingTourist.UpdateWallet(existingTourist.Wallet - amount);
+            userRepository.UpdateTourist(existingTourist);
+            return Result.Ok(mapper.Map<TouristDto>(existingTourist));
+        }
         public Result<TouristDto> AddTouristMoney(int id, int amount)
         {
             Tourist existingTourist = userRepository.GetTouristById(id);
@@ -78,6 +85,7 @@ namespace Explorer.Stakeholders.Core.UseCases
             {
                 return Result.Fail("Tourist not found.");
             }
+        
             existingTourist.AddMoney(amount);
             userRepository.UpdateTourist(existingTourist);
 
@@ -141,6 +149,41 @@ namespace Explorer.Stakeholders.Core.UseCases
 
             var users = userRepository.GetAllByIds(ids);
             return Result.Ok(users.ToDictionary(user => user.Id, user => user.Username));
+        }
+
+        public Result<AuthorDto> GetAuthorById(int id)
+        {
+            Author author = userRepository.GetAuthorById(id);
+            AuthorDto authorDto = mapper.Map<AuthorDto>(author);
+            return Result.Ok(authorDto);
+        }
+
+        public Result<AuthorDto> AddAuthorMoney(int id, int amount)
+        {
+            Author existingAuthor = userRepository.GetAuthorById(id);
+            if (existingAuthor == null)
+            {
+                return Result.Fail("Author not found.");
+            }
+
+            existingAuthor.AddMoney(amount);
+            userRepository.UpdateAuthor(existingAuthor);
+
+            return Result.Ok(mapper.Map<AuthorDto>(existingAuthor));
+        }
+
+        public Result<AuthorDto> RemoveAuthorMoney(long id, double amount)
+        {
+            Author existingAuthor = userRepository.GetAuthorById(id);
+            if (existingAuthor == null)
+            {
+                return Result.Fail("Author not found.");
+            }
+
+            existingAuthor.RemoveMoney(amount);
+            userRepository.UpdateAuthor(existingAuthor);
+
+            return Result.Ok(mapper.Map<AuthorDto>(existingAuthor));
         }
     }
 }

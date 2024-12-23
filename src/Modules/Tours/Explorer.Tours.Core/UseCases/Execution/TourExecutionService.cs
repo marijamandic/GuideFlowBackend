@@ -129,10 +129,17 @@ namespace Explorer.Tours.Core.UseCases.Execution
             var sessionDto = MapToDto(tourExecution);
             return sessionDto;
         }
-
-
-
-
+        public Result<List<long>> GetCompletedToursByTourist(int id)
+        {
+            try
+            {
+                var tourIds = _tourExecutionRepository.GetCompletedToursByTourist(id);
+                return tourIds;
+            }
+            catch (Exception e) { 
+                return Result.Fail(e.ToString());
+            }
+        }
 
         #region HelpperMethods
         public void SetSecretsForDisplaying(TourExecutionDto tourExecutionDto)
@@ -152,6 +159,7 @@ namespace Explorer.Tours.Core.UseCases.Execution
                 }
             }
         }
+
         #endregion
     }
 }

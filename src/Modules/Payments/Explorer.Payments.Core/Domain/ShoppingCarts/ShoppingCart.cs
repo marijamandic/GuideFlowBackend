@@ -17,7 +17,7 @@ public class ShoppingCart : Entity
     {
 		foreach (var i in _items)
 			if (i.ProductId == item.ProductId && i.Type == item.Type)
-				throw new ArgumentException("Tour already in cart");
+				throw new InvalidOperationException("Tour already in cart");
 
 		item.Validate();
         _items.Add(item);
@@ -39,4 +39,16 @@ public class ShoppingCart : Entity
         if (item is null) throw new ArgumentException("Item does not exits");
         return item;
     }
+
+    public void UpdateItem(long itemId, Item updatedItem)
+    {
+        var existingItem = GetById(itemId);
+        if (existingItem == null)
+            throw new ArgumentException("Item not found in the cart");
+
+        _items.Remove(existingItem);
+        updatedItem.Validate();
+        _items.Add(updatedItem);
+    }
+
 }

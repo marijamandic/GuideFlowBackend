@@ -23,6 +23,7 @@ public class PaymentsProfile : Profile
                 new ItemDto { Id = (int)i.Id, ShoppingCartId = (int)i.ShoppingCartId, Type = (API.Dtos.ShoppingCarts.ProductType)i.Type,
                     ProductId = (int)i.ProductId, ProductName = i.ProductName, AdventureCoin = i.AdventureCoin })));
 
+        //CreateMap<ShoppingCartDto, ShoppingCart>().ReverseMap();
         CreateMap<ItemDto, Item>().ReverseMap();
         CreateMap<TourPurchaseTokenDto, TourPurchaseToken>().ReverseMap();
         CreateMap<PaymentDto,Payment>().ReverseMap();

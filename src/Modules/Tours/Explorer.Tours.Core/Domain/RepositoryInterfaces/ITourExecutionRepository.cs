@@ -12,5 +12,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     {
         Task<TourExecution> GetTourExecutionByIdAsync(long tourExecutionId);
         TourExecution GetByUserId(long userId);
+        List<long> GetCompletedToursByTourist(int userId);
     }
 }

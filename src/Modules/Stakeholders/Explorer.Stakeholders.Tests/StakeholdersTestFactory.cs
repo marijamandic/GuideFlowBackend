@@ -13,6 +13,6 @@ public class StakeholdersTestFactory : BaseTestFactory<StakeholdersContext>
         services.Remove(descriptor!);
         services.AddDbContext<StakeholdersContext>(SetupTestContext());
 
-        return services;
+		return services;
     }
 }

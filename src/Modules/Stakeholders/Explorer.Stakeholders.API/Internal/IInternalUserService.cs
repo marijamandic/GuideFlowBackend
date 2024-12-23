@@ -1,4 +1,5 @@
-﻿using FluentResults;
+﻿using Explorer.Stakeholders.API.Dtos;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace Explorer.Stakeholders.API.Internal
     {
         Result<string> GetUsername(long id);
         Result<Dictionary<long, string>> GetUsernamesByIds(List<long> ids);
+        Result<TouristDto> GetTouristById(int id);
+        Result<TouristDto> TakeTouristAdventureCoins(int touristId, int amount);
     }
 }
