@@ -48,7 +48,6 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
             DateTime targetDate = DateTime.Now.AddMonths(-months);
 
             List<Payment> payments = _payments
-                .Where(p => p.PurchaseDate >= targetDate)
                 .Include(p => p.PaymentItems)
                 .ToList();
 

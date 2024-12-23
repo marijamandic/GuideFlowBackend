@@ -104,7 +104,7 @@ namespace Explorer.Payments.Core.UseCases
                 {
                     foreach (var paymentItem in payment.PaymentItems)
                     {
-                        if (paymentItem.Type.Equals(API.Dtos.ShoppingCarts.ProductType.Tour) && productIds.Contains(paymentItem.ProductId))
+                        if (paymentItem.Type.Equals(ProductType.Tour) && productIds.Contains(paymentItem.ProductId))
                         {
                             if (result.ContainsKey(payment.PurchaseDate.Date))
                             {
