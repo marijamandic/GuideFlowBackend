@@ -66,7 +66,7 @@ namespace Explorer.API.Controllers.Tourist
         [HttpPut("{id:int}")]
         public ActionResult<ProblemDto> Update(int id, [FromBody] ProbStatusChangeDto status)
         {
-            var result = _problemService.Update(status,id);
+            var result = _problemService.Update(status, id);
             return CreateResponse(result);
         }
         [HttpGet("{userId:int}")]
@@ -75,5 +75,12 @@ namespace Explorer.API.Controllers.Tourist
             var result = _problemService.GetUserProblems(userId);
             return CreateResponse(result);
         }
+        [HttpGet("{problemId:int}/problem")]
+        public ActionResult<ProblemDto> GetProblemById(int problemId)
+        {
+            var result = _problemService.GetProblemById(problemId);
+            return CreateResponse(result);
+        }
+
     }
 }

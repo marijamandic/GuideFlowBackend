@@ -18,14 +18,15 @@ namespace Explorer.Tours.Core.Domain.Tours
         public DateTime? StatusChangeDate { get; private set; }
         public double LengthInKm { get; private set; }
         public int Price { get; private set; }
-
-        public double AverageGrade { get; private set; }  
+        public double AverageGrade { get; private set; }
+        public bool IsPremium { get; private set; } = false;
         public List<string> Taggs { get; private set; }
+        public WeatherCondition WeatherRequirements { get; private set; }
         public List<Checkpoint> Checkpoints { get; private set; }
         public List<TransportDuration> TransportDurations { get; private set; }
         public List<TourReview> Reviews { get; private set; }
 
-        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price,double averageGrade, TourStatus status = TourStatus.Draft)
+        public Tour(string name,long authorId, string description, Level level,double lengthInKm,int price, bool isPremium, double averageGrade,WeatherCondition weatherRequirements, TourStatus status = TourStatus.Draft)
         {
             Name = name;
             AuthorId = authorId;
@@ -35,6 +36,8 @@ namespace Explorer.Tours.Core.Domain.Tours
             LengthInKm = lengthInKm; 
             Price = price;
             AverageGrade = averageGrade;
+            WeatherRequirements = weatherRequirements;
+            IsPremium = isPremium;
             Taggs = new List<string>();
             Checkpoints = new List<Checkpoint>();
             TransportDurations = new List<TransportDuration>();
@@ -124,6 +127,43 @@ namespace Explorer.Tours.Core.Domain.Tours
             }
             Checkpoints.Remove(checkpoint);
         }
+        public void UpdatePremium(bool isPremium) {
+            IsPremium = isPremium;
+        }
+
+        public override string ToString()
+        {
+            var checkpointsSummary = Checkpoints != null && Checkpoints.Any()
+                ? string.Join("; ", Checkpoints.Select(ch => ch.ToString()))
+                : "No checkpoints";
+
+            var transportSummary = TransportDurations != null && TransportDurations.Any()
+                ? string.Join("; ", TransportDurations.Select(td => td.ToString()))
+                : "No transport durations";
+
+            var reviewsSummary = Reviews != null && Reviews.Any()
+                ? string.Join("; ", Reviews.Select(r => r.ToString()))
+                : "No reviews";
+
+            var tagsSummary = Taggs != null && Taggs.Any()
+                ? string.Join(", ", Taggs)
+                : "No tags";
+
+
+            return $@"
+                        Id: {Id}
+                        Name: {Name}
+                        Description: {Description}
+                        Level: {Level}
+                        Length (km): {LengthInKm}
+                        Price: {Price}
+                        Average Grade: {AverageGrade}
+                        Premium: {IsPremium}
+                        Tags: {tagsSummary}
+                        Transport Durations: {transportSummary}
+            ";
+        }
+
     }
 
     public enum TourStatus

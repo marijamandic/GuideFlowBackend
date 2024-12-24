@@ -10,18 +10,18 @@ namespace Explorer.Payments.Core.Domain
     public  class TourBundle: Entity
     {
         public string Name { get; private set; }
-
+        public string Description { get; private set; }
+        public string ImageUrl { get; private set; }
         public double Price { get; private set; }
-
         public BundleStatus Status { get; private set; }
-
         public long AuthorId { get; private set; }
-
         public List<long> TourIds {  get; private set; } = new List<long>();
 
-        public TourBundle(string name, double price, BundleStatus status, long authorId, List<long> tourIds)
+        public TourBundle(string name, string description, string imageUrl, double price, BundleStatus status, long authorId, List<long> tourIds)
         {
             Name = name;
+            Description = description;
+            ImageUrl = imageUrl;
             Price = price;
             Status = status;
             AuthorId = authorId;

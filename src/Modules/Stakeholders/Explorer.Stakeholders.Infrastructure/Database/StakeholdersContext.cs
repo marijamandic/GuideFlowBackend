@@ -1,4 +1,5 @@
 using Explorer.Stakeholders.Core.Domain;
+using Explorer.Stakeholders.Core.Domain.Chatbot;
 using Explorer.Stakeholders.Core.Domain.Club;
 using Explorer.Stakeholders.Core.Domain.Problems;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,9 @@ public class StakeholdersContext : DbContext
     public DbSet<MessageNotification> MessageNotifications { get; set; }
     public DbSet<ProblemNotification> ProblemNotifications { get; set; }
     public DbSet<Tourist> Tourists {  get; set; }
+    public DbSet<Author> Authors {  get; set; }
+
+    public DbSet<ChatLog> ChatLogs { get; set; }
 
     public StakeholdersContext(DbContextOptions<StakeholdersContext> options) : base(options) { }
 
@@ -46,6 +50,7 @@ public class StakeholdersContext : DbContext
         ConfigureClubInvitation(modelBuilder);
         ConfigureProblem(modelBuilder);
         ConfigureNotifications(modelBuilder);
+        ConfigureChatLogs(modelBuilder);
     }
 
     private static void ConfigureStakeholder(ModelBuilder modelBuilder)
@@ -63,6 +68,10 @@ public class StakeholdersContext : DbContext
 
         modelBuilder.Entity<Tourist>()
             .ToTable("Tourists")
+            .HasBaseType<User>();
+
+        modelBuilder.Entity<Author>()
+            .ToTable("Authors")
             .HasBaseType<User>();
     }
 
@@ -117,4 +126,10 @@ public class StakeholdersContext : DbContext
             .HasBaseType<Notification>();
     }
 
+    private static void ConfigureChatLogs(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ChatLog>()
+           .Property(cl => cl.Messages)
+           .HasColumnType("jsonb");
+    }
 }

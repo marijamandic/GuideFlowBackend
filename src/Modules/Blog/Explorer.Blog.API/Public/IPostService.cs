@@ -15,5 +15,6 @@ namespace Explorer.Blog.API.Public
         Result<PagedResult<PostDto>> GetPaged(int page, int pageSize);
         Result<PostDto> Get(int id);
         Result<PostDto> Update(PostDto post);
+        public string GetDatabaseSummary();
     }
 }

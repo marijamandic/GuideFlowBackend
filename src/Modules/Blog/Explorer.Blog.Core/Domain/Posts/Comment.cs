@@ -65,5 +65,11 @@ namespace Explorer.Blog.Core.Domain.Posts
             if (CreatedAt >= DateTime.UtcNow) throw new ArgumentException("CreatedAt cannot be in the future");
             if (LastModified < CreatedAt) throw new ArgumentException("LastModified cannot be before CreatedAt");
         }
+
+        public override string ToString()
+        {
+            return $"IdOfUserWhoLeftTheComment: {UserId}, IdOfThePostWhichTheCommentWasLeftOn: {PostId}, CreatedAt: {CreatedAt:g}, LastModified: {LastModified:g}, Content: \"{Content}\"";
+        }
+
     }
 }

@@ -12,7 +12,7 @@ namespace Explorer.Stakeholders.API.Internal
     {
         Result<string> GetUsername(long id);
         Result<Dictionary<long, string>> GetUsernamesByIds(List<long> ids);
-        public Result<TouristDto> GetTouristById(int id);
-        public Result<TouristDto> TakeTouristAdventureCoins(int touristId, int amount);
+        Result<TouristDto> GetTouristById(int id);
+        Result<TouristDto> TakeTouristAdventureCoins(int touristId, int amount);
     }
 }

@@ -31,6 +31,11 @@ namespace Explorer.API.Controllers.Tourist.Execution
             var result = _tourExecutionService.Get(id);
             return CreateResponse(result);
         }
+        [HttpGet("completed/{id:int}")]
+        public ActionResult<List<long>> GetCompletedToursByTourist(int id) {
+            var result = _tourExecutionService.GetCompletedToursByTourist(id);
+            return CreateResponse(result);
+        }
 
         [HttpPost]
         public ActionResult<TourExecutionDto> Create([FromBody] CreateTourExecutionDto createTourExecutionDto) {

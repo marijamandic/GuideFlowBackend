@@ -57,7 +57,11 @@ namespace Explorer.Tours.Core.Domain.Tours
             IsEncounterEssential = updatedCheckpoint.IsEncounterEssential;
             EncounterId = updatedCheckpoint.EncounterId;
         }
+
+        public override string ToString()
+        {
+            return $"{{Name: {Name}, Description: {Description}, Latitude: {Latitude}, Longitude: {Longitude}}}";
+        }
+
     }
-
 }
-

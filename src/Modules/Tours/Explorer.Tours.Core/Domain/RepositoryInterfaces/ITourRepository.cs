@@ -13,5 +13,6 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     {
         PagedResult<Tour> GetByAuthorId(int authorId);
         List<long> GetListByAuthorId(int authorId);
+        PagedResult<Tour> GetByIds(IEnumerable<long> ids);
     }
 }

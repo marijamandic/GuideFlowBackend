@@ -42,6 +42,7 @@ public static class StakeholdersStartup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IInternalUserService, UserService>();
         services.AddScoped<IInternalTouristService, UserService>();
+        services.AddScoped<IInternalAuthorService, UserService>();
         services.AddScoped<IProblemService, ProblemService>();
         services.AddScoped<IRatingAppService, RatingAppService>();
         services.AddScoped<IAccountService, AccountService>();
@@ -50,6 +51,7 @@ public static class StakeholdersStartup
         services.AddScoped<IMessageNotificationService, MessageNotificationService>();
         services.AddScoped<IAuthorDashboardService, AuthorDashboardService>();
         services.AddScoped<NotificationMoneyExchangeService>();
+        services.AddScoped<IChatLogService, ChatLogService>();
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
@@ -74,6 +76,7 @@ public static class StakeholdersStartup
                 x => x.MigrationsHistoryTable("__EFMigrationsHistory", "stakeholders")));
 
         services.AddScoped<IUserRepository, UserDatabaseRepository>();
+        services.AddScoped<IChatLogRepository, ChatLogRepository>();
 
     }
 }

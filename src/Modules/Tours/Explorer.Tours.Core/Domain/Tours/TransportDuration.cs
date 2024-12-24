@@ -45,6 +45,12 @@ namespace Explorer.Tours.Core.Domain.Tours
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            return $"{TransportType} ({Time} minutes)";
+        }
+
     }
     public enum TransportType
     {
