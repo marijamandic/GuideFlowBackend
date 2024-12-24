@@ -1,4 +1,4 @@
-﻿using Explorer.Tours.Core.Weather.Models;
+﻿using Explorer.Tours.Core.Domain.WeatherForecast;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +10,6 @@ namespace Explorer.Tours.Core.UseCases.Weather
     public interface IWeatherConnection
     {
         Task<WeatherResponse> GetWeatherAsync(double latitude, double longitude);
+        Task<ForecastWeatherResponse> GetFiveDayForecast(double latitude, double longitude);
     }
 }

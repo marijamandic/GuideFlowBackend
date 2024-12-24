@@ -1,9 +1,11 @@
 ﻿using Explorer.Blog.API.Dtos;
 using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
 using Explorer.Tours.API.Dtos.Execution;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.API.Public.Execution;
+using FluentResults;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +33,34 @@ namespace Explorer.API.Controllers.Tourist
             }
 
             return CreateResponse(result);
+        }
+
+        [HttpGet("purchased/{date:DateTime}")]
+        public async Task<ActionResult<IEnumerable<TourDto>>> GetPurchasedForDate(DateTime date)
+        {
+            if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
+            {
+                var result = await _tourService.GetPurchasedAndArchivedByUser(touristId, date);
+                return CreateResponse(result);
+            }
+            else
+            {
+                return BadRequest("Invalid input");
+            }
+        }
+
+        [HttpGet("recommendTours/{date:DateTime}")]
+        public async Task<ActionResult<IEnumerable<TourDto>>> RecommendToursForDate(DateTime date)
+        {
+            if (int.TryParse(User.FindFirst("id")?.Value, out int touristId))
+            {
+                var result = await _tourService.RecommendToursForDate(touristId,date);
+                return CreateResponse(result);
+            }
+            else
+            {
+                return BadRequest("Invalid input");
+            }
         }
 
         [HttpGet("purchased/{userId:int}/{tourId:int}")]
