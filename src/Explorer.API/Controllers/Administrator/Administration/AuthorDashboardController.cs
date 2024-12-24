@@ -56,5 +56,50 @@ namespace Explorer.API.Controllers.Administrator.Administration
             return CreateResponse(result);
         }
 
+        [HttpGet("total-publishes/{id}")]
+        public ActionResult<int> GetTotalPublishedTours(int id)
+        {
+            var result = _authorDashboardService.GetNumberOfPublishedTours(id);
+            return CreateResponse(result);
+        }
+
+        [HttpGet("total-purchased/{id}")]
+        public ActionResult<int> GetTotalPurchasedTours(int id)
+        {
+            var result = _authorDashboardService.GetNumberOfPurchashedTours(id);
+            return CreateResponse(result);
+        }
+        [HttpGet("total-sales/{id}")]
+        public ActionResult<int> GetTotalSales(int id)
+        {
+            var result = _authorDashboardService.GetTotalSales(id);
+            return CreateResponse(result);
+        }
+
+
+        [HttpGet("paymentsForOneMonth/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForOneMonth(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 1);
+            return result;
+        }
+        [HttpGet("paymentsForThreeMonth/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForThreeMonth(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 3);
+            return result;
+        }
+        [HttpGet("paymentsForSixMonth/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForSixMonth(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 6);
+            return result;
+        }
+        [HttpGet("paymentsForYear/{authorId}")]
+        public Dictionary<DateTime, int> GetPaymentsForYear(int authorId)
+        {
+            var result = _authorDashboardService.GetTourPaymentsForNumOfMonths(authorId, 12);
+            return result;
+        }
     }
 }

@@ -15,5 +15,11 @@ namespace Explorer.Stakeholders.API.Public
         Result<TourDto> GetWorstSellingTourByAuthorId(int id);
         Dictionary<int, int> GetReviewsPartitionedByGrade(long authorId);
         Result<TourDto> GetLowestRatedTourByAuthorId(int id);
+        Result<int> GetNumberOfPublishedTours(int authorId);
+
+        Result<int> GetNumberOfPurchashedTours(int authorId);
+        Result<int> GetTotalSales(int authorId);
+        Dictionary<DateTime, int> GetTourPaymentsForNumOfMonths(int authorId, int months);
+
     }
 }
