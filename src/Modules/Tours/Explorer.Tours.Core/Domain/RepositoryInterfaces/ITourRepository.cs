@@ -12,6 +12,7 @@ namespace Explorer.Tours.Core.Domain.RepositoryInterfaces
     public interface ITourRepository: ICrudRepository<Tour>
     {
         PagedResult<Tour> GetByAuthorId(int authorId);
+        List<long> GetListByAuthorId(int authorId);
         PagedResult<Tour> GetByIds(IEnumerable<long> ids);
     }
 }

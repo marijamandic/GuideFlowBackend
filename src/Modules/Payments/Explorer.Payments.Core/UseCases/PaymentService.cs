@@ -8,6 +8,8 @@ using Explorer.Payments.Core.Domain.ShoppingCarts;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Internal;
 using Explorer.Stakeholders.API.Public;
+using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Public.Author;
 using FluentResults;
 using System;
 using System.Collections.Generic;
@@ -23,13 +25,18 @@ namespace Explorer.Payments.Core.UseCases
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ITourPurchaseTokenService _tourPurchaseTokenService;
         private readonly IInternalUserService _internalUserService;
+        private readonly ITourService _tourService;
+
+
+
         //private readonly IUserService _userService;
-        public PaymentService(IMapper mapper, IInternalUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService):base(mapper) 
+        public PaymentService(IMapper mapper, IInternalUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService, ITourService tourService):base(mapper) 
         { 
             _paymentRepository = paymentRepository;
             _shoppingCartService = shoppingCartService;
             _tourPurchaseTokenService = tourPurchaseTokenService;
             _internalUserService = userService;
+            _tourService = tourService;
         }
 
         public Result<PaymentDto> Create(int touristId)
@@ -86,8 +93,41 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.InvalidArgument).WithError(e.Message);
             }
         }
+        public Dictionary<DateTime, int> GetTourPaymentsWithProductIds(int months, List<long> productIds)
+        {
+            try
+            {
+                var payments = _paymentRepository.GetAllByMonths(months);
+                var result = new Dictionary<DateTime, int>();
 
-        public Result<PagedResult<PaymentDto>> GetAllByTouristId(int touristId)
+                foreach (var payment in payments)
+                {
+                    foreach (var paymentItem in payment.PaymentItems)
+                    {
+                        if (paymentItem.Type.Equals(ProductType.Tour) && productIds.Contains(paymentItem.ProductId))
+                        {
+                            if (result.ContainsKey(payment.PurchaseDate.Date))
+                            {
+                                result[payment.PurchaseDate.Date] += 1;
+                            }
+                            else
+                            {
+                                result[payment.PurchaseDate.Date] = 1;
+                            }
+                        }
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Failed to retrieve tour payments with productIds", e);
+            }
+        }
+    
+    
+    public Result<PagedResult<PaymentDto>> GetAllByTouristId(int touristId)
         {
             try
             {
@@ -99,6 +139,8 @@ namespace Explorer.Payments.Core.UseCases
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
+
+
 
     }
 }

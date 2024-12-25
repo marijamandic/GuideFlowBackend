@@ -32,5 +32,7 @@ namespace Explorer.Tours.API.Public.Author
         Task<bool> GetweatherByCoords(double latitude, double longitude);
         Result<TourDto> UpdatePremium(long tourId);
         Task<Result<IEnumerable<TourDto>>> RecommendToursForDate(int touristId, DateTime date);
+        public string GetDatabaseSummary();
+
     }
 }

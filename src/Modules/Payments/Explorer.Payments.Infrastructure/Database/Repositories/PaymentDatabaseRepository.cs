@@ -38,6 +38,33 @@ namespace Explorer.Payments.Infrastructure.Database.Repositories
 
         }
 
+        public List<Payment> GetAllByMonths(int months)
+        {
+            if (months <= 0)
+            {
+                throw new ArgumentException("The number of months must be greater than zero.", nameof(months));
+            }
+
+            // Izračunavanje target datuma i konverzija u UTC
+            DateTime targetDateUtc = DateTimeOffset.Now.AddMonths(-months).UtcDateTime;
+
+            // Filtriraj samo one payment-e koji imaju PurchaseDate kasniji od targetDate
+            List<Payment> payments = _payments
+                .Include(p => p.PaymentItems)
+                .Where(p => p.PurchaseDate > targetDateUtc) // Filtriranje direktno u bazi
+                .ToList();
+
+            if (payments.Count == 0)
+            {
+                throw new KeyNotFoundException($"No payments found in the last {months} months.");
+            }
+
+            return payments;
+        }
+
+
+
+
         public void Save(Payment payment)
         {
             _paymentsContext.Entry(payment).State = EntityState.Modified;

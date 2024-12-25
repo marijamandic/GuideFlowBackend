@@ -11,6 +11,7 @@ using Explorer.Tours.Core.Domain.WeatherForecast;
 using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
 using System.Collections;
+using TourStatus = Explorer.Tours.Core.Domain.Tours.TourStatus;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
@@ -52,6 +53,33 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             return MapToDto(result);
         }
 
+        public string GetDatabaseSummary()
+        {
+            const int pageSize = 100; // Process tours in batches of 100
+            int currentPage = 1;
+            var allTours = new List<string>();
+
+            while (true)
+            {
+                var pagedResult = tourRepository.GetPaged(currentPage, pageSize);
+
+                if (pagedResult.Results == null || !pagedResult.Results.Any())
+                    break;
+
+                var results = pagedResult.Results.Where(tour => tour.Status == TourStatus.Published);
+                allTours.AddRange(results.Select(tour => tour.ToString()));
+
+                // If fewer results were returned than pageSize, it means we reached the last page
+                if (pagedResult.Results.Count < pageSize)
+                    break;
+
+                currentPage++;
+            }
+
+            return string.Join(Environment.NewLine, allTours);
+        }
+
+
         public Result<TourDto> Get(int id)
         {
             try
@@ -67,6 +95,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
+
 
         private void GetReviewsUsernames(List<TourReviewDto> reviews)
         {
@@ -342,16 +371,28 @@ namespace Explorer.Tours.Core.UseCases.Authoring
 
         public Result<List<long>> GetTourIdsByAuthorId(int authorId)
         {
+            Console.WriteLine($"Author ID: {authorId}");
             try
             {
-                var result = tourRepository.GetByAuthorId(authorId);
-                return result.Results.Select(t => t.Id).ToList();
+                // Dohvatamo listu ID-jeva direktno iz repozitorijuma
+                var tourIds = tourRepository.GetListByAuthorId(authorId);
+
+                // Proveravamo da li lista nije prazna
+                if (tourIds == null || !tourIds.Any())
+                {
+                    return Result.Fail<List<long>>("No tours found for the given author.");
+                }
+
+                // Vraćamo uspešan rezultat sa listom ID-jeva
+                return Result.Ok(tourIds);
             }
             catch (Exception ex)
             {
-                return Result.Fail(ex.Message);
+                // Vraćamo neuspešan rezultat u slučaju greške
+                return Result.Fail<List<long>>($"Error while retrieving tour IDs: {ex.Message}");
             }
         }
+
 
         public Result<List<TourDto>> SearchTours(double lat, double lon, double distance, int page, int pageSize)
         {
@@ -491,10 +532,14 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             try
             {
                 var tour = tourRepository.Get(tourId);
-                tour.UpdatePremium(true);
-                _authorService.RemoveAuthorMoney(tour.AuthorId, 159.99);    // izmeni 10 na cenu placanja premium ture
-                var result = tourRepository.Update(tour);
-                return MapToDto(result);
+                if (!tour.IsPremium)
+                {
+                    tour.UpdatePremium(true);
+                    _authorService.RemoveAuthorMoney(tour.AuthorId, 159.99);    // izmeni 10 na cenu placanja premium ture
+                    var result = tourRepository.Update(tour);
+                    return MapToDto(result);
+                }
+                return Result.Fail("tura je vec premium");
             }
             catch (KeyNotFoundException e)
             {

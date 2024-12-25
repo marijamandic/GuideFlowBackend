@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace Explorer.Tours.Infrastructure.Database.Repositories
 {
-    public class TourDatabaseRepository:CrudDatabaseRepository<Tour,ToursContext>,ITourRepository
+    public class TourDatabaseRepository : CrudDatabaseRepository<Tour, ToursContext>, ITourRepository
     {
-        public TourDatabaseRepository(ToursContext dbContext):base(dbContext) { }
+        public TourDatabaseRepository(ToursContext dbContext) : base(dbContext) { }
 
         public new PagedResult<Tour> GetPaged(int page, int pageSize)
         {
-            var task = DbContext.Tours.Where(t=> t.Status != TourStatus.Deleted).Include(t=>t.Checkpoints).Include(t=>t.Reviews).GetPagedById(page, pageSize);
+            var task = DbContext.Tours.Where(t => t.Status != TourStatus.Deleted).Include(t => t.Checkpoints).Include(t => t.Reviews).GetPagedById(page, pageSize);
             task.Wait();
             return task.Result;
         }
@@ -53,13 +53,21 @@ namespace Explorer.Tours.Infrastructure.Database.Repositories
             return new PagedResult<Tour>(result, result.Count);
         }
 
-		public PagedResult<Tour> GetByIds(IEnumerable<long> ids)
-		{
-			var tours = DbContext.Tours.Where(t => ids.Contains(t.Id))
+        public PagedResult<Tour> GetByIds(IEnumerable<long> ids)
+        {
+            var tours = DbContext.Tours.Where(t => ids.Contains(t.Id))
                 .Include(t => t.Checkpoints)
                 .Include(t => t.Reviews)
                 .ToList();
             return new PagedResult<Tour>(tours, tours.Count);
-		}
-	}
+        }
+
+        public List<long> GetListByAuthorId(int authorId)
+        {
+            return DbContext.Tours
+                            .Where(t => t.AuthorId == authorId)
+                            .Select(t => t.Id)
+                            .ToList();
+        }
+    }
 }
