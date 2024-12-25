@@ -7,6 +7,7 @@ using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
+using Explorer.Tours.Core.Domain.WeatherForecast;
 using Explorer.Tours.Core.UseCases.Weather;
 using FluentResults;
 using System.Collections;
@@ -291,8 +292,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        public async Task<Result<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId)
+        public async Task<Result<IEnumerable<TourDto>>> GetPurchasedAndArchivedByUser(int userId, DateTime? date = null)
         {
+            DateTime effectiveDate = date ?? DateTime.MinValue;
+
             var tokenResult = _purchaseTokenService.GetTokensByTouristId(userId);
             if (!tokenResult.IsSuccess)
             {
@@ -309,13 +312,62 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                     var tour = tourResult.Value;
                     if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived) {
                         //LOGIKA CE VEROVATNO BITI IZDVOJENA U DOMENSKU KLASU KAD SE PROSIRI Tour.cs (Radi se o poslovnoj logici)
-                        await MapWeatherConditionsToTour(tour);
+                        if (effectiveDate.Equals(DateTime.MinValue))
+                        {
+                            await MapWeatherConditionsToTour(tour);
+                        }
+                        else
+                        {
+                            await MapWeatherConditionsForDateToTour(tour,effectiveDate);
+                        }
                         purchased.Add(tour);
                     }
                 }
             }
             return purchased;
         }
+
+        public async Task<Result<IEnumerable<TourDto>>> RecommendToursForDate(int touristId, DateTime date)
+        {
+            var tokenResult = _purchaseTokenService.GetTokensByTouristId(touristId);
+            if (!tokenResult.IsSuccess)
+            {
+                return Result.Fail(tokenResult.Errors);
+            }
+
+            var purchasedToursRecommendationCount = new Dictionary<TourDto, int>();
+
+            var tourTasks = tokenResult.Value.Results
+                .Select(async token =>
+                {
+                    var tourResult = Get(token.TourId);
+                    if (tourResult.IsSuccess)
+                    {
+                        var tour = tourResult.Value;
+                        if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                        {
+                            var recommendationCount = await MapWeatherConditionsForDateToTour(tour, date);
+                            purchasedToursRecommendationCount[tour] = recommendationCount;
+                        }
+                    }
+                });
+
+            await Task.WhenAll(tourTasks);
+
+            if (purchasedToursRecommendationCount.Any())
+            {
+                var maxRecommendationCount = purchasedToursRecommendationCount.Values.Max();
+                var recommendedTours = purchasedToursRecommendationCount
+                    .Where(x => x.Value == maxRecommendationCount)
+                    .Select(x => x.Key)
+                    .ToList();
+
+                return Result.Ok(recommendedTours.AsEnumerable());
+            }
+
+            return Result.Ok(Enumerable.Empty<TourDto>());
+        }
+
 
         public Result<List<long>> GetTourIdsByAuthorId(int authorId)
         {
@@ -520,6 +572,104 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 recommendedCounter++;
             MapRecommendedWeather(tour, recommendedCounter);
         }
+
+        private async Task<int> MapWeatherConditionsForDateToTour(TourDto tour, DateTime date)
+        {
+            int recommendedCounter = 0;
+
+            var weatherTags = tour.WeatherRequirements.SuitableConditions.Select(condition => condition.ToString()).ToList();
+            var weather = await _weatherConnection.GetFiveDayForecast(tour.Checkpoints[0].Latitude, tour.Checkpoints[0].Longitude);
+
+            GetTourWeather(weather, tour, date);
+            var wind = GetAverageWindSpeed(weather, date);
+
+            recommendedCounter += EvaluateTemperature(tour);
+            recommendedCounter += EvaluateWeatherDescription(tour);
+            recommendedCounter += EvaluateWindConditions(wind);
+            recommendedCounter += EvaluateWeatherTags(weatherTags, tour);
+
+            MapRecommendedWeather(tour, recommendedCounter);
+
+            return recommendedCounter;
+        }
+
+        private Wind GetAverageWindSpeed(ForecastWeatherResponse weather, DateTime date)
+        {
+            var forecastItems = weather.List.Where(f => f.Dt.Date.Equals(date.Date)).ToList();
+            double sumWindSpeed = forecastItems.Sum(f => f.Wind.Speed);
+
+            return new Wind { Speed = sumWindSpeed / forecastItems.Count };
+        }
+
+        private void GetTourWeather(ForecastWeatherResponse weather, TourDto tour, DateTime date)
+        {
+            var forecastItems = weather.List.Where(f => f.Dt.Date.Equals(date.Date)).ToList();
+
+            tour.Temperature = forecastItems.Average(f => f.Main.Temp);
+            tour.WeatherDescription = GetMostFrequentWeatherCondition(forecastItems);
+            tour.WeatherIcon = GetWeatherIconFromCondition(tour.WeatherDescription);
+        }
+
+        private string GetMostFrequentWeatherCondition(IEnumerable<ForecastItem> forecastItems)
+        {
+            return forecastItems
+                .GroupBy(f => f.Weather[0].Main)
+                .OrderByDescending(g => g.Count())
+                .FirstOrDefault()?.Key ?? "Unknown";
+        }
+
+        private string GetWeatherIconFromCondition(string weatherCondition)
+        {
+            switch (weatherCondition.ToUpper())
+            {
+                case "CLEAR":
+                    return "01d"; // Ikona za jasno vreme
+                case "CLOUDS":
+                    return "02d"; // Ikona za oblačno vreme
+                case "RAIN":
+                    return "09d"; // Ikona za kišu
+                case "SNOW":
+                    return "13d"; // Ikona za sneg
+                case "MIST":
+                    return "50d"; // Ikona za maglu
+                default:
+                    return "unknown";
+            }
+        }
+
+        private int EvaluateTemperature(TourDto tour)
+        {
+            if (tour.Temperature > tour.WeatherRequirements.MinTemperature && tour.Temperature < tour.WeatherRequirements.MaxTemperature)
+                return 1;
+
+            return 0;
+        }
+
+        private int EvaluateWeatherDescription(TourDto tour)
+        {
+            if (tour.WeatherDescription == "Thunderstorm" || tour.WeatherDescription == "Tornado" || tour.WeatherDescription == "Fog")
+                return -1000;
+
+            return 0;
+        }
+
+        private int EvaluateWindConditions(Wind wind)
+        {
+            int windPenalty = 0;
+
+            if (wind.Speed > 5)
+                windPenalty = -1;
+            if (wind.Speed > 10)
+                windPenalty -= 2;
+
+            return windPenalty;
+        }
+
+        private int EvaluateWeatherTags(List<string> weatherTags, TourDto tour)
+        {
+            return weatherTags.Contains(tour.WeatherDescription, StringComparer.OrdinalIgnoreCase) ? 1 : 0;
+        }
+
         private void MapRecommendedWeather(TourDto tour, int recommendedCounter) {
             if (recommendedCounter == 2)
             {
