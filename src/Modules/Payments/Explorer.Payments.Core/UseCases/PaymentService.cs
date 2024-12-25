@@ -25,18 +25,14 @@ namespace Explorer.Payments.Core.UseCases
         private readonly IShoppingCartService _shoppingCartService;
         private readonly ITourPurchaseTokenService _tourPurchaseTokenService;
         private readonly IInternalUserService _internalUserService;
-        private readonly ITourService _tourService;
-
-
 
         //private readonly IUserService _userService;
-        public PaymentService(IMapper mapper, IInternalUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService, ITourService tourService):base(mapper) 
+        public PaymentService(IMapper mapper, IInternalUserService userService, IPaymentRepository paymentRepository,IShoppingCartService shoppingCartService,ITourPurchaseTokenService tourPurchaseTokenService):base(mapper) 
         { 
             _paymentRepository = paymentRepository;
             _shoppingCartService = shoppingCartService;
             _tourPurchaseTokenService = tourPurchaseTokenService;
             _internalUserService = userService;
-            _tourService = tourService;
         }
 
         public Result<PaymentDto> Create(int touristId)
