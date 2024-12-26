@@ -13,5 +13,6 @@ namespace Explorer.Payments.API.Internal
     {
         Result<PagedResult<TourPurchaseTokenDto>> GetTokensByTouristId(int touristId);
         Result<TourPurchaseTokenDto> GetTokenByTouristAndTourId(int touristId, int tourId);
+        int GetNumOfPurchases(long tourId);
     }
 }

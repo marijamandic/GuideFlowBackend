@@ -34,5 +34,10 @@ namespace Explorer.Tours.API.Public.Author
         Task<Result<IEnumerable<TourDto>>> RecommendToursForDate(int touristId, DateTime date);
         public string GetDatabaseSummary();
 
+        Result<TourDto> GetBestSellingTourByAuthorId(int id);
+        Result<TourDto> GetWorstSellingTourByAuthorId(int id);
+        Result<TourDto> GetBestRatedTourByAuthorId(int id);
+
+
     }
 }

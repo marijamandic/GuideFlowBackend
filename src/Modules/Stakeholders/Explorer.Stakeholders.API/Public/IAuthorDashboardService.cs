@@ -11,10 +11,7 @@ namespace Explorer.Stakeholders.API.Public
     public interface IAuthorDashboardService
     {
         double GetAverageGradeForAuthor(long authorId);
-        Result<TourDto> GetBestSellingTourByAuthorId(int id);
-        Result<TourDto> GetWorstSellingTourByAuthorId(int id);
         Dictionary<int, int> GetReviewsPartitionedByGrade(long authorId);
-        Result<TourDto> GetLowestRatedTourByAuthorId(int id);
         Result<int> GetNumberOfPublishedTours(int authorId);
 
         Result<int> GetNumberOfPurchashedTours(int authorId);
