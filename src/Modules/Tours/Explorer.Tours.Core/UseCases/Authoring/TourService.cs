@@ -15,7 +15,7 @@ using TourStatus = Explorer.Tours.Core.Domain.Tours.TourStatus;
 
 namespace Explorer.Tours.Core.UseCases.Authoring
 {
-	public class TourService : BaseService<TourDto, Tour>, ITourService, IInternalTourService
+    public class TourService : BaseService<TourDto, Tour>, ITourService, IInternalTourService
     {
         private readonly ITourRepository tourRepository;
         private readonly IMapper mapper;
@@ -24,10 +24,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         private readonly IInternalUserService _userService;
         private readonly IWeatherConnection _weatherConnection;
         private readonly IInternalAuthorService _authorService;
-        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection, IInternalAuthorService authorService) : base(mapper) 
-        { 
-            this.tourRepository=tourRepository;
-            this.mapper=mapper;
+        public TourService(ITourRepository tourRepository, IMapper mapper, IInternalPurchaseTokenService purchaseTokenService, IInternalTourBundleService tourBundleService, IInternalUserService userService, IWeatherConnection weatherConnection, IInternalAuthorService authorService) : base(mapper)
+        {
+            this.tourRepository = tourRepository;
+            this.mapper = mapper;
             _purchaseTokenService = purchaseTokenService;
             _tourBundleService = tourBundleService;
             _userService = userService;
@@ -35,19 +35,19 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             _authorService = authorService;
         }
 
-		public TourService(
-			ITourRepository tourRepository,
-			IMapper mapper,
-			IInternalPurchaseTokenService purchaseTokenService,
-			IInternalTourBundleService tourBundleService) : base(mapper)
-		{
-			this.tourRepository = tourRepository;
-			this.mapper = mapper;
-			_purchaseTokenService = purchaseTokenService;
-			_tourBundleService = tourBundleService;
-		}
+        public TourService(
+            ITourRepository tourRepository,
+            IMapper mapper,
+            IInternalPurchaseTokenService purchaseTokenService,
+            IInternalTourBundleService tourBundleService) : base(mapper)
+        {
+            this.tourRepository = tourRepository;
+            this.mapper = mapper;
+            _purchaseTokenService = purchaseTokenService;
+            _tourBundleService = tourBundleService;
+        }
 
-		public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
+        public Result<PagedResult<TourDto>> GetPaged(int page, int pageSize)
         {
             var result = tourRepository.GetPaged(page, pageSize);
             return MapToDto(result);
@@ -246,7 +246,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-        
+
 
         public Result<TourDto> Publish(int id)
         {
@@ -310,7 +310,8 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 if (tourResult.IsSuccess)
                 {
                     var tour = tourResult.Value;
-                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived) {
+                    if (tour.Status == API.Dtos.TourStatus.Published || tour.Status == API.Dtos.TourStatus.Archived)
+                    {
                         //LOGIKA CE VEROVATNO BITI IZDVOJENA U DOMENSKU KLASU KAD SE PROSIRI Tour.cs (Radi se o poslovnoj logici)
                         if (effectiveDate.Equals(DateTime.MinValue))
                         {
@@ -318,7 +319,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                         }
                         else
                         {
-                            await MapWeatherConditionsForDateToTour(tour,effectiveDate);
+                            await MapWeatherConditionsForDateToTour(tour, effectiveDate);
                         }
                         purchased.Add(tour);
                     }
@@ -443,15 +444,15 @@ namespace Explorer.Tours.Core.UseCases.Authoring
         public Result<TourDto> CheckIfPurchased(int userId, int tourId)
         {
             try
-            {   
+            {
                 var tourTokens = _purchaseTokenService.GetTokensByTouristId(userId).Value.Results;
-                if(tourTokens.Count == 0)
+                if (tourTokens.Count == 0)
                 {
                     return null;
                 }
 
                 var tourToken = tourTokens.Find(tt => tt.TourId == tourId);
-                if(tourToken != null)
+                if (tourToken != null)
                 {
                     var tour = Get(tourToken.TourId).Value;
                     if (tour.Status == API.Dtos.TourStatus.Published)
@@ -495,10 +496,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             HashSet<long> nearTours = new HashSet<long>();
             List<TourDto> tours = new List<TourDto>();
             var publishedTours = tourRepository.GetPaged(0, 0).Results.Where(t => t.Status == Domain.Tours.TourStatus.Published).ToList();
-            foreach(var tour in publishedTours)
+            foreach (var tour in publishedTours)
             {
                 var checkpoints = tour.Checkpoints;
-                foreach(var checkpoint in checkpoints)
+                foreach (var checkpoint in checkpoints)
                 {
                     bool isNearLatitude = Math.Abs((double)(checkpoint.Latitude - latitude)) <= 500.0 / 111320.0;
                     bool isNearLongitude = Math.Abs((double)(checkpoint.Longitude - longitude)) <= 500.0 / (111320.0 * Math.Cos(latitude));
@@ -508,7 +509,7 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                     }
                 }
             }
-            foreach(var tour in nearTours)
+            foreach (var tour in nearTours)
             {
                 tours.Add(MapToDto(tourRepository.Get(tour)));
             }
@@ -516,10 +517,10 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             return tours;
         }
 
-		public Result<string> GetImageUrlByProductId(int productType, int productId)
-		{
-			throw new NotImplementedException();
-		}
+        public Result<string> GetImageUrlByProductId(int productType, int productId)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<bool> GetweatherByCoords(double latitude, double longitude)
         {
@@ -546,10 +547,11 @@ namespace Explorer.Tours.Core.UseCases.Authoring
                 return Result.Fail(FailureCode.NotFound).WithError(e.Message);
             }
         }
-            
-    #region HelpperMethods
 
-        private async Task MapWeatherConditionsToTour(TourDto tour) {
+        #region HelpperMethods
+
+        private async Task MapWeatherConditionsToTour(TourDto tour)
+        {
             var recommendedCounter = 0;
             var weatherTags = tour.WeatherRequirements.SuitableConditions.Select(condition => condition.ToString()).ToList();
             var weather = await _weatherConnection.GetWeatherAsync(tour.Checkpoints[0].Latitude, tour.Checkpoints[0].Longitude);
@@ -670,7 +672,8 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             return weatherTags.Contains(tour.WeatherDescription, StringComparer.OrdinalIgnoreCase) ? 1 : 0;
         }
 
-        private void MapRecommendedWeather(TourDto tour, int recommendedCounter) {
+        private void MapRecommendedWeather(TourDto tour, int recommendedCounter)
+        {
             if (recommendedCounter == 2)
             {
                 tour.WeatherRecommend = WeatherRecommend.HighyRecommend;
@@ -693,7 +696,148 @@ namespace Explorer.Tours.Core.UseCases.Authoring
             }
         }
 
-    #endregion
+        #endregion
+
+
+        public Result<TourDto> GetBestSellingTourByAuthorId(int id)
+        {
+            try
+            {
+                var toursResult = GetTourIdsByAuthorId(id);
+
+                if (toursResult.Value == null || !toursResult.Value.Any())
+                {
+                    return Result.Fail<TourDto>("No tours found or failed to fetch tours.");
+                }
+
+                var tours = toursResult.Value;
+
+                long bestTourId = -1;
+                int bestNumber = 0;
+                foreach (var tourId in tours)
+                {
+                    int purchases = _purchaseTokenService.GetNumOfPurchases(tourId);
+                    if (purchases >= bestNumber)
+                    {
+                        bestNumber = purchases;
+                        bestTourId = tourId;
+                    }
+                }
+
+                var bestTourResult = Get(Convert.ToInt32(bestTourId));
+
+                if (bestTourId == -1)
+                {
+                    return Result.Fail<TourDto>("Korisnik nema validnih tura za analizu.");
+                }
+
+
+                if (bestTourResult.IsFailed)
+                {
+                    return Result.Fail<TourDto>("Failed to retrieve the best-selling tour.");
+                }
+
+                var bestTour = bestTourResult.Value;
+
+                return Result.Ok(bestTour);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<TourDto>(ex.Message);
+            }
+        }
+
+        public Result<TourDto> GetWorstSellingTourByAuthorId(int id)
+        {
+            try
+            {
+                var toursResult = GetTourIdsByAuthorId(id);
+
+                if (toursResult.Value == null || !toursResult.Value.Any())
+                {
+                    return Result.Fail<TourDto>("No tours found or failed to fetch tours.");
+                }
+
+                var tours = toursResult.Value;
+
+                long worstTourId = tours.First();
+                int worstNumber = _purchaseTokenService.GetNumOfPurchases(worstTourId);
+
+                foreach (var tourId in tours)
+                {
+                    int purchases = _purchaseTokenService.GetNumOfPurchases(tourId);
+                    if (purchases < worstNumber)
+                    {
+                        worstNumber = purchases;
+                        worstTourId = tourId;
+                    }
+                }
+
+                var worstTourResult = Get(Convert.ToInt32(worstTourId));
+
+                if (worstTourResult.IsFailed)
+                {
+                    return Result.Fail<TourDto>("Failed to retrieve the worst-selling tour.");
+                }
+
+                var worstTour = worstTourResult.Value;
+
+                return Result.Ok(worstTour);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<TourDto>(ex.Message);
+            }
+        }
+
+        public Result<TourDto> GetBestRatedTourByAuthorId(int id)
+        {
+            try
+            {
+                var toursResult = GetTourIdsByAuthorId(id);
+
+                if (toursResult.Value == null || !toursResult.Value.Any())
+                {
+                    return Result.Fail<TourDto>("No tours found or failed to fetch tours.");
+                }
+
+                var tours = toursResult.Value;
+
+                long bestTourId = -1;
+                double bestRating = 0;
+                foreach (var tourId in tours)
+                {
+                    var tourResult = Get(Convert.ToInt32(tourId));
+                    if (tourResult.Value.AverageGrade > bestRating)
+                    {
+                        bestRating = tourResult.Value.AverageGrade;
+                        bestTourId = tourId;
+                    }
+                }
+
+                var bestTourResult = Get(Convert.ToInt32(bestTourId));
+
+                if (bestTourId == -1)
+                {
+                    return Result.Fail<TourDto>("Korisnik nema validnih recenzija za analizu.");
+                }
+
+
+                if (bestTourResult.IsFailed)
+                {
+                    return Result.Fail<TourDto>("Failed to retrieve the best-selling tour.");
+                }
+
+                var bestTour = bestTourResult.Value;
+
+                return Result.Ok(bestTour);
+            }
+            catch (Exception ex)
+            {
+                return Result.Fail<TourDto>(ex.Message);
+            }
+        }
     }
+
 
 }
