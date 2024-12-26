@@ -53,25 +53,6 @@ namespace Explorer.Stakeholders.Core.UseCases
         }
 
 
-        public Dictionary<DateTime, int> GetTourPaymentsForNumOfMonths(int authorId, int months)
-        {
-            try
-            {
-                var toursResult = _tourService.GetTourIdsByAuthorId(authorId);
-
-                if (toursResult.Value == null || !toursResult.Value.Any())
-                {
-                    return null;
-                }
-                Dictionary<DateTime, int> dictionary = _paymentService.GetTourPaymentsWithProductIds(months, toursResult.Value);
-                return dictionary;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-
         public Result<int> GetNumberOfPublishedTours(int authorId)
         {
 
