@@ -2,6 +2,7 @@
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using FluentResults;
@@ -15,14 +16,14 @@ namespace Explorer.Stakeholders.Core.UseCases
 {
     public class AuthorDashboardService : IAuthorDashboardService
     {
-        private readonly ITourReviewService _tourReviewService;
+        private readonly IInternalTourReviewService _internalTourReviewService;
         private readonly ITourService _tourService;
         private readonly ITourPurchaseTokenService _tourPurchaseTokenService;
         private readonly IPaymentService _paymentService;
 
-        public AuthorDashboardService(ITourReviewService tourReviewService, ITourService tourService, ITourPurchaseTokenService tourPurchaseTokenService, IPaymentService paymentService)
+        public AuthorDashboardService(IInternalTourReviewService internalTourReviewService, ITourService tourService, ITourPurchaseTokenService tourPurchaseTokenService, IPaymentService paymentService)
         {
-            _tourReviewService = tourReviewService;
+            _internalTourReviewService = internalTourReviewService;
             _tourService = tourService;
             _tourPurchaseTokenService = tourPurchaseTokenService;
             _paymentService = paymentService;
@@ -30,7 +31,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public double GetAverageGradeForAuthor(long authorId)
         {
-            var reviews = _tourReviewService.GetReviewsByAuthorId(authorId, _tourService);
+            var reviews = _internalTourReviewService.GetReviewsByAuthorId(authorId, _tourService);
             if (reviews == null || !reviews.Any())
             {
                 return 0.0; // No reviews, return 0
@@ -42,7 +43,7 @@ namespace Explorer.Stakeholders.Core.UseCases
 
         public Dictionary<int, int> GetReviewsPartitionedByGrade(long authorId)
         {
-            var reviews = _tourReviewService.GetReviewsByAuthorId(authorId, _tourService);
+            var reviews = _internalTourReviewService.GetReviewsByAuthorId(authorId, _tourService);
             if (reviews == null || !reviews.Any())
             {
                 return new Dictionary<int, int>(); // No reviews, return empty dictionary

@@ -1,46 +1,73 @@
 ﻿using AutoMapper;
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.Tours.API.Dtos;
+using Explorer.Tours.API.Internal;
 using Explorer.Tours.API.Public.Administration;
 using Explorer.Tours.API.Public.Author;
 using Explorer.Tours.Core.Domain;
 using Explorer.Tours.Core.Domain.RepositoryInterfaces;
 using Explorer.Tours.Core.Domain.Tours;
+using Explorer.Tours.Core.UseCases.Authoring;
 
 namespace Explorer.Tours.Core.UseCases.Administration;
 
-public class TourReviewService : CrudService<TourReviewDto, TourReview>, ITourReviewService
+public class TourReviewService : CrudService<TourReviewDto, TourReview>, ITourReviewService, IInternalTourReviewService
 {
 
     private readonly ICrudRepository<TourReview> _repository;
+    private readonly ITourService _tourService;
 
-    public TourReviewService(ICrudRepository<TourReview> repository, IMapper mapper) : base(repository, mapper)
+    public TourReviewService(ICrudRepository<TourReview> repository, ITourService tourService, IMapper mapper) : base(repository, mapper)
     {
         _repository = repository;
+        _tourService = tourService;
     }
 
     public double GetAvgGradeByTourId(long tourId)
     {
-        throw new NotImplementedException();
+        var reviews = GetPagedReviews().Where(r => r.TourId == tourId).ToList();
+        return reviews.Any() ? reviews.Average(r => r.Rating) : 0.0;
     }
 
     public IEnumerable<TourReviewDto> GetReviewsByAuthorId(long authorId, ITourService tourService)
     {
-        const int pageSize = 100;
-        int currentPage = 1;
-        var allReviews = new List<TourReviewDto>();
+        var tourIds = tourService.GetTourIdsByAuthorId((int)authorId).Value;
 
-        // Fetch all tour IDs associated with the author
-        var tourIdsResult = tourService.GetTourIdsByAuthorId((int)authorId);
-
-        if (!tourIdsResult.IsSuccess || tourIdsResult.Value == null)
+        if (tourIds == null || !tourIds.Any())
         {
-            return Enumerable.Empty<TourReviewDto>(); // No tours found for this author
+            return Enumerable.Empty<TourReviewDto>();
+        }
+
+        return GetPagedReviews()
+               .Where(r => tourIds.Contains(r.TourId))
+               .Select(MapToDto);
+    }
+
+    public Dictionary<int, int> GetReviewsPartitionedByGrade(long authorId)
+    {
+        var tourIdsResult = _tourService.GetTourIdsByAuthorId((int)authorId);
+
+        if (!tourIdsResult.IsSuccess || tourIdsResult.Value == null || !tourIdsResult.Value.Any())
+        {
+            return new Dictionary<int, int>(); // No tours found for the author
         }
 
         var tourIds = tourIdsResult.Value;
 
-        // Fetch and filter reviews
+        var reviews = GetPagedReviews()
+            .Where(r => tourIds.Contains(r.TourId))
+            .ToList();
+
+        return reviews.GroupBy(r => r.Rating)
+                      .ToDictionary(g => g.Key, g => g.Count());
+    }
+
+    private IEnumerable<TourReview> GetPagedReviews()
+    {
+        const int pageSize = 100;
+        int currentPage = 1;
+        var allReviews = new List<TourReview>();
+
         while (true)
         {
             var pagedResult = _repository.GetPaged(currentPage, pageSize);
@@ -48,10 +75,7 @@ public class TourReviewService : CrudService<TourReviewDto, TourReview>, ITourRe
             if (pagedResult.Results == null || !pagedResult.Results.Any())
                 break;
 
-            var filteredReviews = pagedResult.Results
-                                             .Where(r => tourIds.Contains(r.TourId))
-                                             .Select(r => MapToDto(r));
-            allReviews.AddRange(filteredReviews);
+            allReviews.AddRange(pagedResult.Results);
 
             if (pagedResult.Results.Count < pageSize)
                 break;
