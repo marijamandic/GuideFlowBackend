@@ -1,4 +1,5 @@
 ﻿using Explorer.BuildingBlocks.Tests;
+using Explorer.Stakeholders.Infrastructure.Database;
 using Explorer.Tours.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,10 @@ public class ToursTestFactory : BaseTestFactory<ToursContext>
         services.Remove(descriptor!);
         services.AddDbContext<ToursContext>(SetupTestContext());
 
-        return services;
+        var stakeholderDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<StakeholdersContext>));
+        services.Remove(stakeholderDescriptor!);
+        services.AddDbContext<StakeholdersContext>(SetupTestContext());
+
+		return services;
     }
 }

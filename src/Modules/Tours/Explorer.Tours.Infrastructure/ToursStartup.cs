@@ -1,12 +1,28 @@
 using Explorer.BuildingBlocks.Core.UseCases;
 using Explorer.BuildingBlocks.Infrastructure.Database;
+using Explorer.Tours.API.Internal;
+using Explorer.Tours.API.Public;
 using Explorer.Tours.API.Public.Administration;
+using Explorer.Tours.API.Public.Author;
+using Explorer.Tours.API.Public.Execution;
 using Explorer.Tours.Core.Domain;
+using Explorer.Tours.Core.Domain.Shopping;
+using Explorer.Tours.Core.Domain.RepositoryInterfaces;
+using Explorer.Tours.Core.Domain.TourExecutions;
+using Explorer.Tours.Core.Domain.Tours;
 using Explorer.Tours.Core.Mappers;
+using Explorer.Tours.Core.UseCases;
 using Explorer.Tours.Core.UseCases.Administration;
+using Explorer.Tours.Core.UseCases.Authoring;
+using Explorer.Tours.Core.UseCases.Execution;
 using Explorer.Tours.Infrastructure.Database;
+using Explorer.Tours.Infrastructure.Database.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Explorer.Tours.Core.UseCases.Shopping;
+using Explorer.Tours.API.Public.Shopping;
+using Explorer.Tours.Core.UseCases.Weather;
+using Explorer.Tours.Infrastructure.Weather;
 
 namespace Explorer.Tours.Infrastructure;
 
@@ -24,11 +40,55 @@ public static class ToursStartup
     private static void SetupCore(IServiceCollection services)
     {
         services.AddScoped<IEquipmentService, EquipmentService>();
+        services.AddScoped<ITourService, TourService>();
+        services.AddScoped<ITourEquipmentService, TourEquipmentService>();
+
+        services.AddScoped<ICheckpointService, CheckpointService>();
+        services.AddScoped<ITourObjectService, TourObjectService>();
+        services.AddScoped<IEquipmentManagementService, EquipmentManagementService>();
+        services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
+        services.AddScoped<ITourReviewService, TourReviewService>();
+        services.AddScoped<ITourSpecificationService, TourSpecificationService>();
+        services.AddScoped<IPublicPointService, PublicPointService>();
+        services.AddScoped<ITourExecutionService, TourExecutionService>();
+        services.AddScoped<IPurchaseTokensService, PurchaseTokenService>();
+        services.AddScoped<IPublicPointNotificationService, PublicPointNotificationService>();
+        services.AddScoped<IInternalProblemService, InternalProblemService>();
+        services.AddScoped<IPublicPointService, PublicPointService>();
+        services.AddScoped<IInternalSalesService, InternalSalesService>();
+        services.AddScoped<IInternalTourService, TourService>();
+        services.AddScoped<IInternalTourReviewService, TourReviewService>();
+
+        // TRENUTNO RESENJE
+
+        services.AddScoped<IInternalTourHelperService, TourHelperService>();
+
+        //
     }
 
     private static void SetupInfrastructure(IServiceCollection services)
     {
+        services.AddScoped<ITourRepository,TourDatabaseRepository>();
         services.AddScoped(typeof(ICrudRepository<Equipment>), typeof(CrudDatabaseRepository<Equipment, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourEquipment>), typeof(CrudDatabaseRepository<TourEquipment, ToursContext>));
+        services.AddScoped<ITourEquipmentRepository, TourEquipmentRepository>();
+        services.AddScoped(typeof(ICrudRepository<Checkpoint>), typeof(CrudDatabaseRepository<Checkpoint, ToursContext>));
+        services.AddScoped<ICheckpointRepository, CheckpointRepository>();
+        services.AddScoped(typeof(ICrudRepository<TourObject>), typeof(CrudDatabaseRepository<TourObject, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<EquipmentManagement>), typeof(CrudDatabaseRepository<EquipmentManagement, ToursContext>));
+        services.AddScoped<IEquipmentManagementRepository, EquipmentManagementRepository>();
+        services.AddScoped(typeof(ICrudRepository<TourReview>), typeof(CrudDatabaseRepository<TourReview, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<TourSpecification>), typeof(CrudDatabaseRepository<TourSpecification, ToursContext>));
+        services.AddScoped(typeof(ICrudRepository<PublicPoint>), typeof(CrudDatabaseRepository<PublicPoint, ToursContext>));
+        services.AddScoped<ITourExecutionRepository, TourExecutionRepository>();
+        services.AddScoped(typeof(ICrudRepository<TourExecution>), typeof(CrudDatabaseRepository<TourExecution, ToursContext>));
+        services.AddScoped<ITourSpecificationRepository, TourSpecificationRepository>();
+        services.AddScoped<IPublicPointRepository, PublicPointRepository>();
+        services.AddScoped<IPurchaseTokenRepository, PurchaseTokenRepository>();
+        services.AddScoped<IPublicPointNotificationRepository, PublicPointNotificationRepository>();
+        services.AddScoped(typeof(ICrudRepository<PublicPointNotification>), typeof(CrudDatabaseRepository<PublicPointNotification, ToursContext>));
+        services.AddHttpClient<IWeatherConnection, WeatherConnection>();
+        
 
         services.AddDbContext<ToursContext>(opt =>
             opt.UseNpgsql(DbConnectionStringBuilder.Build("tours"),

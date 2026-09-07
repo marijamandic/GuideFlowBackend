@@ -1,5 +1,4 @@
 namespace Explorer.Stakeholders.API.Dtos;
-
 public class AccountRegistrationDto
 {
     public string Username { get; set; }

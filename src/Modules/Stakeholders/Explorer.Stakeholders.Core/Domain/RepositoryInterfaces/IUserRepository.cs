@@ -1,9 +1,20 @@
-﻿namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+﻿using Explorer.BuildingBlocks.Core.UseCases;
 
-public interface IUserRepository
+namespace Explorer.Stakeholders.Core.Domain.RepositoryInterfaces;
+
+public interface IUserRepository : ICrudRepository<User>
 {
     bool Exists(string username);
+    User GetById(long id);
     User? GetActiveByName(string username);
-    User Create(User user);
+    List<User> GetAll();
     long GetPersonId(long userId);
+    Tourist GetTouristById(long id);
+    Tourist UpdateTourist(Tourist tourist);
+    Tourist CreateTourist(Tourist tourist);
+    PagedResult<Tourist> GetTouristsPaged(int page, int pageSize);
+    List<User> GetAllByIds(List<long> ids);
+    Author GetAuthorById(long id);
+    Author UpdateAuthor(Author author);
+
 }

@@ -1,4 +1,6 @@
-﻿using Explorer.BuildingBlocks.Core.UseCases;
+﻿using AutoMapper;
+using Explorer.BuildingBlocks.Core.UseCases;
+using Explorer.Payments.API.Internal;
 using Explorer.Stakeholders.API.Dtos;
 using Explorer.Stakeholders.API.Public;
 using Explorer.Stakeholders.Core.Domain;
@@ -12,12 +14,18 @@ public class AuthenticationService : IAuthenticationService
     private readonly ITokenGenerator _tokenGenerator;
     private readonly IUserRepository _userRepository;
     private readonly ICrudRepository<Person> _personRepository;
+    private readonly IProfileInfoRepository _profileInfoRepository;
+    private readonly IInternalShoppingCartService _shoppingCartService;
+    private readonly IMapper _mapper;
 
-    public AuthenticationService(IUserRepository userRepository, ICrudRepository<Person> personRepository, ITokenGenerator tokenGenerator)
+    public AuthenticationService(IUserRepository userRepository, ICrudRepository<Person> personRepository, ITokenGenerator tokenGenerator, IInternalShoppingCartService shoppingCartService, IProfileInfoRepository profileInfoRepository, IMapper mapper)
     {
         _tokenGenerator = tokenGenerator;
         _userRepository = userRepository;
         _personRepository = personRepository;
+        _shoppingCartService = shoppingCartService;
+        _profileInfoRepository = profileInfoRepository;
+        _mapper = mapper;
     }
 
     public Result<AuthenticationTokensDto> Login(CredentialsDto credentials)
@@ -34,17 +42,24 @@ public class AuthenticationService : IAuthenticationService
         {
             personId = 0;
         }
+        user.SetLastLoginTime();
+        _userRepository.Update(user);
         return _tokenGenerator.GenerateAccessToken(user, personId);
     }
 
-    public Result<AuthenticationTokensDto> RegisterTourist(AccountRegistrationDto account)
+    public Result<AuthenticationTokensDto> RegisterTourist(UserDto account)
     {
         if(_userRepository.Exists(account.Username)) return Result.Fail(FailureCode.NonUniqueUsername);
 
         try
         {
-            var user = _userRepository.Create(new User(account.Username, account.Password, UserRole.Tourist, true));
+            var user = _userRepository.Create(_mapper.Map<User>(account));
+            user.SetLastLoginTime();
+            _userRepository.Update(user);
             var person = _personRepository.Create(new Person(user.Id, account.Name, account.Surname, account.Email));
+            var profileInfo = _profileInfoRepository.Create(new ProfileInfo(user.Id, account.Name, account.Surname, "images/profileInfo/1c0f2ce0-b565-49d1-8455-02efdaae83a2.png", "bio", "moto"));
+            if(account.Role == API.Dtos.UserRole.Tourist)
+                _shoppingCartService.Create((int)user.Id);
 
             return _tokenGenerator.GenerateAccessToken(user, person.Id);
         }
@@ -54,4 +69,25 @@ public class AuthenticationService : IAuthenticationService
             // There is a subtle issue here. Can you find it?
         }
     }
+
+    public Result HandleLogout(long id)
+    {
+        try
+        {
+            var user = _userRepository.GetById(id);
+            if (user == null) // Explicitly check for null
+            {
+                return Result.Fail(FailureCode.NotFound).WithError($"User with ID {id} not found.");
+            }
+
+            user.SetLastLogoutTime();
+            _userRepository.Update(user);
+            return Result.Ok();
+        }
+        catch (Exception e) // Catch other unexpected exceptions
+        {
+            return Result.Fail(FailureCode.NotFound).WithError(e.Message);
+        }
+    }
+
 }

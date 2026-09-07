@@ -22,13 +22,15 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         using var scope = Factory.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<StakeholdersContext>();
         var controller = CreateController(scope);
-        var account = new AccountRegistrationDto
+        var account = new UserDto
         {
             Username = "turistaA@gmail.com",
             Email = "turistaA@gmail.com",
             Password = "turistaA",
             Name = "Žika",
-            Surname = "Žikić"
+            Surname = "Žikić",
+            Location = new LocationDto { Latitude = 45.245 , Longitude = 19.245},
+            Role = API.Dtos.UserRole.Tourist
         };
 
         // Act
@@ -46,7 +48,7 @@ public class RegistrationTests : BaseStakeholdersIntegrationTest
         dbContext.ChangeTracker.Clear();
         var storedAccount = dbContext.Users.FirstOrDefault(u => u.Username == account.Email);
         storedAccount.ShouldNotBeNull();
-        storedAccount.Role.ShouldBe(UserRole.Tourist);
+        storedAccount.Role.ShouldBe(Explorer.Stakeholders.Core.Domain.UserRole.Tourist);
         var storedPerson = dbContext.People.FirstOrDefault(i => i.Email == account.Email);
         storedPerson.ShouldNotBeNull();
         storedPerson.UserId.ShouldBe(storedAccount.Id);

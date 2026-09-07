@@ -15,7 +15,7 @@ public class AuthenticationController : BaseApiController
     }
 
     [HttpPost]
-    public ActionResult<AuthenticationTokensDto> RegisterTourist([FromBody] AccountRegistrationDto account)
+    public ActionResult<AuthenticationTokensDto> RegisterTourist([FromBody] UserDto account)
     {
         var result = _authenticationService.RegisterTourist(account);
         return CreateResponse(result);
@@ -25,6 +25,13 @@ public class AuthenticationController : BaseApiController
     public ActionResult<AuthenticationTokensDto> Login([FromBody] CredentialsDto credentials)
     {
         var result = _authenticationService.Login(credentials);
+        return CreateResponse(result);
+    }
+
+    [HttpPatch("logout/{id:long}")]
+    public ActionResult HandleLogout(long id)
+    {
+        var result = _authenticationService.HandleLogout(id);
         return CreateResponse(result);
     }
 }
